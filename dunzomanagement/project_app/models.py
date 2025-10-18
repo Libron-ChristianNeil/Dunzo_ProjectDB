@@ -16,6 +16,8 @@ class Project(models.Model):
 
     user_id = models.ManyToManyField(User, related_name="projects")
 
+    #
+
 
 class KanbanColumn(models.Model):
     column_id = models.AutoField(primary_key=True)
