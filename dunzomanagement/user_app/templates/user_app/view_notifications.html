@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Dunzo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --danger: #e63946;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            font-size: 32px;
+            color: var(--primary);
+            margin-right: 12px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 32px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .notification-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: var(--warning);
+            color: white;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .page-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .breadcrumb {
+            display: flex;
+            list-style: none;
+            color: var(--gray);
+        }
+
+        .breadcrumb li:not(:last-child)::after {
+            content: '/';
+            margin: 0 10px;
+        }
+
+        .breadcrumb a {
+            color: var(--gray);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary);
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .card-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header h3 i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            display: inline-block;
+            border: none;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--gray-light);
+            color: var(--dark);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Notifications Page */
+        .notifications-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+        }
+
+        @media (max-width: 992px) {
+            .notifications-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .notification-filters {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            height: fit-content;
+        }
+
+        .filter-group {
+            margin-bottom: 25px;
+        }
+
+        .filter-group h4 {
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: var(--dark);
+        }
+
+        .filter-options {
+            list-style: none;
+        }
+
+        .filter-options li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-options input {
+            margin-right: 10px;
+            accent-color: var(--primary);
+        }
+
+        .filter-options label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .notification-count {
+            margin-left: auto;
+            background-color: var(--gray-light);
+            color: var(--dark);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .notification-list {
+            list-style: none;
+        }
+
+        .notification-item {
+            display: flex;
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-light);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item:hover {
+            background-color: rgba(67, 97, 238, 0.03);
+        }
+
+        .notification-item.unread {
+            background-color: rgba(67, 97, 238, 0.05);
+            border-left: 3px solid var(--primary);
+        }
+
+        .notification-icon-small {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 500;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-badge-small {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            margin-left: 8px;
+        }
+
+        .notification-message {
+            color: var(--gray);
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .notification-time {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .notification-action {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .notification-action:hover {
+            text-decoration: underline;
+        }
+
+        .mark-all-read {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-light);
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--gray-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: var(--gray-light);
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <i class="fas fa-tasks"></i>
+                    <h1>Dunzo</h1>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="projects.html">Projects</a></li>
+                    <li><a href="tasks.html">Tasks</a></li>
+                    <li><a href="calendar.html">Calendar</a></li>
+                    <li><a href="view_notifications.html" class="active">Notifications</a></li>
+                </ul>
+                <div class="user-actions">
+                    <a href="view_notifications.html" class="notification-icon">
+                        <i class="fas fa-bell"></i>
+                        <div class="notification-badge">3</div>
+                    </a>
+                    <a href="edit_profile.html" class="user-profile">
+                        <div class="user-avatar">JS</div>
+                        <span>John Smith</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h2>Notifications</h2>
+                <div class="mark-all-read">
+                    <button class="btn btn-outline" id="mark-all-read">Mark All as Read</button>
+                </div>
+            </div>
+
+            <div class="notifications-container">
+                <!-- Filters -->
+                <div class="notification-filters">
+                    <div class="filter-group">
+                        <h4>Filter by Type</h4>
+                        <ul class="filter-options">
+                            <li>
+                                <input type="checkbox" id="filter-task" checked>
+                                <label for="filter-task">
+                                    Tasks
+                                    <span class="notification-count">5</span>
+                                </label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="filter-project" checked>
+                                <label for="filter-project">
+                                    Projects
+                                    <span class="notification-count">3</span>
+                                </label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="filter-comment" checked>
+                                <label for="filter-comment">
+                                    Comments
+                                    <span class="notification-count">2</span>
+                                </label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="filter-deadline" checked>
+                                <label for="filter-deadline">
+                                    Deadlines
+                                    <span class="notification-count">4</span>
+                                </label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="filter-system">
+                                <label for="filter-system">
+                                    System
+                                    <span class="notification-count">1</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>Filter by Status</h4>
+                        <ul class="filter-options">
+                            <li>
+                                <input type="checkbox" id="filter-unread" checked>
+                                <label for="filter-unread">Unread</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="filter-read">
+                                <label for="filter-read">Read</label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button class="btn btn-primary" style="width: 100%;" id="apply-filters">Apply Filters</button>
+                </div>
+
+                <!-- Notifications List -->
+                <div class="notifications-list">
+                    <div class="tabs">
+                        <div class="tab active" data-tab="all">All Notifications</div>
+                        <div class="tab" data-tab="unread">Unread</div>
+                        <div class="tab" data-tab="archived">Archived</div>
+                    </div>
+
+                    <div class="tab-content active" id="tab-all">
+                        <ul class="notification-list">
+                            <li class="notification-item unread">
+                                <div class="notification-icon-small">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">
+                                        New Task Assigned
+                                        <span class="notification-badge-small"></span>
+                                    </div>
+                                    <div class="notification-message">
+                                        You've been assigned to "Design wireframes for mobile app" in Mobile App Project.
+                                    </div>
+                                    <div class="notification-time">10 minutes ago</div>
+                                    <div class="notification-actions">
+                                        <button class="notification-action mark-read">Mark as Read</button>
+                                        <button class="notification-action">View Task</button>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="notification-item unread">
+                                <div class="notification-icon-small">
+                                    <i class="fas fa-comment"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">
+                                        New Comment
+                                        <span class="notification-badge-small"></span>
+                                    </div>
+                                    <div class="notification-message">
+                                        Sarah Johnson commented on your task "Prepare presentation slides".
+                                    </div>
+                                    <div class="notification-time">2 hours ago</div>
+                                    <div class="notification-actions">
+                                        <button class="notification-action mark-read">Mark as Read</button>
+                                        <button class="notification-action">View Comment</button>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="notification-item">
+                                <div class="notification-icon-small">
+                                    <i class="fas fa-calendar-plus"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">
+                                        Meeting Scheduled
+                                    </div>
+                                    <div class="notification-message">
+                                        Team meeting scheduled for Friday, 2:00 PM in Conference Room B.
+                                    </div>
+                                    <div class="notification-time">Yesterday</div>
+                                    <div class="notification-actions">
+                                        <button class="notification-action">Add to Calendar</button>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="notification-item unread">
+                                <div class="notification-icon-small">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">
+                                        Deadline Approaching
+                                        <span class="notification-badge-small"></span>
+                                    </div>
+                                    <div class="notification-message">
+                                        Task "Submit final design mockups" is due in 2 days.
+                                    </div>
+                                    <div class="notification-time">1 day ago</div>
+                                    <div class="notification-actions">
+                                        <button class="notification-action mark-read">Mark as Read</button>
+                                        <button class="notification-action">View Task</button>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="notification-item">
+                                <div class="notification-icon-small">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">
+                                        Project Milestone Completed
+                                    </div>
+                                    <div class="notification-message">
+                                        "Research competitor products" has been completed by Alex Thompson.
+                                    </div>
+                                    <div class="notification-time">2 days ago</div>
+                                    <div class="notification-actions">
+                                        <button class="notification-action">View Project</button>
+                                    <button class="notification-action archive">Archive</button>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="tab-content" id="tab-unread">
+                        <!-- Unread notifications would be displayed here -->
+                        <div class="empty-state">
+                            <i class="fas fa-bell-slash"></i>
+                            <h3>No Unread Notifications</h3>
+                            <p>You're all caught up! New notifications will appear here.</p>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="tab-archived">
+                        <!-- Archived notifications would be displayed here -->
+                        <div class="empty-state">
+                            <i class="fas fa-archive"></i>
+                            <h3>No Archived Notifications</h3>
+                            <p>Notifications you archive will appear here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Dunzo</h3>
+                    <p>Project management designed specifically for student teams to collaborate effectively and achieve academic success.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Product</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Use Cases</a></li>
+                        <li><a href="#">Integrations</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">API Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Dunzo. All rights reserved. Designed for students, by students.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab functionality for notifications
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Show corresponding content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(`tab-${tabId}`).classList.add('active');
+            });
+        });
+
+        // Mark notification as read
+        document.querySelectorAll('.mark-read').forEach(button => {
+            button.addEventListener('click', function() {
+                const notificationItem = this.closest('.notification-item');
+                notificationItem.classList.remove('unread');
+                
+                // Remove the unread badge
+                const badge = notificationItem.querySelector('.notification-badge-small');
+                if (badge) badge.remove();
+                
+                // Update notification count in header
+                const headerBadge = document.querySelector('.notification-badge');
+                let count = parseInt(headerBadge.textContent);
+                if (count > 0) {
+                    count--;
+                    headerBadge.textContent = count;
+                    if (count === 0) {
+                        headerBadge.style.display = 'none';
+                    }
+                }
+            });
+        });
+
+        // Archive notification
+        document.querySelectorAll('.archive').forEach(button => {
+            button.addEventListener('click', function() {
+                const notificationItem = this.closest('.notification-item');
+                notificationItem.style.display = 'none';
+                alert('Notification archived');
+            });
+        });
+
+        // Mark all as read
+        document.getElementById('mark-all-read').addEventListener('click', function() {
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+                const badge = item.querySelector('.notification-badge-small');
+                if (badge) badge.remove();
+            });
+            
+            // Reset notification count in header
+            const headerBadge = document.querySelector('.notification-badge');
+            headerBadge.textContent = '0';
+            headerBadge.style.display = 'none';
+            
+            alert('All notifications marked as read');
+        });
+
+        // Apply filters
+        document.getElementById('apply-filters').addEventListener('click', function() {
+            alert('Filters applied! In a real application, this would filter the notifications based on your selections.');
+        });
+    </script>
+</body>
+</html>
