@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dunzomanagement',
         'USER': 'root',
-        'PASSWORD': 'Libron.110603',
+        'PASSWORD': 'password123',
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'OPTIONS': {'init_command': "SET SQL_MODE='STRICT_TRANS_TABLES'"},
