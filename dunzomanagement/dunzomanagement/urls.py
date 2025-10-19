@@ -24,5 +24,9 @@ urlpatterns = [
     path('login/', views.login_page, name='login'),  # login page
 
     path('user/', include('user_app.urls')),
+    path('project/', include('project_app.urls')),
+    path('task/', include('task_app.urls')),
+    path('calendar/', include('calendarevent_app.urls')),
+    path('timeline/', include('timeline_app.urls')),
     # include your apps if needed
 ]
