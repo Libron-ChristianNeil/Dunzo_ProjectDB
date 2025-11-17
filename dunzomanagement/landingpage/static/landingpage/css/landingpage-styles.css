@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dunzo - Project Management for Students</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
+  html {
+  scroll-behavior: smooth;
+}
+
+  :root {
             --primary: #4361ee;
             --primary-light: #4895ef;
             --secondary: #3f37c9;
@@ -510,30 +506,30 @@
                 flex-direction: column;
                 text-align: center;
             }
-            
+
             .hero-content {
                 padding-right: 0;
                 margin-bottom: 60px;
             }
-            
+
             .hero-buttons {
                 justify-content: center;
             }
-            
+
             .stats {
                 justify-content: center;
             }
-            
+
             .steps::before {
                 display: none;
             }
-            
+
             .steps {
                 flex-direction: column;
                 align-items: center;
                 gap: 40px;
             }
-            
+
             .step {
                 max-width: 100%;
             }
@@ -544,23 +540,23 @@
                 flex-direction: column;
                 gap: 20px;
             }
-            
+
             .nav-links {
                 margin: 20px 0;
             }
-            
+
             .nav-links li {
                 margin: 0 15px;
             }
-            
+
             .hero-content h2 {
                 font-size: 36px;
             }
-            
+
             .hero-content p {
                 font-size: 18px;
             }
-            
+
             .section-header h2 {
                 font-size: 30px;
             }
@@ -571,292 +567,20 @@
                 flex-wrap: wrap;
                 justify-content: center;
             }
-            
+
             .hero-buttons {
                 flex-direction: column;
                 align-items: center;
             }
-            
+
             .btn {
                 width: 100%;
                 max-width: 250px;
                 text-align: center;
             }
-            
+
             .stats {
                 flex-direction: column;
                 gap: 20px;
             }
         }
-    </style>
-</head>
-<body>
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <nav class="navbar">
-                <div class="logo">
-                    <i class="fas fa-tasks"></i>
-                    <h1>Dunzo</h1>
-                </div>
-                <ul class="nav-links">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Features</a></li>
-                    <li><a href="#">How It Works</a></li>
-                    <li><a href="#">Testimonials</a></li>
-                    <li><a href="#">Pricing</a></li>
-                </ul>
-                <div class="nav-buttons">
-                    <a href="#" class="btn btn-outline">Log In</a>
-                    <a href="#" class="btn btn-primary">Sign Up Free</a>
-                </div>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h2>Project Management Made Simple for Students</h2>
-                <p>Dunzo helps student teams organize tasks, track progress, and meet deadlines with ease. Collaborate effectively and achieve your academic goals together.</p>
-                <div class="hero-buttons">
-                    <a href="#" class="btn btn-primary">Get Started Free</a>
-                    <a href="#" class="btn btn-outline">Watch Demo</a>
-                </div>
-                <div class="stats">
-                    <div class="stat">
-                        <div class="stat-value">5,000+</div>
-                        <div class="stat-label">Student Users</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">98%</div>
-                        <div class="stat-label">Project Completion</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">4.9/5</div>
-                        <div class="stat-label">User Rating</div>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-image">
-                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Dunzo Dashboard" class="hero-dashboard">
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Designed for Student Success</h2>
-                <p>Dunzo provides all the tools you need to manage group projects effectively and efficiently.</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-tasks"></i>
-                    </div>
-                    <h3>Task Assignment</h3>
-                    <p>Clearly distribute responsibilities with assigned tasks and deadlines for each team member.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>Progress Tracking</h3>
-                    <p>Get real-time visibility into task status and project progress with visual indicators.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bell"></i>
-                    </div>
-                    <h3>Smart Reminders</h3>
-                    <p>Automated notifications keep everyone on schedule and prevent missed deadlines.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-comments"></i>
-                    </div>
-                    <h3>Built-in Comments</h3>
-                    <p>Communicate clearly with team members through task-specific comments and feedback.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-file-alt"></i>
-                    </div>
-                    <h3>Document Sharing</h3>
-                    <p>Easily share and collaborate on project documents with your team in one place.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-calendar-alt"></i>
-                    </div>
-                    <h3>Deadline Management</h3>
-                    <p>Visual calendar and timeline views help you stay on top of all project milestones.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="section">
-        <div class="container">
-            <div class="section-header">
-                <h2>How Dunzo Works</h2>
-                <p>Get your student project organized in just a few simple steps.</p>
-            </div>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Create Project</h3>
-                    <p>Set up your project and invite team members.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Assign Tasks</h3>
-                    <p>Break down the project into manageable tasks.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Track Progress</h3>
-                    <p>Monitor task completion and project timeline.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>Submit Work</h3>
-                    <p>Complete and submit your project successfully.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="testimonials">
-        <div class="container">
-            <div class="section-header">
-                <h2>What Students Say</h2>
-                <p>Discover how Dunzo has transformed group project experiences for students worldwide.</p>
-            </div>
-            <div class="testimonial-grid">
-                <div class="testimonial-card">
-                    <div class="testimonial-text">
-                        Dunzo made our computer science project so much easier to manage. We could track everyone's progress and never missed a deadline.
-                    </div>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">AS</div>
-                        <div class="author-info">
-                            <h4>Alex Smith</h4>
-                            <p>Computer Science Student</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-text">
-                        As a project manager for our business class, Dunzo helped me keep our team organized and accountable. The reminder system is a lifesaver!
-                    </div>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">MJ</div>
-                        <div class="author-info">
-                            <h4>Maria Johnson</h4>
-                            <p>Business Administration</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-text">
-                        I used to dread group projects, but Dunzo has completely changed that. The clear task assignments and progress tracking eliminated all confusion.
-                    </div>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">TW</div>
-                        <div class="author-info">
-                            <h4>Thomas Wilson</h4>
-                            <p>Engineering Student</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="container">
-            <h2>Ready to Transform Your Group Projects?</h2>
-            <p>Join thousands of students who are already using Dunzo to make group work more organized and less stressful.</p>
-            <a href="#" class="btn btn-primary">Get Started Free</a>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>Dunzo</h3>
-                    <p>Project management designed specifically for student teams to collaborate effectively and achieve academic success.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                <div class="footer-column">
-                    <h3>Product</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Features</a></li>
-                        <li><a href="#">Pricing</a></li>
-                        <li><a href="#">Use Cases</a></li>
-                        <li><a href="#">Integrations</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Resources</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Tutorials</a></li>
-                        <li><a href="#">Support</a></li>
-                        <li><a href="#">API Documentation</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Company</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Contact</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2023 Dunzo. All rights reserved. Designed for students, by students.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        // Simple animation for feature cards on scroll
-        document.addEventListener('DOMContentLoaded', function() {
-            const featureCards = document.querySelectorAll('.feature-card');
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, { threshold: 0.1 });
-            
-            featureCards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                observer.observe(card);
-            });
-        });
-    </script>
-</body>
-</html>

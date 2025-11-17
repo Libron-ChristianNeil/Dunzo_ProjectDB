@@ -1,0 +1,414 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Project Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'project_app/css/project-app-styles.css' %}">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">PM</div>
+            <div class="logo-text">ProjectHub</div>
+        </div>
+
+        <div class="nav-items">
+            <a href="{% url 'user_app:dashboard' %}" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item active">
+                <i class="fas fa-folder"></i>
+                <span>Projects</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-tasks"></i>
+                <span>Tasks</span>
+            </a>
+            <a href="{% url 'timeline_app:timeline_app' %}" class="nav-item">
+                <i class="fas fa-stream"></i>
+                <span>Timeline</span>
+            </a>
+            <a href="{% url 'calendarevent_app:calendarevent_app' %}" class="nav-item">
+                <i class="fas fa-calendar"></i>
+                <span>Calendar</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+
+        <div class="user-section">
+            <div class="user-profile">
+                <div class="user-avatar">JD</div>
+                <div class="user-info">
+                    <div class="user-name">John Doe</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-bar">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <h1 class="page-title">All Projects</h1>
+
+            <button class="btn-primary" onclick="createProject()">
+                <i class="fas fa-plus"></i> New Project
+            </button>
+        </div>
+
+        <div class="content">
+            <!-- Filters -->
+            <div class="filters-bar">
+                <div class="filter-group">
+                    <span class="filter-label">Status:</span>
+                    <select class="filter-select">
+                        <option>All Projects</option>
+                        <option>Active</option>
+                        <option>Planning</option>
+                        <option>On Hold</option>
+                        <option>Completed</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-label">Team:</span>
+                    <select class="filter-select">
+                        <option>All Teams</option>
+                        <option>Design</option>
+                        <option>Development</option>
+                        <option>Marketing</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-label">Sort By:</span>
+                    <select class="filter-select">
+                        <option>Recent</option>
+                        <option>Name</option>
+                        <option>Progress</option>
+                        <option>Due Date</option>
+                    </select>
+                </div>
+
+                <div class="view-toggle">
+                    <button class="view-btn active">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button class="view-btn">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-icon blue">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="project-header">
+                        <h3 class="project-title">Website Redesign</h3>
+                        <button class="project-menu">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                    <p class="project-description">Complete overhaul of the company website with modern design and improved UX.</p>
+
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">16</div>
+                            <div class="stat-label">Tasks</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Done</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Team</div>
+                        </div>
+                    </div>
+
+                    <div class="project-progress">
+                        <div class="progress-header">
+                            <span class="progress-label">Overall Progress</span>
+                            <span class="progress-value">75%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+                    </div>
+
+                    <div class="project-footer">
+                        <div class="team-avatars">
+                            <div class="avatar">AM</div>
+                            <div class="avatar">SK</div>
+                            <div class="avatar">JL</div>
+                        </div>
+                        <span class="project-status status-active">Active</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-icon green">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="project-header">
+                        <h3 class="project-title">Mobile App Development</h3>
+                        <button class="project-menu">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                    <p class="project-description">Native iOS and Android app for customer engagement and service delivery.</p>
+
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">20</div>
+                            <div class="stat-label">Tasks</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">9</div>
+                            <div class="stat-label">Done</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4</div>
+                            <div class="stat-label">Team</div>
+                        </div>
+                    </div>
+
+                    <div class="project-progress">
+                        <div class="progress-header">
+                            <span class="progress-label">Overall Progress</span>
+                            <span class="progress-value">45%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                    </div>
+
+                    <div class="project-footer">
+                        <div class="team-avatars">
+                            <div class="avatar">TR</div>
+                            <div class="avatar">MK</div>
+                            <div class="avatar">LP</div>
+                            <div class="avatar">DN</div>
+                        </div>
+                        <span class="project-status status-active">Active</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-icon yellow">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div class="project-header">
+                        <h3 class="project-title">Marketing Campaign</h3>
+                        <button class="project-menu">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                    <p class="project-description">Q4 digital marketing campaign across social media and email channels.</p>
+
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">20</div>
+                            <div class="stat-label">Tasks</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">18</div>
+                            <div class="stat-label">Done</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">2</div>
+                            <div class="stat-label">Team</div>
+                        </div>
+                    </div>
+
+                    <div class="project-progress">
+                        <div class="progress-header">
+                            <span class="progress-label">Overall Progress</span>
+                            <span class="progress-value">90%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 90%"></div>
+                        </div>
+                    </div>
+
+                    <div class="project-footer">
+                        <div class="team-avatars">
+                            <div class="avatar">KW</div>
+                            <div class="avatar">RH</div>
+                        </div>
+                        <span class="project-status status-active">Active</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-icon red">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="project-header">
+                        <h3 class="project-title">Data Migration</h3>
+                        <button class="project-menu">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                    <p class="project-description">Migrate legacy systems to new cloud infrastructure with zero downtime.</p>
+
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">15</div>
+                            <div class="stat-label">Tasks</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">Done</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Team</div>
+                        </div>
+                    </div>
+
+                    <div class="project-progress">
+                        <div class="progress-header">
+                            <span class="progress-label">Overall Progress</span>
+                            <span class="progress-value">53%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 53%"></div>
+                        </div>
+                    </div>
+
+                    <div class="project-footer">
+                        <div class="team-avatars">
+                            <div class="avatar">BT</div>
+                            <div class="avatar">NP</div>
+                            <div class="avatar">LS</div>
+                        </div>
+                        <span class="project-status status-active">Active</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-icon purple">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <div class="project-header">
+                        <h3 class="project-title">Brand Refresh</h3>
+                        <button class="project-menu">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                    <p class="project-description">Complete rebrand including logo, colors, typography, and brand guidelines.</p>
+
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Tasks</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Done</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">2</div>
+                            <div class="stat-label">Team</div>
+                        </div>
+                    </div>
+
+                    <div class="project-progress">
+                        <div class="progress-header">
+                            <span class="progress-label">Overall Progress</span>
+                            <span class="progress-value">25%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 25%"></div>
+                        </div>
+                    </div>
+
+                    <div class="project-footer">
+                        <div class="team-avatars">
+                            <div class="avatar">VK</div>
+                            <div class="avatar">CH</div>
+                        </div>
+                        <span class="project-status status-planning">Planning</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-icon orange">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="project-header">
+                        <h3 class="project-title">Product Launch</h3>
+                        <button class="project-menu">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                    <p class="project-description">Coordinate launch of new product line including marketing and distribution.</p>
+
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">25</div>
+                            <div class="stat-label">Tasks</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Done</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Team</div>
+                        </div>
+                    </div>
+
+                    <div class="project-progress">
+                        <div class="progress-header">
+                            <span class="progress-label">Overall Progress</span>
+                            <span class="progress-value">20%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 20%"></div>
+                        </div>
+                    </div>
+
+                    <div class="project-footer">
+                        <div class="team-avatars">
+                            <div class="avatar">GD</div>
+                            <div class="avatar">RM</div>
+                            <div class="avatar">PL</div>
+                            <div class="avatar">AS</div>
+                        </div>
+                        <span class="project-status status-planning">Planning</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        function createProject() {
+            alert('Wapa na implement hahaha');
+        }
+    </script>
+</body>
+</html>

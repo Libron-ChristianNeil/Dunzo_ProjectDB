@@ -20,9 +20,11 @@ from . import views  # import views from main project
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name='index'),  # index page
-    path('login/', views.login_page, name='login'),  # login page
+    path('', include('landingpage.urls')),#landingpage/dashboard
 
     path('user/', include('user_app.urls')),
-    # include your apps if needed
+    path('', include('timeline_app.urls')),
+    path('', include('calendarevent_app.urls')),
+    path('', include('project_app.urls')),
+    path('', include('task_app.urls')),
 ]

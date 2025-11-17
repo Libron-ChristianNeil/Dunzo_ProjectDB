@@ -1,0 +1,437 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline - Project Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'timeline_app/css/timeline-app-styles.css' %}">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">PM</div>
+            <div class="logo-text">ProjectHub</div>
+        </div>
+
+        <div class="nav-items">
+            <a href="{% url 'user_app:dashboard' %}" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{% url 'project_app:project_app' %}" class="nav-item">
+                <i class="fas fa-folder"></i>
+                <span>Projects</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-tasks"></i>
+                <span>Tasks</span>
+            </a>
+            <a href="{% url 'timeline_app:timeline_app' %}" class="nav-item active">
+                <i class="fas fa-stream"></i>
+                <span>Timeline</span>
+            </a>
+            <a href="{% url 'calendarevent_app:calendarevent_app' %}" class="nav-item">
+                <i class="fas fa-calendar"></i>
+                <span>Calendar</span>
+            </a>
+            <a href="{% url 'user_app:settings' %}" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+
+        <div class="user-section">
+            <div class="user-profile">
+                <div class="user-avatar">JD</div>
+                <div class="user-info">
+                    <div class="user-name">John Doe</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-bar">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <h1 class="page-title">Project Timeline</h1>
+
+            <div class="timeline-controls">
+                <button class="zoom-btn">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+                <span class="date-range">Dec 18 - Jan 7, 2024</span>
+                <button class="zoom-btn">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="timeline-container">
+            <div class="timeline-wrapper">
+                <!-- Timeline Header -->
+                <div class="timeline-header">
+                    <div class="task-labels">Tasks</div>
+                    <div class="timeline-dates">
+                        <div class="date-cell">Dec 18</div>
+                        <div class="date-cell">Dec 20</div>
+                        <div class="date-cell">Dec 22</div>
+                        <div class="date-cell today">Dec 24</div>
+                        <div class="date-cell">Dec 26</div>
+                        <div class="date-cell">Dec 28</div>
+                        <div class="date-cell">Dec 30</div>
+                        <div class="date-cell">Jan 2</div>
+                        <div class="date-cell">Jan 4</div>
+                        <div class="date-cell">Jan 7</div>
+                    </div>
+                </div>
+
+                <!-- Project Group 1 -->
+                <div class="project-group">
+                    <div class="project-group-header">
+                        <div class="project-icon blue" style="background: linear-gradient(135deg, #4285F4, #3367D6);">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="project-group-title">Website Redesign</div>
+                        <div class="project-group-tasks">6 tasks</div>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+
+                    <div class="timeline-grid">
+                        <div class="timeline-row">
+                            <div class="task-info">
+                                <div class="task-name">Design mockups</div>
+                                <div class="task-project">Design Phase</div>
+                            </div>
+                            <div class="gantt-chart">
+                                <div class="gantt-background">
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell today"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                </div>
+                                <div class="gantt-bar blue" style="left: 0%; width: 30%;">
+                                    <span>Design mockups</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-row">
+                            <div class="task-info">
+                                <div class="task-name">Frontend development</div>
+                                <div class="task-project">Development</div>
+                            </div>
+                            <div class="gantt-chart">
+                                <div class="gantt-background">
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell today"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                </div>
+                                <div class="gantt-bar blue" style="left: 20%; width: 40%;">
+                                    <span>Frontend development</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-row">
+                            <div class="task-info">
+                                <div class="task-name">Content migration</div>
+                                <div class="task-project">Content</div>
+                            </div>
+                            <div class="gantt-chart">
+                                <div class="gantt-background">
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell today"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                </div>
+                                <div class="gantt-bar green" style="left: 40%; width: 25%;">
+                                    <span>Content migration</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-row">
+                            <div class="task-info">
+                                <div class="task-name">Testing & QA</div>
+                                <div class="task-project">Quality Assurance</div>
+                            </div>
+                            <div class="gantt-chart">
+                                <div class="gantt-background">
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell today"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                </div>
+                                <div class="gantt-bar yellow" style="left: 55%; width: 20%;">
+                                    <span>Testing & QA</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Group 2 -->
+                <div class="project-group">
+                    <div class="project-group-header">
+                        <div class="project-icon green" style="background: linear-gradient(135deg, #34A853, #2E7D32);">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="project-group-title">Mobile App Development</div>
+                        <div class="project-group-tasks">5 tasks</div>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+
+                    <div class="timeline-grid">
+                        <div class="timeline-row">
+                            <div class="task-info">
+                                <div class="task-name">User research</div>
+                                <div class="task-project">Research</div>
+                            </div>
+                            <div class="gantt-chart">
+                                <div class="gantt-background">
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell today"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                </div>
+                                <div class="gantt-bar purple" style="left: 5%; width: 20%;">
+                                    <span>User research</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-row">
+                            <div class="task-info">
+                                <div class="task-name">iOS development</div>
+                                <div class="task-project">Development</div>
+                            </div>
+                            <div class="gantt-chart">
+                                <div class="gantt-background">
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell today"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                </div>
+                                <div class="gantt-bar green" style="left: 15%; width: 45%;">
+                                    <span>iOS development</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-row">
+                            <div class="task-info">
+                                <div class="task-name">Android development</div>
+                                <div class="task-project">Development</div>
+                            </div>
+                            <div class="gantt-chart">
+                                <div class="gantt-background">
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell today"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                </div>
+                                <div class="gantt-bar green" style="left: 20%; width: 45%;">
+                                    <span>Android development</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-row">
+                            <div class="task-info">
+                                <div class="task-name">Beta testing</div>
+                                <div class="task-project">Testing</div>
+                            </div>
+                            <div class="gantt-chart">
+                                <div class="gantt-background">
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell today"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                </div>
+                                <div class="gantt-bar red" style="left: 60%; width: 25%;">
+                                    <span>Beta testing</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Group 3 -->
+                <div class="project-group">
+                    <div class="project-group-header">
+                        <div class="project-icon yellow" style="background: linear-gradient(135deg, #FBBC05, #F9AB00);">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div class="project-group-title">Marketing Campaign</div>
+                        <div class="project-group-tasks">4 tasks</div>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+
+                    <div class="timeline-grid">
+                        <div class="timeline-row">
+                            <div class="task-info">
+                                <div class="task-name">Campaign strategy</div>
+                                <div class="task-project">Planning</div>
+                            </div>
+                            <div class="gantt-chart">
+                                <div class="gantt-background">
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell today"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                </div>
+                                <div class="gantt-bar yellow" style="left: 10%; width: 25%;">
+                                    <span>Campaign strategy</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-row">
+                            <div class="task-info">
+                                <div class="task-name">Content creation</div>
+                                <div class="task-project">Creative</div>
+                            </div>
+                            <div class="gantt-chart">
+                                <div class="gantt-background">
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell today"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                </div>
+                                <div class="gantt-bar yellow" style="left: 30%; width: 30%;">
+                                    <span>Content creation</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-row">
+                            <div class="task-info">
+                                <div class="task-name">Launch campaign</div>
+                                <div class="task-project">Execution</div>
+                            </div>
+                            <div class="gantt-chart">
+                                <div class="gantt-background">
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell today"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                    <div class="gantt-cell"></div>
+                                </div>
+                                <div class="gantt-bar green" style="left: 55%; width: 15%;">
+                                    <span>Launch</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color blue" style="background: linear-gradient(135deg, #4285F4, #3367D6);"></div>
+                        <span>Design & Planning</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color green" style="background: linear-gradient(135deg, #34A853, #2E7D32);"></div>
+                        <span>Development</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color yellow" style="background: linear-gradient(135deg, #FBBC05, #F9AB00);"></div>
+                        <span>Marketing</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color red" style="background: linear-gradient(135deg, #EA4335, #D93025);"></div>
+                        <span>Testing & QA</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color purple" style="background: linear-gradient(135deg, #9C27B0, #7B1FA2);"></div>
+                        <span>Research</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+    </script>
+</body>
+</html>
