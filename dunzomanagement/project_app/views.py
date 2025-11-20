@@ -1,11 +1,9 @@
 from django.shortcuts import render
+from django.views import View
 
-def projectpage(request):
-    return render(request, 'project_app/projectpage.html')
 
 # Create your views here.
-# class ProjectPageView(View):
-#     template_name = 'task_app.html'
-#
-#     def get(self,request):
-#         return render(request, self.template_name)
+class ProjectAppView(View):
+    template_name = 'project_app/project_app.html'
+    def get(self, request):
+        return render(request, self.template_name)

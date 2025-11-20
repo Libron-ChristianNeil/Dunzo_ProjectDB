@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 
+app_name = 'timeline_app'
+
 urlpatterns = [
-    path('timeline', views.timeline_index, name='timeline_index'),
+    path('timeline/', views.TimelineAppView.as_view(), name='timeline_app'),
 ]

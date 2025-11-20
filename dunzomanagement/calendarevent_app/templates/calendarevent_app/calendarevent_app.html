@@ -1,10 +1,298 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar - Project Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'calendarevent_app/css/calendar-app-styles.css' %}">
+    <style>
+
+    </style>
 </head>
 <body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">PM</div>
+            <div class="logo-text">ProjectHub</div>
+        </div>
 
+        <div class="nav-items">
+            <a href="{% url 'user_app:dashboard' %}" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{% url 'project_app:project_app' %}" class="nav-item">
+                <i class="fas fa-folder"></i>
+                <span>Projects</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-tasks"></i>
+                <span>Tasks</span>
+            </a>
+            <a href="{% url 'timeline_app:timeline_app' %}" class="nav-item">
+                <i class="fas fa-stream"></i>
+                <span>Timeline</span>
+            </a>
+            <a href="{% url 'calendarevent_app:calendarevent_app' %}" class="nav-item active">
+                <i class="fas fa-calendar"></i>
+                <span>Calendar</span>
+            </a>
+            <a href="{% url 'user_app:settings' %}" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+
+        <div class="user-section">
+            <div class="user-profile">
+                <div class="user-avatar">JD</div>
+                <div class="user-info">
+                    <div class="user-name">John Doe</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-bar">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="calendar-header">
+                <div class="month-nav">
+                    <button class="nav-btn" onclick="previousMonth()">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h1 class="current-month">December 2024</h1>
+                    <button class="nav-btn" onclick="nextMonth()">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <button class="btn-today">Today</button>
+
+                <div class="view-tabs">
+                    <button class="view-tab active">Month</button>
+                    <button class="view-tab">Week</button>
+                    <button class="view-tab">Day</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="calendar-container">
+            <div class="calendar-grid">
+                <div class="calendar-weekdays">
+                    <div class="weekday">Sun</div>
+                    <div class="weekday">Mon</div>
+                    <div class="weekday">Tue</div>
+                    <div class="weekday">Wed</div>
+                    <div class="weekday">Thu</div>
+                    <div class="weekday">Fri</div>
+                    <div class="weekday">Sat</div>
+                </div>
+
+                <div class="calendar-days">
+                    <!-- Week 1 -->
+                    <div class="calendar-day other-month">
+                        <div class="day-number">26</div>
+                    </div>
+                    <div class="calendar-day other-month">
+                        <div class="day-number">27</div>
+                    </div>
+                    <div class="calendar-day other-month">
+                        <div class="day-number">28</div>
+                    </div>
+                    <div class="calendar-day other-month">
+                        <div class="day-number">29</div>
+                    </div>
+                    <div class="calendar-day other-month">
+                        <div class="day-number">30</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">1</div>
+                        <div class="day-events">
+                            <div class="event blue">Team Meeting</div>
+                        </div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">2</div>
+                    </div>
+
+                    <!-- Week 2 -->
+                    <div class="calendar-day">
+                        <div class="day-number">3</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">4</div>
+                        <div class="day-events">
+                            <div class="event green">Sprint Planning</div>
+                        </div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">5</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">6</div>
+                        <div class="day-events">
+                            <div class="event yellow">Client Review</div>
+                        </div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">7</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">8</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">9</div>
+                    </div>
+
+                    <!-- Week 3 -->
+                    <div class="calendar-day">
+                        <div class="day-number">10</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">11</div>
+                        <div class="day-events">
+                            <div class="event blue">Design Review</div>
+                        </div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">12</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">13</div>
+                        <div class="day-events">
+                            <div class="event purple">User Testing</div>
+                        </div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">14</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">15</div>
+                        <div class="day-events">
+                            <div class="event red">Deadline</div>
+                        </div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">16</div>
+                    </div>
+
+                    <!-- Week 4 -->
+                    <div class="calendar-day">
+                        <div class="day-number">17</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">18</div>
+                        <div class="day-events">
+                            <div class="event green">Sprint Review</div>
+                        </div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">19</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">20</div>
+                        <div class="day-events">
+                            <div class="event blue">All Hands</div>
+                            <div class="event yellow">Workshop</div>
+                        </div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">21</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">22</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">23</div>
+                    </div>
+
+                    <!-- Week 5 -->
+                    <div class="calendar-day today">
+                        <div class="day-number">24</div>
+                        <div class="day-events">
+                            <div class="event blue">Team Standup</div>
+                            <div class="event green">Deploy v2.0</div>
+                            <div class="event red">Bug Bash</div>
+                        </div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">25</div>
+                        <div class="day-events">
+                            <div class="event purple">Holiday</div>
+                        </div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">26</div>
+                        <div class="day-events">
+                            <div class="event yellow">Q4 Review</div>
+                        </div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">27</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">28</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">29</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-number">30</div>
+                        <div class="day-events">
+                            <div class="event red">Year End</div>
+                        </div>
+                    </div>
+
+                    <!-- Week 6 -->
+                    <div class="calendar-day">
+                        <div class="day-number">31</div>
+                    </div>
+                    <div class="calendar-day other-month">
+                        <div class="day-number">1</div>
+                    </div>
+                    <div class="calendar-day other-month">
+                        <div class="day-number">2</div>
+                    </div>
+                    <div class="calendar-day other-month">
+                        <div class="day-number">3</div>
+                    </div>
+                    <div class="calendar-day other-month">
+                        <div class="day-number">4</div>
+                    </div>
+                    <div class="calendar-day other-month">
+                        <div class="day-number">5</div>
+                    </div>
+                    <div class="calendar-day other-month">
+                        <div class="day-number">6</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        function previousMonth() {
+            alert('Navigate to previous month');
+        }
+
+        function nextMonth() {
+            alert('Navigate to next month');
+        }
+    </script>
 </body>
 </html>
