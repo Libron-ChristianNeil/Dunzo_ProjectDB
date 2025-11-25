@@ -6,11 +6,15 @@ import datetime
 # Create your models here.
 class Task(models.Model):
     task_id = models.AutoField(primary_key=True)
-    project_id = models.ForeignKey(
-        Project,
-        on_delete=models.CASCADE,
-        default=1
+    project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
+    notification_id = models.ForeignKey(
+        Notification,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
     )
+    # Many-to-Many relationship to users through Assignment
+    users = models.ManyToManyField(User, through='Assignment', related_name='tasks')
 
     title = models.CharField(max_length=100)
     description = models.TextField()
@@ -20,7 +24,6 @@ class Task(models.Model):
         'Done',
         'Blocked'
     )
-
     priority = (
         'Low',
         'Medium',
@@ -31,45 +34,29 @@ class Task(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # Many-to-Many relationship to users through Assignment
-    user_id = models.ManyToManyField(User, through='Assignment')
-
-    # Notification as ForeignKey
-    notification_id = models.ForeignKey(
-        Notification,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
-    )
-
     def __str__(self):
         return self.title
 
 class Assignment(models.Model):
     assignment_id = models.AutoField(primary_key=True)
-    task_id = models.ForeignKey(Task, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        default=1
-    )
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     role = (
         'Owner',
         'Contributor',
         'Reviewer'
     )
+
     assigned_at = models.DateTimeField(auto_now_add=True)
 
 
 class Comment(models.Model):
     comment_id = models.AutoField(primary_key=True)
     task_id = models.ForeignKey(Task, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        default=1
-    )
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     content = models.TextField()
-    create_time = models.DateTimeField(auto_now_add=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
