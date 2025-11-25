@@ -15,7 +15,12 @@ class TimelineEntry(models.Model):
         on_delete=models.CASCADE,
         default=1
     )
-    action = models.CharField(max_length=255, default=1)
+    action = models.CharField(max_length=255, default="")
     details = models.TextField(default="null")
     created_at = models.DateTimeField(default=timezone.now)
 
+    class Meta:
+        ordering = ['-created_at']  # Order by creation date, most recent first
+
+    def __str__(self):
+        return self.action

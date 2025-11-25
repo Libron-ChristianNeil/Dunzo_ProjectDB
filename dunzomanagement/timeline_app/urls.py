@@ -6,3 +6,11 @@ app_name = 'timeline_app'
 urlpatterns = [
     path('timeline/', views.TimelineAppView.as_view(), name='timeline_app'),
 ]
+
+# timeline/urls.py
+urlpatterns = [
+    path("", views.timeline_list, name="timeline_list"),
+    path("create/", views.timeline_create, name="timeline_create"),
+    path("<int:id>/edit/", views.timeline_edit, name="timeline_edit"),
+    path("<int:id>/delete/", views.timeline_delete, name="timeline_delete"),
+]
