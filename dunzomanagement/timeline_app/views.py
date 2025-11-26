@@ -49,10 +49,10 @@ def timeline_create(request):
 #############################################
 # VIEW: Edit a timeline entry - CONVERTED
 #############################################
-def timeline_edit(request, id):
+def timeline_edit(request, timeline_id):
     # REPLACED: supabase fetch with Django ORM get
     try:
-        entry = TimelineEntry.objects.get(id=id)
+        entry = TimelineEntry.objects.get(id=timeline_id)
     except TimelineEntry.DoesNotExist:
         raise Http404("Entry not found")
 
@@ -81,10 +81,10 @@ def timeline_edit(request, id):
 #############################################
 # VIEW: Delete a timeline entry - CONVERTED
 #############################################
-def timeline_delete(request, id):
+def timeline_delete(request, timeline_id):
     # REPLACED: supabase fetch with Django ORM get
     try:
-        entry = TimelineEntry.objects.get(id=id)
+        entry = TimelineEntry.objects.get(id=timeline_id)
     except TimelineEntry.DoesNotExist:
         raise Http404("Entry not found")
 
