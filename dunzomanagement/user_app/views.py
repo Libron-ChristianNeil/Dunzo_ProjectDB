@@ -11,7 +11,6 @@ from django.views import View
 # def view_notifications(request):
 #     return render(request, 'user_app/view_notifications.html')
 
-
 class DashboardView(View):
     template_name = 'user_app/user_dashboard.html'
     def get(self, request):
@@ -24,11 +23,6 @@ class EditProfileView(View):
 
 class ViewNotificationsView(View):
     template_name = 'user_app/view_notifications.html'
-    def get(self, request):
-        return render(request, self.template_name)
-
-class LoginView(View):
-    template_name = 'user_app/login.html'
     def get(self, request):
         return render(request, self.template_name)
 

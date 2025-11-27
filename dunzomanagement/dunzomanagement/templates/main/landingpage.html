@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dunzo - Project Management for Students</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'landingpage/css/landingpage-styles.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/landingpage-styles.css' %}">
 </head>
 <body>
     <!-- Header -->
@@ -18,14 +18,14 @@
                     <h1>Dunzo</h1>
                 </div>
                 <ul class="nav-links">
-                    <li><a href="{% url 'landingpage:landingpage' %}">Home</a></li>
+                    <li><a href="{% url 'landingpage' %}">Home</a></li>
                     <li><a href="#FEATURES">Features</a></li>
                     <li><a href="#HOW-IT-WORKS">How It Works</a></li>
                     <li><a href="#TESTIMONIALS">Testimonials</a></li>
                     <li><a href="#">Pricing</a></li>
                 </ul>
                 <div class="nav-buttons">
-                    <a href="{% url 'user_app:login' %}" class="btn btn-outline">Log In</a>
+                    <a href="{% url 'login' %}" class="btn btn-outline">Log In</a>
                     <a href="#" class="btn btn-primary">Sign Up Free</a>
                 </div>
             </nav>
@@ -249,7 +249,7 @@
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2023 Dunzo. All rights reserved. Designed for students, by students.</p>
+                <p>&copy; 2025 Dunzo. All rights reserved. Designed for students, by students.</p>
             </div>
         </div>
     </footer>

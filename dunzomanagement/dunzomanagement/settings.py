@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'landingpage',
+    'dunzomanagement',
     'user_app',
     'project_app',
     'task_app',
