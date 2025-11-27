@@ -1,7 +1,8 @@
 from django.urls import path
 from . import views
 
-app_name = 'user_app'   # allows namespacing of URLs
+
+app_name = 'user_app'
 
 urlpatterns = [
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
