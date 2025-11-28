@@ -1,3 +1,4 @@
+/* variables */
 :root{
     --white: #ffffff;    
     --offWhite: #f7f7f7;
@@ -19,6 +20,7 @@ body{
     background-color: var(--offWhite);
     
 }
+
 .outer-container{
     display: flex;
     flex-direction: row;
@@ -150,8 +152,6 @@ body{
 .user-role{
     font-size: 0.875rem;
 }
-
-
 /* main section */
 .main-section {
     margin-left: 260px;
@@ -170,7 +170,7 @@ body{
     width: 100%;   
     height: 48px;
     box-sizing: border-box;
-    margin-bottom: 20px;
+    
 }
 
 /* left items */
@@ -186,7 +186,7 @@ body{
     margin: 0;
 }
 
-.add-event{
+.new-task{
     height: fit-content;
     width: fit-content;
     padding: 10px 25px;
@@ -200,56 +200,188 @@ body{
     transition: var(--transition);
 }
 
-.add-event i{
+.new-task i{
     font-size: 1rem;
     margin-right: 5px;
 }
 
-.add-event:hover{
+.new-task:hover{
     opacity: 0.9;
     box-shadow: var(--box-shadow);
 }
 
 
-.fc .fc-col-header-cell-cushion {
-    font-weight: normal;
+/* task card */
+.task-grid{
+    margin: 18px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 10px;
+    transition: var(--transition);
+    cursor: pointer;
+}
+.task-card{
+    max-width: 320px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: var(--box-shadow)
 }
 
-/* Target all FullCalendar buttons */
-.fc .fc-button {
-    background-color: var(--dark) !important;  /* force override */
-    color: white !important;
-    border: none !important;
-    border-radius: 5px !important;
-    padding: 5px 12px !important;
-    font-weight: bold !important;
-    cursor: pointer !important;
-    margin-left: 8px;
-    margin-right: 8px;
+.task-card:hover{
+    transform: translateY(4px);
 }
 
-/* Hover state */
-.fc .fc-button:hover {
-    background-color: var(--red) !important;
-    box-shadow: var(--box-shadow) !important;
+/* task task */
+.task-title{
+    display: flex;
+    flex-direction: row;
+    margin: 0px 0px 2px 0px;
+    align-items: center;
+    height: 30px;
+    gap: 5px;
 }
 
-/* Active state */
-.fc .fc-button.fc-button-active {
-    background-color: var(--red) !important;
-    box-shadow: var(--box-shadow) !important; 
+/* .task-title input[type="checkbox"] {
+    appearance: none;      
+    width: 20px;              
+    height: 20px;
+    border: 2px solid #333;   
+    border-radius: 6px;       
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+} */
+
+.task-title input[type="checkbox"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #000;   /* outer black outline */
+    border-radius: 6px;
+    background: #fff;         /* default white */
+    cursor: pointer;
+    position: relative;
 }
 
-.fc .fc-timegrid-slot-label .fc-time text {
-    text-transform: uppercase;  /* optional */
-}
-.fc .fc-timegrid-slot-label .fc-time::after {
-    content: attr(data-full);  /* only works if you add data-full attribute */
+.task-title input[type="checkbox"]:checked {
+    background: var(--red); /* red center fill */
+
+    /* creates: white inner border + black outer border */
+    box-shadow:
+        0 0 0 2px #fff inset,   /* inner white ring */
+        0 0 0 2px #ffffff inset;   /* outer black ring */
 }
 
-/* calendar-event-app-styles.css */
-.fc .fc-day-today {
-    background-color:  #b6ffa5 !important;  /* light yellow */
-    border-radius: 5px;                   /* optional, makes it rounded */
+
+
+/* .task-title input[type="checkbox"]:checked {
+    background-color: var(--red); 
+    padding: 2px; 
+    background: #f7f7f7;
+    border-color: #333;
+} */
+
+.task-title h2{
+    margin: 0px;
+    font-size: 1.2rem;
 }
 
+.task-stat-group{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0px;
+}
+
+.task-stat {
+    appearance: none;      
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-align: center;     
+    
+    padding: 2px 6px;
+    font-size: 1rem;
+    
+    border: none;       
+    border-radius: 6px;           
+    background-color: rgba(54, 54, 54, 0.1);       
+    color: rgb(40, 40, 40);                
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.task-stat.blocked{          
+    background-color: var(--red);       
+    color: white;                
+}
+
+.task-stat.done{          
+    background-color: rgb(123, 204, 1);       
+    color: white;                
+}
+
+.task-stat.inprog{          
+    background-color: rgb(21, 0, 255);       
+    color: white;                
+}
+
+.task-priority{
+    appearance: none;      
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-align: center;     
+    
+    padding: 2px 6px;
+    font-size: 1rem;
+    
+    border: none;       
+    border-radius: 6px;           
+    background-color: rgba(76, 201, 240, 0.1);       
+    color: rgb(76, 201, 240);                
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.task-priority.medium{           
+    background-color: rgba(255, 221, 0, 0.274);       
+    color: rgb(255, 170, 0);                
+}
+
+.task-priority.high{           
+    background-color: rgba(255, 41, 41, 0.184);       
+    color: var(--red);                
+}
+
+.task-stat:hover,
+.task-stat:focus {
+    border-color: var(--red); 
+    outline: none;
+}
+
+.task-desc{
+    font-size: 1rem;
+    margin: 7px 0px;
+}
+
+
+.task-priority.low{
+    background-color: white;   
+    color: rgb(64, 180, 215); 
+}
+
+.task-priority.med{
+    background-color: rgb(255, 255, 255);     
+    color: rgb(255, 170, 0);  
+}
+
+.task-priority.hi{
+    background-color: rgb(255, 255, 255);     
+    color: var(--red);  
+}
+
+.date-created, .due-date{
+    font-size: 0.9rem;
+}

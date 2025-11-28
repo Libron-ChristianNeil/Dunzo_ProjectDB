@@ -4,85 +4,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects - Project Management</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Dunzo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'project_app/css/project-app-styles.css' %}">
+
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <i class="fas fa-tasks"></i>
-            <div class="logo-text">Dunzo</div>
-        </div>
+    <div class="outer-container">
+        <!-- sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <button class="toggleSidebar">
+                    <i class="fa-solid fa-bars-progress"></i>
+                </button>
+                <p>Dunzo</p>
+            </div>
 
-        <div class="nav-items">
-            <a href="{% url 'user_app:dashboard' %}" class="nav-item">
-                <i class="fas fa-chart-line"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="#" class="nav-item active">
-                <i class="fas fa-folder"></i>
-                <span>Projects</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fas fa-tasks"></i>
-                <span>Tasks</span>
-            </a>
-            <a href="{% url 'timeline_app:timeline' %}" class="nav-item">
-                <i class="fas fa-stream"></i>
-                <span>Timeline</span>
-            </a>
-            <a href="{% url 'calendarevent_app:calendar' %}" class="nav-item">
-                <i class="fas fa-calendar"></i>
-                <span>Calendar</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
-            </a>
-        </div>
+            <!-- navigation links -->
+            <ul class="navigation">
+                <li class="nav-item">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <a href="{% url 'user_app:dashboard' %}">Dashboard</a>
+                    
+                </li>
 
-        <div class="user-section">
+                <li class="nav-item">
+                    <i class="fa-solid fa-folder"></i>
+                    <a href="{% url 'project_app:project' %}">Project</a>
+                    
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-list-check"></i>
+                    <a href="{% url 'task_app:task' %}">Task</a>
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                    <a href="{% url 'timeline_app:timeline' %}">Timeline</a>
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-calendar"></i>
+                    <a href="{% url 'calendarevent_app:calendar' %}">Calendar</a>
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <a href="{% url 'user_app:settings' %}">Settings</a>
+                </li>
+            </ul>
+
+             <!-- User SECTION-->
             <div class="user-profile">
-                <div class="user-avatar">JD</div>
+                <div class="user-avatar">
+                    JV
+                </div>
+
                 <div class="user-info">
-                    <div class="user-name">John Doe</div>
-                    <div class="user-role">Administrator</div>
+                    <p class="user-name">Josephs Victors</p>
+                    <p class="user-role">Student</p>
                 </div>
             </div>
+
         </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="top-bar">
-            <button class="menu-toggle" onclick="toggleSidebar()">
-                <i class="fas fa-bars"></i>
-            </button>
-
-            <h1 class="page-title">All Projects</h1>
-
-            <button class="btn-primary" onclick="createProject()">
-                <i class="fas fa-plus"></i> New Project
-            </button>
+        
+        <!-- main section --> 
+        <div class="main-section" id="main-content">
+            <div class="top-bar">
+        <div class="top-left">
+            <h1 class="page-title">Projects</h1>
         </div>
 
-        <div class="content">
-            <!-- Filters -->
+        <div class="top-right">
+            <button class="new-project">
+                <i class="fa-solid fa-plus"></i>
+                New Project
+            </button>
+        </div>
+            </div>
+
+            <div class="content">
+            <!-- filters -->
             <div class="filters-bar">
+
+                <!-- project filter -->
                 <div class="filter-group">
                     <span class="filter-label">Status:</span>
                     <select class="filter-select">
                         <option>All Projects</option>
+                        <option>To Do</option>
                         <option>Active</option>
-                        <option>Planning</option>
                         <option>On Hold</option>
                         <option>Completed</option>
+                        <option>Cancelled</option>
                     </select>
                 </div>
 
+                <!-- Team filter -->
                 <div class="filter-group">
                     <span class="filter-label">Team:</span>
                     <select class="filter-select">
@@ -92,6 +111,8 @@
                         <option>Marketing</option>
                     </select>
                 </div>
+
+                <!-- Sort filter -->
 
                 <div class="filter-group">
                     <span class="filter-label">Sort By:</span>
@@ -103,312 +124,262 @@
                     </select>
                 </div>
 
-                <div class="view-toggle">
-                    <button class="view-btn active">
-                        <i class="fas fa-th"></i>
+            </div>
+            </div>
+
+            <!-- Projects section/grid -->
+            <div class="projects-grid">
+
+            <!-- INDIV PROJECT CARD -->
+            <div class="project-card">
+                <!-- PROJECT ICON -->
+                <div class="project-icon red">
+                    <i class="fa-solid fa-database"></i>
+                </div>
+
+                <!-- PROJECT TITLE -->
+                <div class="project-header">
+                    <h3 class="project-title">Django IM2</h3>
+                    <button class="project-menu">
+                        <i class="fas fa-ellipsis-v"></i>
                     </button>
-                    <button class="view-btn">
-                        <i class="fas fa-list"></i>
-                    </button>
+                </div>
+
+                <div class="date-section">
+                    <div class="date-field">
+                        <label for="start-date">Start Date: </label>
+                        <input type="date" id="start-date" value="2025-07-21">
+                    </div>
+
+                    <div class="date-field">
+                        <label for="end-date">End Date: </label>
+                        <input type="date" id="start-date" value="2025-11-13">
+                    </div>
+                </div>
+
+                <!-- PROJECT DESCRIPTION -->
+                <p class="project-description">Maghimo sa DJANGO.</p>
+
+                <!-- PROJECT STATS -->
+                <div class="project-stats">
+
+                    <!-- NUMBER OF TASK-->
+                    <div class="stat-item">
+                        <div class="stat-value">30</div>
+                        <div class="stat-label">Tasks</div>
+                    </div>
+
+                    <!-- NUMBER OF COMPLETED TASK -->
+                    <div class="stat-item">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">Done</div>
+                    </div>
+
+                    <!-- NUMBER OF TEAM MEMBERS -->
+                    <div class="stat-item">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Team</div>
+                    </div>
+                </div>
+
+                <!-- PROGRESS -->
+                <div class="project-progress">
+                    <!-- NUMERICAL PROGRESS VALUE -->
+                    <div class="progress-header">
+                        <span class="progress-label">Overall Progress</span>
+                        <span class="progress-value">5%</span>
+                    </div>
+
+                    <!-- PROGRESS BAR -->
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 5%"></div>
+                    </div>
+                </div>
+
+                <!-- TEAM -->
+                <div class="project-footer">
+                    <div class="team-avatars">
+                        <div class="avatar">JL</div>
+                        <div class="avatar">JT</div>
+                        <div class="avatar">JN</div>
+                        <div class="avatar">CL</div>
+                        <div class="avatar">FV</div>
+                    </div>
+                    <!-- PROGRESS STATUS -->
+                    <span class="project-status status-cancelled">Cancelled</span>
                 </div>
             </div>
 
-            <!-- Projects Grid -->
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-icon blue">
-                        <i class="fas fa-globe"></i>
-                    </div>
-                    <div class="project-header">
-                        <h3 class="project-title">Website Redesign</h3>
-                        <button class="project-menu">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                    </div>
-                    <p class="project-description">Complete overhaul of the company website with modern design and improved UX.</p>
 
-                    <div class="project-stats">
-                        <div class="stat-item">
-                            <div class="stat-value">16</div>
-                            <div class="stat-label">Tasks</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">12</div>
-                            <div class="stat-label">Done</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">3</div>
-                            <div class="stat-label">Team</div>
-                        </div>
+            <!-- INDIV PROJECT CARD -->
+            <div class="project-card">
+                <!-- PROJECT ICON -->
+                <div class="project-icon blue">
+                    <i class="fas fa-globe"></i>
+                </div>
+
+                <!-- PROJECT TITLE -->
+                <div class="project-header">
+                    <h3 class="project-title">Website Redesign</h3>
+                    <button class="project-menu">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                </div>
+
+                <div class="date-section">
+                    <div class="date-field">
+                        <label for="start-date">Start Date: </label>
+                        <input type="date" id="start-date" value="2025-07-21">
                     </div>
 
-                    <div class="project-progress">
-                        <div class="progress-header">
-                            <span class="progress-label">Overall Progress</span>
-                            <span class="progress-value">75%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 75%"></div>
-                        </div>
-                    </div>
-
-                    <div class="project-footer">
-                        <div class="team-avatars">
-                            <div class="avatar">AM</div>
-                            <div class="avatar">SK</div>
-                            <div class="avatar">JL</div>
-                        </div>
-                        <span class="project-status status-active">Active</span>
+                    <div class="date-field">
+                        <label for="end-date">End Date: </label>
+                        <input type="date" id="start-date" value="2025-11-13">
                     </div>
                 </div>
 
-                <div class="project-card">
-                    <div class="project-icon green">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <div class="project-header">
-                        <h3 class="project-title">Mobile App Development</h3>
-                        <button class="project-menu">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                    </div>
-                    <p class="project-description">Native iOS and Android app for customer engagement and service delivery.</p>
+                <!-- PROJECT DESCRIPTION -->
+                <p class="project-description">Complete overhaul of the company website with modern design and improved UX.</p>
 
-                    <div class="project-stats">
-                        <div class="stat-item">
-                            <div class="stat-value">20</div>
-                            <div class="stat-label">Tasks</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">9</div>
-                            <div class="stat-label">Done</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">4</div>
-                            <div class="stat-label">Team</div>
-                        </div>
+                <!-- PROJECT STATS -->
+                <div class="project-stats">
+
+                    <!-- NUMBER OF TASK-->
+                    <div class="stat-item">
+                        <div class="stat-value">16</div>
+                        <div class="stat-label">Tasks</div>
                     </div>
 
-                    <div class="project-progress">
-                        <div class="progress-header">
-                            <span class="progress-label">Overall Progress</span>
-                            <span class="progress-value">45%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 45%"></div>
-                        </div>
+                    <!-- NUMBER OF COMPLETED TASK -->
+                    <div class="stat-item">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Done</div>
                     </div>
 
-                    <div class="project-footer">
-                        <div class="team-avatars">
-                            <div class="avatar">TR</div>
-                            <div class="avatar">MK</div>
-                            <div class="avatar">LP</div>
-                            <div class="avatar">DN</div>
-                        </div>
-                        <span class="project-status status-active">Active</span>
+                    <!-- NUMBER OF TEAM MEMBERS -->
+                    <div class="stat-item">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Team</div>
                     </div>
                 </div>
 
-                <div class="project-card">
-                    <div class="project-icon yellow">
-                        <i class="fas fa-bullhorn"></i>
-                    </div>
-                    <div class="project-header">
-                        <h3 class="project-title">Marketing Campaign</h3>
-                        <button class="project-menu">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                    </div>
-                    <p class="project-description">Q4 digital marketing campaign across social media and email channels.</p>
-
-                    <div class="project-stats">
-                        <div class="stat-item">
-                            <div class="stat-value">20</div>
-                            <div class="stat-label">Tasks</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">18</div>
-                            <div class="stat-label">Done</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">2</div>
-                            <div class="stat-label">Team</div>
-                        </div>
+                <!-- PROGRESS -->
+                <div class="project-progress">
+                    <!-- NUMERICAL PROGRESS VALUE -->
+                    <div class="progress-header">
+                        <span class="progress-label">Overall Progress</span>
+                        <span class="progress-value">75%</span>
                     </div>
 
-                    <div class="project-progress">
-                        <div class="progress-header">
-                            <span class="progress-label">Overall Progress</span>
-                            <span class="progress-value">90%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 90%"></div>
-                        </div>
-                    </div>
-
-                    <div class="project-footer">
-                        <div class="team-avatars">
-                            <div class="avatar">KW</div>
-                            <div class="avatar">RH</div>
-                        </div>
-                        <span class="project-status status-active">Active</span>
+                    <!-- PROGRESS BAR -->
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%"></div>
                     </div>
                 </div>
 
-                <div class="project-card">
-                    <div class="project-icon red">
-                        <i class="fas fa-database"></i>
+                <!-- TEAM -->
+                <div class="project-footer">
+                    <div class="team-avatars">
+                        <div class="avatar">AM</div>
+                        <div class="avatar">SK</div>
+                        <div class="avatar">JL</div>
                     </div>
-                    <div class="project-header">
-                        <h3 class="project-title">Data Migration</h3>
-                        <button class="project-menu">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                    </div>
-                    <p class="project-description">Migrate legacy systems to new cloud infrastructure with zero downtime.</p>
+                    <!-- PROGRESS STATUS -->
+                    <span class="project-status status-active">Active</span>
+                </div>
+            </div>
 
-                    <div class="project-stats">
-                        <div class="stat-item">
-                            <div class="stat-value">15</div>
-                            <div class="stat-label">Tasks</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">8</div>
-                            <div class="stat-label">Done</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">3</div>
-                            <div class="stat-label">Team</div>
-                        </div>
-                    </div>
+            <!-- INDIV PROJECT CARD -->
+            <div class="project-card">
+                <!-- PROJECT ICON -->
+                <div class="project-icon yellow">
+                    <i class="fa-solid fa-bus-simple"></i>
+                </div>
 
-                    <div class="project-progress">
-                        <div class="progress-header">
-                            <span class="progress-label">Overall Progress</span>
-                            <span class="progress-value">53%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 53%"></div>
-                        </div>
+                <!-- PROJECT TITLE -->
+                <div class="project-header">
+                    <h3 class="project-title">Technopreneurship: AsaNaBus</h3>
+                    <button class="project-menu">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                </div>
+
+                <div class="date-section">
+                    <div class="date-field">
+                        <label for="start-date">Start Date: </label>
+                        <input type="date" id="start-date" value="2025-07-21">
                     </div>
 
-                    <div class="project-footer">
-                        <div class="team-avatars">
-                            <div class="avatar">BT</div>
-                            <div class="avatar">NP</div>
-                            <div class="avatar">LS</div>
-                        </div>
-                        <span class="project-status status-active">Active</span>
+                    <div class="date-field">
+                        <label for="end-date">End Date: </label>
+                        <input type="date" id="start-date" value="2025-11-13">
                     </div>
                 </div>
 
-                <div class="project-card">
-                    <div class="project-icon purple">
-                        <i class="fas fa-paint-brush"></i>
-                    </div>
-                    <div class="project-header">
-                        <h3 class="project-title">Brand Refresh</h3>
-                        <button class="project-menu">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                    </div>
-                    <p class="project-description">Complete rebrand including logo, colors, typography, and brand guidelines.</p>
+                <!-- PROJECT DESCRIPTION -->
+                <p class="project-description">Bus tracking system for Technopreneurship.</p>
 
-                    <div class="project-stats">
-                        <div class="stat-item">
-                            <div class="stat-value">12</div>
-                            <div class="stat-label">Tasks</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">3</div>
-                            <div class="stat-label">Done</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">2</div>
-                            <div class="stat-label">Team</div>
-                        </div>
+                <!-- PROJECT STATS -->
+                <div class="project-stats">
+
+                    <!-- NUMBER OF TASK-->
+                    <div class="stat-item">
+                        <div class="stat-value">67</div>
+                        <div class="stat-label">Tasks</div>
                     </div>
 
-                    <div class="project-progress">
-                        <div class="progress-header">
-                            <span class="progress-label">Overall Progress</span>
-                            <span class="progress-value">25%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 25%"></div>
-                        </div>
+                    <!-- NUMBER OF COMPLETED TASK -->
+                    <div class="stat-item">
+                        <div class="stat-value">60</div>
+                        <div class="stat-label">Done</div>
                     </div>
 
-                    <div class="project-footer">
-                        <div class="team-avatars">
-                            <div class="avatar">VK</div>
-                            <div class="avatar">CH</div>
-                        </div>
-                        <span class="project-status status-planning">Planning</span>
+                    <!-- NUMBER OF TEAM MEMBERS -->
+                    <div class="stat-item">
+                        <div class="stat-value">10</div>
+                        <div class="stat-label">Team</div>
                     </div>
                 </div>
 
-                <div class="project-card">
-                    <div class="project-icon orange">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <div class="project-header">
-                        <h3 class="project-title">Product Launch</h3>
-                        <button class="project-menu">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                    </div>
-                    <p class="project-description">Coordinate launch of new product line including marketing and distribution.</p>
-
-                    <div class="project-stats">
-                        <div class="stat-item">
-                            <div class="stat-value">25</div>
-                            <div class="stat-label">Tasks</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">5</div>
-                            <div class="stat-label">Done</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">5</div>
-                            <div class="stat-label">Team</div>
-                        </div>
+                <!-- PROGRESS -->
+                <div class="project-progress">
+                    <!-- NUMERICAL PROGRESS VALUE -->
+                    <div class="progress-header">
+                        <span class="progress-label">Overall Progress</span>
+                        <span class="progress-value">90%</span>
                     </div>
 
-                    <div class="project-progress">
-                        <div class="progress-header">
-                            <span class="progress-label">Overall Progress</span>
-                            <span class="progress-value">20%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 20%"></div>
-                        </div>
-                    </div>
-
-                    <div class="project-footer">
-                        <div class="team-avatars">
-                            <div class="avatar">GD</div>
-                            <div class="avatar">RM</div>
-                            <div class="avatar">PL</div>
-                            <div class="avatar">AS</div>
-                        </div>
-                        <span class="project-status status-planning">Planning</span>
+                    <!-- PROGRESS BAR -->
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width:90%"></div>
                     </div>
                 </div>
+
+                <!-- TEAM -->
+                <div class="project-footer">
+                    <div class="team-avatars">
+                        <div class="avatar">NB</div>
+                        <div class="avatar">JV</div>
+                        <div class="avatar">KB</div>
+                        <div class="avatar">JP</div>
+                        <div class="avatar">JL</div>
+                        <div class="avatar">+5</div>
+                    </div>
+                    <!-- PROGRESS STATUS -->
+                    <span class="project-status status-active">Active</span>
+                </div>
+            </div>
+
+
+
+
             </div>
         </div>
     </div>
-
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('collapsed');
-        }
-
-        function createProject() {
-            alert('Wapa na implement hahaha');
-        }
-    </script>
 </body>
+
+<script>
+    
+</script>
+
 </html>

@@ -12,7 +12,7 @@ from django.views import View
 #     return render(request, 'user_app/view_notifications.html')
 
 class DashboardView(View):
-    template_name = 'user_app/user_dashboard.html'
+    template_name = 'user_app/dashboard.html'
     def get(self, request):
         return render(request, self.template_name)
 

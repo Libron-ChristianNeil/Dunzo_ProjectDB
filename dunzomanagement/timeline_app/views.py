@@ -19,7 +19,7 @@ def timeline_list(request):
     entries = TimelineEntry.objects.all()
     # The ordering is already handled by class Meta in models.py
 
-    return render(request, "timeline/list.html", {"entries": entries})
+    return render(request, "timeline_app/timeline_app.html", {"entries": entries})
 
 
 #############################################

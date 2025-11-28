@@ -1,10 +1,243 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Task App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dunzo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'task_app/css/task-app-styles.css' %}">
+
 </head>
 <body>
-    <h1>Task App</h1>
+    <div class="outer-container">
+        <!-- sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <button class="toggleSidebar">
+                    <i class="fa-solid fa-bars-progress"></i>
+                </button>
+                <p>Dunzo</p>
+            </div>
+
+            <!-- navigation links -->
+            <ul class="navigation">
+                <li class="nav-item">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <a href="{% url 'user_app:dashboard' %}">Dashboard</a>
+                    
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-folder"></i>
+                    <a href="{% url 'project_app:project' %}">Project</a>
+                    
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-list-check"></i>
+                    <a href="{% url 'task_app:task' %}">Task</a>
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                    <a href="{% url 'timeline_app:timeline' %}">Timeline</a>
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-calendar"></i>
+                    <a href="{% url 'calendarevent_app:calendar' %}">Calendar</a>
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <a href="{% url 'user_app:settings' %}">Settings</a>
+                </li>
+            </ul>
+
+             <!-- User SECTION-->
+            <div class="user-profile">
+                <div class="user-avatar">
+                    JV
+                </div>
+
+                <div class="user-info">
+                    <p class="user-name">Josephs Victors</p>
+                    <p class="user-role">Student</p>
+                </div>
+            </div>
+
+        </div>
+        
+        <!-- main section --> 
+        <div class="main-section" id="main-content">
+           <div class="top-bar">
+        <div class="top-left">
+            <h1 class="page-title">Tasks</h1>
+        </div>
+
+        <div class="top-right">
+            <button class="new-task">
+                <i class="fa-solid fa-plus"></i>
+                New Task
+            </button>
+        </div>
+            </div>
+
+            <div class="task-grid">
+                <div class="task-card">
+                    <div class="task-title">
+                        <input type="checkbox">
+                        <h2>Integrate frontend with API</h2>
+                    </div>
+
+                    <div class="date-created">
+                        Created: Nov 1
+                    </div>
+
+                    <div class="task-stat-group">
+                        <select class="task-stat inprog">
+                            <option>To Do</option>
+                            <option selected>In Progress</option>
+                            <option>Done</option>
+                            <option>Blocked</option>
+                        </select>
+
+                        <div class="task-priority-group">
+                            <span class="task-priority med"><i class="fa-brands fa-font-awesome"></i></span>
+                            <select class="task-priority medium">
+                                <option>Low</option>
+                                <option selected>Medium</option>
+                                <option>High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="task-desc">
+                        <p>Integrate the frontend interface with the backend API.</p>
+                    </div>
+
+                    <div class="due-date">
+                        Due: Nov 23
+                    </div>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-title">
+                        <input type="checkbox" checked>
+                        <h2>Study automata theory</h2>
+                    </div>
+
+                    <div class="date-created">
+                        Created: Nov 22
+                    </div>
+
+                    <div class="task-stat-group">
+                        <select class="task-stat done">
+                            <option>To Do</option>
+                            <option>In Progress</option>
+                            <option selected>Done</option>
+                            <option>Blocked</option>
+                        </select>
+
+                        <div class="task-priority-group">
+                            <span class="task-priority low"><i class="fa-brands fa-font-awesome"></i></span>
+                            <select class="task-priority">
+                                <option>Low</option>
+                                <option>Medium</option>
+                                <option>High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="task-desc">
+                        <p>review DFAs, NFAs, and regular languages</p>
+                    </div>
+
+                    <div class="due-date">
+                        Due: Nov 24
+                    </div>
+                </div>
+                
+                <div class="task-card">
+                    <div class="task-title">
+                        <input type="checkbox">
+                        <h2>Document project workflow</h2>
+                    </div>
+
+                    <div class="date-created">
+                        Created: Nov 12
+                    </div>
+
+                    <div class="task-stat-group">
+                        <select class="task-stat">
+                            <option>To Do</option>
+                            <option>In Progress</option>
+                            <option>Done</option>
+                            <option>Blocked</option>
+                        </select>
+
+                        <div class="task-priority-group">
+                            <span class="task-priority hi"><i class="fa-brands fa-font-awesome"></i></span>
+                            <select class="task-priority high">
+                                <option>Low</option>
+                                <option>Medium</option>
+                                <option selected>High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="task-desc">
+                        <p>Document the project workflow for easier team understanding.</p>
+                    </div>
+
+                    <div class="due-date">
+                        Due: Nov 30
+                    </div>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-title">
+                        <input type="checkbox">
+                        <h2>Update API endpoints</h2>
+                    </div>
+
+                    <div class="date-created">
+                        Created: Nov 10
+                    </div>
+
+                    <div class="task-stat-group">
+                        <select class="task-stat blocked">
+                            <option>To Do</option>
+                            <option>In Progress</option>
+                            <option>Done</option>
+                            <option selected>Blocked</option>
+                        </select>
+
+                        <div class="task-priority-group">
+                            <span class="task-priority low"><i class="fa-brands fa-font-awesome"></i></span>
+                            <select class="task-priority">
+                                <option>Low</option>
+                                <option>Medium</option>
+                                <option>High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="task-desc">
+                        <p>add new routes or fix outdated ones</p>
+                    </div>
+
+                    <div class="due-date">
+                        Due: Dec 1
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
+<script>
+</script>
+
 </html>

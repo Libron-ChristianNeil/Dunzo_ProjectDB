@@ -4,78 +4,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dunzo - Project Management</title>
+    <title>Dunzo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'user_app/css/user-dashboard-styles.css' %}">
+    <link rel="stylesheet" href="{% static 'user_app/css/dashboard-styles.css' %}">
+
 </head>
 <body>
-    <div class="container">
-        <!-- Sidebar -->
+    <div class="outer-container">
+        <!-- sidebar -->
         <div class="sidebar">
             <div class="logo">
-                <i class="fas fa-tasks"></i>
-                <h1>Dunzo</h1>
+                <button class="toggleSidebar">
+                    <i class="fa-solid fa-bars-progress"></i>
+                </button>
+                <p>Dunzo</p>
             </div>
-            <ul class="nav-links">
-                <li class="active"><a href="{% url 'user_app:dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="{% url 'project_app:project' %}"><i class="fas fa-project-diagram"></i> Projects</a></li>
-                <li><a href="#"><i class="fas fa-tasks"></i> Tasks</a></li>
-                <li><a href="{% url 'calendarevent_app:calendar' %}"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
-                <li><a href="#"><i class="fas fa-comments"></i> Messages</a></li>
-                <li><a href="{% url 'user_app:settings' %}"><i class="fas fa-cog"></i> Settings</a></li>
+
+            <!-- navigation links -->
+            <ul class="navigation">
+                <li class="nav-item">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <a href="{% url 'user_app:dashboard' %}">Dashboard</a>
+                    
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-folder"></i>
+                    <a href="{% url 'project_app:project' %}">Project</a>
+                    
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-list-check"></i>
+                    <a href="{% url 'task_app:task' %}">Task</a>
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                    <a href="{% url 'timeline_app:timeline' %}">Timeline</a>
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-calendar"></i>
+                    <a href="{% url 'calendarevent_app:calendar' %}">Calendar</a>
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <a href="{% url 'user_app:settings' %}">Settings</a>
+                </li>
             </ul>
+
+             <!-- User SECTION-->
             <div class="user-profile">
-                <div class="user-avatar">JS</div>
+                <div class="user-avatar">
+                    JV
+                </div>
+
                 <div class="user-info">
-                    <h4>John Smith</h4>
-                    <p>Project Manager</p>
+                    <p class="user-name">Josephs Victors</p>
+                    <p class="user-role">Student</p>
                 </div>
             </div>
+
         </div>
+        
+        <!-- main section --> 
+        <div class="main-section" id="main-content">
+            <div class="top-bar">
+                <div class="top-left">
+                    <h1 class="page-title">Dashboard</h1>
+                </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <div class="header">
-                <h2>Dashboard</h2>
                 <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search tasks, projects...">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder= "Search task, project, or team members">
                 </div>
             </div>
-
+            
             <!-- Stats Cards -->
             <div class="stats-cards">
+                <!-- Number of tasks -->
                 <div class="stat-card card-1">
                     <div class="stat-icon">
                         <i class="fas fa-tasks"></i>
                     </div>
+                    
                     <div class="stat-info">
                         <h3>12</h3>
                         <p>Active Tasks</p>
                     </div>
                 </div>
+
+                <!-- Number of projects -->
                 <div class="stat-card card-2">
                     <div class="stat-icon">
-                        <i class="fas fa-project-diagram"></i>
+                        <i class="fa-solid fa-folder"></i>
                     </div>
+
                     <div class="stat-info">
                         <h3>4</h3>
                         <p>Projects</p>
                     </div>
                 </div>
+
+                <!-- Number of notifications -->
                 <div class="stat-card card-3">
                     <div class="stat-icon">
                         <i class="fas fa-bell"></i>
                     </div>
+
                     <div class="stat-info">
                         <h3>7</h3>
                         <p>Notifications</p>
                     </div>
                 </div>
+
+                <!-- Number of upcoming deadlines -->
                 <div class="stat-card card-4">
                     <div class="stat-icon">
                         <i class="fas fa-calendar-check"></i>
                     </div>
+
                     <div class="stat-info">
                         <h3>3</h3>
                         <p>Upcoming Deadlines</p>
@@ -263,21 +313,23 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Simple script to handle task completion
-        document.querySelectorAll('.task-checkbox input').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const taskItem = this.closest('.task-item');
-                if (this.checked) {
-                    taskItem.style.opacity = '0.7';
-                    taskItem.querySelector('.task-title').style.textDecoration = 'line-through';
-                } else {
-                    taskItem.style.opacity = '1';
-                    taskItem.querySelector('.task-title').style.textDecoration = 'none';
-                }
-            });
-        });
-    </script>
 </body>
+
+<script>
+    document.querySelectorAll('.task-checkbox input').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const taskItem = this.closest('.task-item');
+            const title = taskItem.querySelector('.task-title');
+
+            if (this.checked) {
+                taskItem.style.opacity = '0.7';
+                title.style.textDecoration = 'line-through';
+            } else {
+                taskItem.style.opacity = '1';
+                title.style.textDecoration = 'none';
+            }
+        });
+    });
+</script>
+
 </html>
