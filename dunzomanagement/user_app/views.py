@@ -1,33 +1,22 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.views import View
 
+dashboard = 'user_app/dashboard.html'
+settings = 'user_app/settings.html'
 
-# def user_dashboard(request):
-#     return render(request, 'user_app/user_dashboard.html')
-#
-# def edit_profile(request):
-#     return render(request, 'user_app/edit_profile.html')
-#
-# def view_notifications(request):
-#     return render(request, 'user_app/view_notifications.html')
+# @login_required
+def get_dashboard(request):
+    # stat row containing no. of tasks, projects, notifications, calendar events
+    # Tasks in list format
+    # Projects in list format
+    # Notifications in list format
+    # Calendar events in list format
+    return render(request, dashboard)
 
-class DashboardView(View):
-    template_name = 'user_app/dashboard.html'
-    def get(self, request):
-        return render(request, self.template_name)
+# @login_required
+def get_settings(request):
+    # bruh keep it as simple as possible
+    # limit to editing profile and info and logging out
+    return render(request, settings)
 
-class EditProfileView(View):
-    template_name = 'user_app/edit_profile.html'
-    def get(self, request):
-        return render(request, self.template_name)
-
-class ViewNotificationsView(View):
-    template_name = 'user_app/view_notifications.html'
-    def get(self, request):
-        return render(request, self.template_name)
-
-class SettingsView(View):
-    template_name = 'user_app/settings.html'
-    def get(self, request):
-        return render(request, self.template_name)
 

@@ -1,9 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.views import View
 
+project = 'project_app/project_app.html'
 
-# Create your views here.
-class ProjectAppView(View):
-    template_name = 'project_app/project_app.html'
-    def get(self, request):
-        return render(request, self.template_name)
+# @login_required
+def get_projects(request):
+    # List all projects the user is involved in
+    return render(request, project)
+

@@ -1,7 +1,6 @@
 from django.db import models
 from user_app.models import User, Notification
-from project_app.models import Project
-import datetime
+from project_app.models import Project, Tag
 
 # Create your models here.
 class Task(models.Model):
@@ -9,30 +8,25 @@ class Task(models.Model):
         ('To Do', 'To Do'),
         ('In Progress', 'In Progress'),
         ('Done', 'Done'),
-        ('Blocked', 'Blocked'),
+        ('Archived', 'Archived'),
     ]
 
-    # PRIORITY_CHOICES = [
-    #     ('Low', 'Low'),
-    #     ('Medium', 'Medium'),
-    #     ('High', 'High'),
-    # ]
-
     task_id = models.AutoField(primary_key=True)
-    project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
-    notification_id = models.ForeignKey(Notification, on_delete=models.SET_NULL, null=True, blank=True)
-    # Many-to-Many relationship to users through Assignment
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     users = models.ManyToManyField(User, through='Assignment', related_name='tasks')
+    tags = models.ManyToManyField(Tag, blank=True)
 
     title = models.CharField(max_length=100)
     description = models.TextField()
 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='To Do')
-    # priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='Medium')
 
-    due_date = models.DateField(default=datetime.date.today)
+    due_date = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-due_date']
 
     def __str__(self):
         return self.title
@@ -44,21 +38,30 @@ class Assignment(models.Model):
         ('Reviewer', 'Reviewer'),
     ]
 
-    assignment_id = models.AutoField(primary_key=True)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='assignments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assignments')
 
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
 
     assigned_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('user', 'task')
+
 
 class Comment(models.Model):
     comment_id = models.AutoField(primary_key=True)
-    task_id = models.ForeignKey(Task, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        related_name='replies',
+        on_delete=models.CASCADE
+    )
 
-    content = models.TextField()
+    content = models.TextField(blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

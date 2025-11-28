@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.views import View
 
+calendar = 'calendarevent_app/calendarevent_app.html'
 
-# Create your views here.
-class CalendarEventViews(View):
-    template_name = 'calendarevent_app/calendarevent_app.html'
-    def get(self, request):
-        return render(request, self.template_name)
+# @login_required
+def get_calendar(request):
+    # Display the calendar view for the user
+    return render(request, calendar)
+
