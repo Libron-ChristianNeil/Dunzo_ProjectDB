@@ -8,7 +8,6 @@ from project_app.models import Project
 class CalendarEvent(models.Model):
     TYPE_CHOICES = [
         ('Deadline', 'Deadline'),
-        ('Milestone', 'Milestone'),
         ('Meeting', 'Meeting'),
         ('Event', 'Event'),
     ]

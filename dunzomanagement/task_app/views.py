@@ -6,17 +6,20 @@ from project_app.models import Project
 from user_app.models import User
 
 task = 'task_app/task_app.html'
-details = 'task_app/task_detail.html'
+details = 'task_app/task_details.html'
 
 create = 'task_app/create_task.html'
-comment = 'task_app/add_comment.html'
-add_self = 'task_app/assign_self.html'
-manage_tags = 'task_app/manage_tags.html'
-manage_users = 'task_app/manage_users.html'
-edit_comment = 'task_app/edit_comment.html'
 edit_task = 'task_app/edit_task.html'
 delete_task = 'task_app/delete_task.html'
+
+manage_users = 'task_app/manage_users.html'
+add_self = 'task_app/assign_self.html'
+
+comment = 'task_app/add_comment.html'
+edit_comment = 'task_app/edit_comment.html'
 delete_comment = 'task_app/delete_comment.html'
+
+manage_tags = 'task_app/manage_tags.html'
 
 # @login_required
 def get_tasks(request):
