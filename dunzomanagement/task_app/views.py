@@ -23,7 +23,7 @@ manage_tags = 'task_app/manage_tags.html'
 
 # @login_required
 def get_tasks(request):
-    tasks = Task.objects.filter(users=request.user.id)
+    tasks = Task.objects.filter(users=request.user.user_id)
 
     return render(request, task, {"tasks": tasks})
 
@@ -41,12 +41,12 @@ def get_tasks_by_status(request, status):
 
 # @login_required
 def get_details(request, task_id):
-    task = get_object_or_404(Task, pk=task_id)
-    assignments = Assignment.objects.filter(task=task)
-    comments = Comment.objects.filter(task_id=task)
+    obj_task = get_object_or_404(Task, pk=task_id)
+    assignments = Assignment.objects.filter(task=obj_task)
+    comments = Comment.objects.filter(task=obj_task)
 
     return render(request, details, {
-        "task": task,
+        "task": obj_task,
         "assignments": assignments,
         "comments": comments,
     })
