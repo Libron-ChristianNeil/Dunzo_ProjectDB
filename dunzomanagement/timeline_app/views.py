@@ -11,10 +11,10 @@ def get_entries(request):
     user = request.user
 
     # Step 1: Get all projects the user is involved in
-    user_projects = user.projects.all()  # because of Project.users ManyToMany
+    # user_projects = user.projects.all()  # because of Project.users ManyToMany
 
     # Step 2: Get timeline entries for those projects
-    entries = TimelineEntry.objects.filter(project__in=user_projects).select_related('user', 'project')
-
+    #for loop
+    # entries = TimelineEntry.objects.filter(project__in=user_projects).select_related('user', 'project') { "entries": entries }
     # Step 3: Return to template
-    return render(request, entry, { "entries": entries })
+    return render(request, entry, )

@@ -23,7 +23,7 @@ manage_tags = 'task_app/manage_tags.html'
 
 # @login_required
 def get_tasks(request):
-    tasks = Task.objects.filter(users=request.user.user_id)
+    tasks = Task.objects.filter(users=request.user.pk)
 
     return render(request, task, {"tasks": tasks})
 
