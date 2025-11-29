@@ -1,7 +1,6 @@
-from django.contrib.auth import logout
+from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
 from task_app.models import Task
 from project_app.models import Project
 from .models import User, Notification
@@ -14,33 +13,34 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'password']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password'] #email is optional
 
 ### URL names to use for redirect function
-# dashboard
-# settings
+DASHBOARD = 'user_app:dashboard'
+SETTINGS = 'user:app:settings'
+LANDING_PAGE = 'landingpage'
 
 
 dashboard = 'user_app/dashboard.html'
 settings = 'user_app/settings.html' # limit to editing profile and showing info and logging out
 notifications = 'user_app/notifications.html' # pinafacebook na style, overlay
 
-create = 'user_app/sign_up.html'
+create = 'user_app/sign_up.html' # url naa sa dunzomanagement/urls.py
 edit = 'user_app/edit_user.html'
-delete = 'user_app/delete_user.html'
-user_logout = 'user_app/logout.html' # confirmation page for logging out
+delete = 'user_app/delete_user.html' # confirmation overlay
+user_logout = 'user_app/logout.html' #  confirmation overlay
 
-delete_notif = 'user_app/delete_notification.html' # confirmation page for deleting a notification
+delete_notif = 'user_app/delete_notification.html' # confirmation overlay
 
 def create_user(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            # Here you should hash the password
-            user.password_hash = make_password(form.cleaned_data['password'])
+            user.set_password(form.cleaned_data['password'])  # hash password properly
             user.save()
-            return redirect('dashboard')
+            login(request, user)  # log in the user immediately after signup
+            return redirect(DASHBOARD)  # redirect to dashboard
     else:
         form = UserForm()
 
@@ -69,9 +69,8 @@ def get_dashboard(request):
 
 # @login_required
 def get_settings(request):
-    # user = get_object_or_404(User, pk=request.user.pk) {"user": user,}
-
-    return render(request, settings, )
+    user = request.user
+    return render(request, settings, {'user': user})
 
 # @login_required
 def get_notifications(request):
@@ -100,7 +99,7 @@ def delete_notification(request, notification_id):
 
     if request.method == 'POST':
         notif.delete()
-        return redirect('dashboard')
+        return redirect(DASHBOARD)
 
     return render(request, delete_notif, {
         "notification": notif,
@@ -108,13 +107,13 @@ def delete_notification(request, notification_id):
 
 # @login_required
 def edit_user(request):
-    user = get_object_or_404(User, pk=request.user.pk)
+    user = request.user
 
     if request.method == 'POST':
         form = UserForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('get_settings')
+            return redirect(SETTINGS)
     else:
         form = UserForm(instance=user)
 
@@ -122,12 +121,12 @@ def edit_user(request):
 
 # @login_required
 def delete_user(request):
-    user = get_object_or_404(User, pk=request.user.pk)
+    user = request.user
 
     if request.method == 'POST':
         user.delete()
         logout(request)
-        return redirect(reverse('landingpage'))  # Redirect to home or login page after deletion
+        return redirect(LANDING_PAGE)  # Redirect to home or login page after deletion
 
     return render(request, delete, {
         "user": user,
@@ -137,6 +136,6 @@ def delete_user(request):
 def logout_user(request):
     if request.method == 'POST':
         logout(request)
-        return landing_page(request)
+        return redirect(LANDING_PAGE)
 
     return render(request, user_logout)

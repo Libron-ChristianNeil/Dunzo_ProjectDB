@@ -1,19 +1,23 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-class User(models.Model):
+
+class User(AbstractUser):
     user_id = models.AutoField(primary_key=True)
 
-    username = models.CharField(max_length=20)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
-    password_hash = models.CharField(max_length=255)
+    # username(unique), first_name, last_name are inherited from AbstractUser
+    # AbstractUser already has password, last_login, date_joined(created_at)
 
-    date_joined = models.DateTimeField(auto_now_add=True)
-    last_login = models.DateTimeField(auto_now=True)
+    email = models.EmailField(blank=True, null=True, unique=True) # it is optional
 
     def __str__(self):
         return self.username
+
+    # Override save method to handle empty email field
+    def save(self, *args, **kwargs):
+        if self.email == "":
+            self.email = None
+        super().save(*args, **kwargs)
 
 class Notification(models.Model):
     # TYPE_CHOICES = [

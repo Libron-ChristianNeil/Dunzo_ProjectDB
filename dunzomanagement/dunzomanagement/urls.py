@@ -19,6 +19,7 @@ from django.urls import path, include
 from . import views  # import views from main project
 from user_app import views as user_views
 
+# /
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', views.login_user, name='login'),
