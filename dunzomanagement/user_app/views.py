@@ -16,15 +16,19 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password']
 
+### URL names to use for redirect function
+# dashboard
+# settings
+
 
 dashboard = 'user_app/dashboard.html'
 settings = 'user_app/settings.html' # limit to editing profile and showing info and logging out
 notifications = 'user_app/notifications.html' # pinafacebook na style, overlay
 
-create = 'user_app/create_user.html'
+create = 'user_app/sign_up.html'
 edit = 'user_app/edit_user.html'
 delete = 'user_app/delete_user.html'
-user_logout = 'user_app/logout.html'
+user_logout = 'user_app/logout.html' # confirmation page for logging out
 
 delete_notif = 'user_app/delete_notification.html' # confirmation page for deleting a notification
 
@@ -36,7 +40,7 @@ def create_user(request):
             # Here you should hash the password
             user.password_hash = make_password(form.cleaned_data['password'])
             user.save()
-            return redirect('get_dashboard')
+            return redirect('dashboard')
     else:
         form = UserForm()
 
@@ -65,9 +69,7 @@ def get_dashboard(request):
 
 # @login_required
 def get_settings(request):
-    # user = get_object_or_404(User, pk=request.user.pk)c= {
-    #     "user": user,
-    # }
+    # user = get_object_or_404(User, pk=request.user.pk) {"user": user,}
 
     return render(request, settings, )
 
@@ -98,7 +100,7 @@ def delete_notification(request, notification_id):
 
     if request.method == 'POST':
         notif.delete()
-        return redirect('get_notifications')
+        return redirect('dashboard')
 
     return render(request, delete_notif, {
         "notification": notif,
@@ -135,6 +137,6 @@ def delete_user(request):
 def logout_user(request):
     if request.method == 'POST':
         logout(request)
-        return redirect(reverse('landingpage'))
+        return landing_page(request)
 
     return render(request, user_logout)

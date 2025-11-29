@@ -17,11 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views  # import views from main project
+from user_app import views as user_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', views.LoginView.as_view(), name='login'),
-    path('', views.LandingPageView.as_view(), name='landingpage'),
+    path('login/', views.login_user, name='login'),
+    path('signup/', user_views.create_user, name='signup'),
+    path('', views.landing_page, name='landingpage'),
     path('dashboard/', include('user_app.urls')),
     path('timeline/', include('timeline_app.urls')),
     path('calendar/', include('calendarevent_app.urls')),

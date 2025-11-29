@@ -1,18 +1,25 @@
-from django.shortcuts import render
-from django.views import View
+from django.contrib.auth import login, authenticate
+from django.shortcuts import render, redirect
 
-# def index_view(request):
-#     return render(request, 'index.html')
-#
-# def login_view(request):
-#     return render(request, 'login.html')
+log_in = 'main/login.html'
+landing = 'main/landingpage.html'
 
-class LoginView(View):
-    template_name = 'main/login.html'
-    def get(self, request):
-        return render(request, self.template_name)
+def login_user(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
 
-class LandingPageView(View):
-    template_name = 'main/landingpage.html'
-    def get(self, request):
-        return render(request, self.template_name)
+        user = authenticate(request, email=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('user_app:dashboard')
+        else:
+            return render(request, log_in, {
+                'error': 'Invalid email or password'
+            })
+
+    return render(request, log_in)
+
+def landing_page(request):
+    return render(request, landing)
