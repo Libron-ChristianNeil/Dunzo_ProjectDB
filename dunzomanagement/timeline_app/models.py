@@ -5,7 +5,6 @@ from user_app.models import User
 class TimelineEntry(models.Model):
     timeline_id = models.AutoField(primary_key=True)
     project = models.ForeignKey(Project,on_delete=models.CASCADE)
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
 
     action = models.CharField(max_length=255)
 
