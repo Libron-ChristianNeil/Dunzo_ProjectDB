@@ -12,7 +12,8 @@ function QuickProjectCard({projectName = 'Untitled', numTask = 0, percentage = 0
                         {percentage}% Complete
                     </span>
                 </div>
-            </div> 
+            </div>
+            
         </div>
     )
 }

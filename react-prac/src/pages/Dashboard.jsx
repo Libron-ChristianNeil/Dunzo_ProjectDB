@@ -3,8 +3,10 @@ import Statcard from '../components/dashboard-components/Statcard';
 import QuickTaskCard from '../components/dashboard-components/QuickTaskCard';
 import QuickProjectCard from '../components/dashboard-components/QuickProjectCard';
 import QuickNotifCard from '../components/dashboard-components/QuickNotifCard';
-function Dashboard() {
+import QuickDeadlineCard from '../components/dashboard-components/QuickDeadlineCard';
 
+
+function Dashboard() {
     // data para sa stat cards, add ra og value: 
     const statCardItems = [
         { icon: 'fas fa-tasks', title: 'Active Tasks', bgColor: 'bg-green-100', iconColor: 'text-green-500' },
@@ -59,7 +61,7 @@ function Dashboard() {
         // add more tasks as needed
     ];
 
-    // data for recent projects
+    // sample data for recent projects
 
     const recentProjects = [
         {
@@ -103,9 +105,66 @@ function Dashboard() {
             numTask: 12,
             percentage: 75
         }
-        
-
     ];
+
+    //sample data for notifications
+
+    const notifications = [
+        {
+            notificationContext: 'New comment on your task "App Dev"',
+            time: '2 hours ago'
+        },
+
+        {
+            notificationContext: 'New comment on your task "Django"',
+            time: '4 hours ago'
+        },
+    ]
+
+    //sample data for deadlines
+
+    const deadlines = [
+        {
+            deadlineContext: 'Deadline for "App Dev" project',
+            date: 'Dec 10, 2024'
+        },
+        {
+            deadlineContext: 'Deadline for "Django" project',
+            date: 'Dec 12, 2024'
+        },
+        
+        {
+            deadlineContext: 'Deadline for "App Dev" project',
+            date: 'Dec 10, 2024'
+        },
+        {
+            deadlineContext: 'Deadline for "Django" project',
+            date: 'Dec 12, 2024'
+        },
+
+        {
+            deadlineContext: 'Deadline for "App Dev" project',
+            date: 'Dec 10, 2024'
+        },
+        {
+            deadlineContext: 'Deadline for "Django" project',
+            date: 'Dec 12, 2024'
+        },
+
+        {
+            deadlineContext: 'Deadline for "App Dev" project',
+            date: 'Dec 10, 2024'
+        },
+        {
+            deadlineContext: 'Deadline for "Django" project',
+            date: 'Dec 12, 2024'
+        },
+        
+        {
+            deadlineContext: 'Deadline for "Project Report"',
+            date: 'Dec 15, 2024'
+        }
+    ]
 
     return (
         <div className='flex flex-col'>
@@ -170,7 +229,22 @@ function Dashboard() {
                     </div>
 
                     <div className='overflow-y-auto flex-1'>
-
+                        {notifications.length === 0 ? (
+                            <p className='text-gray-500'>No notifications.</p>
+                        ) : (
+                            <ul>
+                                {notifications.map((notif, index) => (
+                                    <li key={index}>
+                                        <QuickNotifCard
+                                            notificationContext={notif.notificationContext}
+                                            time={notif.time}
+                                        />
+                                    </li>
+                                ))}
+                                
+                            </ul>
+                        )}
+                        
                     </div>
                     
                     
@@ -205,13 +279,31 @@ function Dashboard() {
                     </div>
                     
                 </div>
-
+                
+                {/* upcoming deadlines */}
                 <div className='flex flex-col shrink-0 max-h-100 bg-white p-5 rounded-sm shadow-md'>
                     <div className='flex flex-row mb-3 justify-between'>
                         <span className='font-semibold text-xl'>Upcoming Deadlines</span>
                         <button className='bg-none  text-red-500 font-medium hover:underline cursor-pointer'>
                             View All
                         </button>
+                    </div>
+
+                    <div className='overflow-y-auto flex-1'>
+                        {deadlines.lenght == 0 ? (
+                            <p className='text-gray-500'>No upcoming deadlines.</p>
+                        ):(
+                            <ul>
+                                {deadlines.map((deadline, index) => (
+                                    <li KEY={index}>
+                                        <QuickDeadlineCard
+                                            deadlineContext={deadline.deadlineContext}
+                                            date={deadline.date}
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                 </div>
             </div>
