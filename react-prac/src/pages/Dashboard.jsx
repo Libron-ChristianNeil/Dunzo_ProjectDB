@@ -168,8 +168,8 @@ function Dashboard() {
 
     return (
         <div className='flex flex-col'>
-            <div className='bg-none '>
-                <h1>Dashboard</h1>
+            <div className='bg-none py-3'>
+                <h1 className='m-0 p-0 '>Dashboard</h1>
             </div>
             {/* stats */}
             <div className='grid gap-5 grid-cols-[repeat(auto-fill,minmax(240px,1fr))]'>
@@ -290,12 +290,12 @@ function Dashboard() {
                     </div>
 
                     <div className='overflow-y-auto flex-1'>
-                        {deadlines.lenght == 0 ? (
+                        {deadlines.length == 0 ? (
                             <p className='text-gray-500'>No upcoming deadlines.</p>
                         ):(
                             <ul>
                                 {deadlines.map((deadline, index) => (
-                                    <li KEY={index}>
+                                    <li key={index}>
                                         <QuickDeadlineCard
                                             deadlineContext={deadline.deadlineContext}
                                             date={deadline.date}
