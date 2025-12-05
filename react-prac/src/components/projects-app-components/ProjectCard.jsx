@@ -10,7 +10,7 @@ function ProjectCard({item}) {
         .toUpperCase();
     
     return (
-        <div className='flex flex-col rounded-xl bg-white p-6 min-w-100 gap-3 transition duration-300 hover:-translate-y-1 cursor-pointer'>
+        <div className='flex flex-col rounded-xl shadow bg-white p-6 min-w-100 gap-3 transition duration-300 hover:-translate-y-1 cursor-pointer'>
             {/* project icon */}
             <div className={`flex items-center justify-center bg-linear-to-br ${item.color} h-12 w-12 rounded-xl`}>
                 <span className='font-bold text-white text-xl'>{item.name[0]}</span>

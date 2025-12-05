@@ -1,13 +1,13 @@
 import React from 'react'
 import { useState } from 'react';
-import SelectOptions from '../components/projects-app-components/SelectOptions';
+import SelectOptions from '../components/SelectOptions';
 import ProjectCard from '../components/projects-app-components/ProjectCard';
 import ModalAddProject from '../components/projects-app-components/ModalAddProject';
 
 function Project() {
     // para dali ra ma edit lols XDXDXD
     const projectStatuses = [
-        { id: 0, name: 'All Projects' },
+        { id: 0, name: 'All' },
         { id: 1, name: 'Active' },
         { id: 2, name: 'Completed' },
         { id: 3, name: 'Archived' },
@@ -15,7 +15,7 @@ function Project() {
 
     //sample datas
     const teamList = [
-        {id: 0, name: 'All Teams'},
+        {id: 0, name: 'All'},
         {id: 1, name: 'ProjectDB'},
         {id: 2, name: 'Pyongyang AI Liberation Front'}
     ]
@@ -24,7 +24,7 @@ function Project() {
         { id: 0, name: 'Recent' },
         { id: 1, name: 'Name' },
         { id: 2, name: 'Progress' },
-        { id: 3, name: 'Due Date' },
+        { id: 3, name: 'Due Date' }
     ]
 
 
@@ -127,7 +127,7 @@ function Project() {
             {/* filter */}
             <div className='flex flex-row gap-3 my-2'>
                 <SelectOptions context={'Status'} items={projectStatuses}/>
-                <SelectOptions context={'Team'} items={teamList}/>
+                <SelectOptions context={'Project'} items={teamList}/>
                 <SelectOptions context={'Sort by'} items={sortList}/>
             </div>
 
