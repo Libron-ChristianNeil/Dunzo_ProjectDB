@@ -7,7 +7,7 @@ function SelectOptions({context, items}) {
     return (
         <div className='flex flex-row gap-2 items-center'>
             <span className='text-gray-600 font-semibold'>{context}:</span>
-            <select className='w-30 border-gray-200 border rounded-sm py-0.5 px-3 shadow-sm cursor-pointer'
+            <select className='w-30 border-gray-200 bg-white border rounded-sm py-0.5 px-3 shadow-sm cursor-pointer'
                     value={selected} onChange={(e) => setSelected(e.target.value)}>
                 {items.map((item) => (
                     <option className=' '

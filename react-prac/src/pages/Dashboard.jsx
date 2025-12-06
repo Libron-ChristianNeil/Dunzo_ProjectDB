@@ -1,4 +1,5 @@
 import React from 'react'
+import { sampleTaskData } from '../components/data/taskSampleData';
 import Statcard from '../components/dashboard-components/Statcard';
 import QuickTaskCard from '../components/dashboard-components/QuickTaskCard';
 import QuickProjectCard from '../components/dashboard-components/QuickProjectCard';
@@ -18,6 +19,7 @@ function Dashboard() {
     // sample data para sa quick task cards
     const quickTaskItems = [
         {
+            id: 1,
             taskName: 'Cram Djangoooo',
             dueDate: 'Dec 9',
             projectName: 'Django',
@@ -25,6 +27,7 @@ function Dashboard() {
         },
 
         {
+            id: 2,
             taskName: 'Project Report',
             dueDate: 'Dec 3',
             projectName: '',
@@ -32,27 +35,7 @@ function Dashboard() {
         },
 
         {
-            taskName: 'App Dev',
-            dueDate: 'Dec 15',
-            projectName: 'NavCIT',
-            priority: 'Medium'
-        },
-
-        {
-            taskName: 'Cram Djangoooo',
-            dueDate: 'Dec 9',
-            projectName: 'Django',
-            priority: 'High'
-        },
-
-        {
-            taskName: 'Project Report',
-            dueDate: 'Dec 3',
-            projectName: '',
-            priority: 'High'
-        },
-
-        {
+            id: 3,
             taskName: 'App Dev',
             dueDate: 'Dec 15',
             projectName: 'NavCIT',
@@ -197,18 +180,15 @@ function Dashboard() {
 
                     <div className='overflow-y-auto flex-1'>
                         {/* Checks if naa bay tasks */}
-                        {quickTaskItems.length === 0 ? (
+                        {sampleTaskData.length === 0 ? (
                             <p className='text-gray-500'>No tasks available.</p>
                         ) : (
                             <ul>
                             
-                            {quickTaskItems.map((task, index) => (
-                                <li key={index}>
+                            {sampleTaskData.map((task) => (
+                                <li key={task.id}>
                                     <QuickTaskCard
-                                        taskName={task.taskName}
-                                        dueDate={task.dueDate}
-                                        projectName={task.projectName}
-                                        priority={task.priority}
+                                        item={task}
                                     />
                                 </li>
                             ))}

@@ -26,7 +26,7 @@ function Sidebar({fullname = 'Josephs Victors', position = 'Product Manager'}) {
     // const isActive = location.pathname === item.path || (location.pathname === '/' && item.path === '/dashboard');
 
     return (
-        <div className='flex flex-col w-[260px] h-screen fixed top-0 left-0 bg-white overflow-hidden box-border shadow-custom z-1000'>
+        <div className='flex flex-col w-[260px] h-screen fixed top-0 left-0 bg-white overflow-hidden box-border shadow-custom z-100'>
             <div className='flex flex-row  items-center my-[25px]'>
                 <button className='border-none bg-transparent cursor-pointer ml-[22px]'>
                     <i className='fa-solid fa-bars-progress text-[1.8rem]' style={{ color: 'red' }}> </i>

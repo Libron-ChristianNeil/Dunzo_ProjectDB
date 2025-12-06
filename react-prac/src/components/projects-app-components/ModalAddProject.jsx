@@ -44,12 +44,7 @@ function ModalAddProject({onClose}) {
                     
                 </div>
 
-                <div className='flex flex-col gap-1'>
-                    <span className='font-semibold text-gray-900'>Project Description</span>
-                    <input  placeholder='Describe your project…'
-                            type='text'
-                            className='min-w-100 w-100% border border-gray-300 py-2 px-3 rounded-sm'/>
-                </div>
+                
 
                 <div className='flex flex-col gap-1'>
                     <span className='font-semibold text-gray-900'>Team</span>
