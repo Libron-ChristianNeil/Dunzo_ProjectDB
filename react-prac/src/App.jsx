@@ -1,31 +1,36 @@
 import React from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Sidebar from "./components/Sidebar"; 
+import { Routes, Route } from 'react-router-dom';
+import PageController from './pages/PageController'
+import LandingPage from './pages/LandingPage';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
-import Dashboard from './pages/Dashboard';
-import Project from './pages/Project';
-import Task from './pages/Task';
-import Timeline from './pages/Timeline';
-import Calendar from './pages/Calendar';
-import Settings from './pages/Settings';
+import Dashboard from "./pages/Dashboard";
+import Project from "./pages/Project";
+import Task from "./pages/Task";
+import Timeline from "./pages/Timeline";
+import Calendar from "./pages/Calendar";
+import Settings from "./pages/Settings";
 
 const App = () => {
-  return (
-    <div className='flex flex-row h-full w-full'>
-      <Sidebar/>
-      <div id='main-content' className='ml-[260px] w-screen h-screen bg-gray-100 px-4 py-5'>
-        <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/project" element={<Project />} />
-            <Route path="/task" element={<Task />} />
-            <Route path="/timeline" element={<Timeline />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/settings" element={<Settings />} />
-        </Routes>
-      </div>
+  return(
+    <div className='bg-white min-h-screen min-w-screen'>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        <Route path="/user" element={<PageController />}>
+          <Route index element={<Dashboard />} />           {/* /user */}
+          <Route path="dashboard" element={<Dashboard />} /> {/* /user/dashboard */}
+          <Route path="project" element={<Project />} />     {/* /user/project */}
+          <Route path="task" element={<Task />} />           {/* /user/task */}
+          <Route path="timeline" element={<Timeline />} />   {/* /user/timeline */}
+          <Route path="calendar" element={<Calendar />} />   {/* /user/calendar */}
+          <Route path="settings" element={<Settings />} />   {/* /user/settings */}
+        </Route>
+      </Routes>
     </div>
-    
   )
 }
 

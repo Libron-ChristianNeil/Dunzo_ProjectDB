@@ -36,7 +36,7 @@ function Sidebar({fullname = 'Josephs Victors', position = 'Product Manager'}) {
 
 
             <div className='flex flex-row gap-2 items-center px-6 py-3 cursor-pointer mt-auto mb-2 bg-gray-100 rounded-lg' onClick={() => navigate('/Settings')}>
-                <div className='flex fex-row items-center justify-center h-10 w-10 text-white font-bold bg-linear-to-br from-yellow-500 to-red-500 rounded-full'>
+                <div className='flex fex-row items-center justify-center h-10 w-10 text-white font-bold bg-red-500 rounded-full'>
                     {getInitials(fullname)}
                 </div>
                 <div className='flex flex-col'>
