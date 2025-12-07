@@ -58,7 +58,9 @@ function ProjectCard({item, setViewProject, setProjectItem}) {
             <div className='flex flex-col'>
                 <span className='text-gray-600 text-sm mb-1'>Overall Progress</span>
                 <div className='bg-gray-300 w-full h-2 rounded-full shadow-2xl'>
-                    <div className={`bg-green-500 h-2 rounded-full`} style={{ width: `${item.percentage}%` }}></div>
+                    <div className={` h-2 rounded-full
+                                    ${item.percentage == '100' ? 'bg-green-500' : 'bg-red-500'}`} 
+                        style={{ width: `${item.percentage}%` }}></div>
                 </div>
             </div>
                     

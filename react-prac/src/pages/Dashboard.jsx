@@ -13,10 +13,10 @@ function Dashboard() {
     const navigate = useNavigate()
     // data para sa stat cards, add ra og value: 
     const statCardItems = [
-        { icon: 'fas fa-tasks', title: 'Active Tasks', bgColor: 'bg-green-100', iconColor: 'text-green-500' },
-        { icon: 'fa-solid fa-folder', title: 'Projects', bgColor: 'bg-blue-100', iconColor: 'text-blue-500' },
-        { icon: 'fas fa-bell', title: 'Notifications', bgColor: 'bg-red-100', iconColor: 'text-red-500' },
-        { icon: 'fas fa-calendar-check', title: 'Upcoming Deadlines', bgColor: 'bg-yellow-100', iconColor: 'text-yellow-500' }
+        { icon: 'fas fa-tasks', title: 'Active Tasks', bgColor: 'bg-red-500', iconColor: 'text-white' },
+        { icon: 'fa-solid fa-folder', title: 'Projects', bgColor: 'bg-red-500', iconColor: 'text-white' },
+        { icon: 'fas fa-bell', title: 'Notifications', bgColor: 'bg-red-500', iconColor: 'text-white' },
+        { icon: 'fas fa-calendar-check', title: 'Upcoming Deadlines', bgColor: 'bg-red-500', iconColor: 'text-white' }
     ]
 
     //sample data for notifications
@@ -81,7 +81,7 @@ function Dashboard() {
     return (
         <div className='flex flex-col'>
             <div className='bg-none py-3'>
-                <h1 className='m-0 p-0 '>Dashboard</h1>
+                <h1 className='m-0 p-0'>Dashboard.</h1>
             </div>
             {/* stats */}
             <div className='grid gap-5 grid-cols-[repeat(auto-fill,minmax(240px,1fr))]'>
@@ -99,7 +99,7 @@ function Dashboard() {
             {/* grid */}
             <div className='mt-5 my-3 grid gap-4 lg:grid-cols-[2fr_1fr] max-sm:grid-cols-1 '>
                 {/* tasks */}
-                <div className='flex flex-col bg-white p-5 rounded-sm shadow-md max-h-100 shrink-0'>
+                <div className='flex flex-col bg-white p-5 rounded-sm shadow-sm max-h-100 shrink-0'>
                     <div className='flex flex-row mb-3 justify-between'>
                         <span className='font-semibold text-xl'>My Task</span>
                         <button className='bg-none font-medium text-red-500 hover:underline cursor-pointer'
@@ -129,7 +129,7 @@ function Dashboard() {
                 </div>
 
                 {/* Notifications */}
-                <div className='flex flex-col shrink-0 max-h-100 bg-white p-5 rounded-sm shadow-md'>
+                <div className='flex flex-col shrink-0 max-h-100 bg-white p-5 rounded-sm shadow-sm'>
                     <div className='flex flex-row mb-3'>
                         <span className='font-semibold text-xl'>Notifications</span>
                     </div>
@@ -153,7 +153,7 @@ function Dashboard() {
                 </div>
                 
                 {/* projects */}
-                <div className='flex flex-col shrink-0 max-h-100 bg-white p-5 rounded-sm shadow-md'>
+                <div className='flex flex-col shrink-0 max-h-100 bg-white p-5 rounded-sm shadow-sm'>
                     <div className='flex flex-row mb-3 justify-between'>
                         <span className='font-semibold text-xl'>Recent Projects</span>
                         <button className='bg-none  text-red-500 font-medium hover:underline cursor-pointer'
@@ -179,7 +179,7 @@ function Dashboard() {
                 </div>
                 
                 {/* upcoming deadlines */}
-                <div className='flex flex-col shrink-0 max-h-100 bg-white p-5 rounded-sm shadow-md'>
+                <div className='flex flex-col shrink-0 max-h-100 bg-white p-5 rounded-sm shadow-sm'>
                     <div className='flex flex-row mb-3 justify-between'>
                         <span className='font-semibold text-xl'>Upcoming Deadlines</span>
                         <button className='bg-none  text-red-500 font-medium hover:underline cursor-pointer'

@@ -40,7 +40,7 @@ function Project() {
 
             <div className='sticky top-0 z-100 bg-gray-100 py-3'>
                 <div className='flex flex-row justify-between items-center bg-none'>
-                    <h1 className='m-0 p-0'>Projects</h1>
+                    <h1 className='m-0 p-0'>Projects.</h1>
                     <button className='bg-red-500 mr-4 py-1.5 px-4 text-white font-medium rounded-full cursor-pointer'
                             onClick={() => setOpenAddProject(true)}>
                         <span className='mr-2'><i class="fa-solid fa-plus"></i></span>

@@ -35,7 +35,7 @@ function Task() {
 
             <div className='sticky top-0 z-100 bg-gray-100 py-3'>
                 <div className='flex flex-row justify-between items-center bg-none'>
-                    <h1 className='m-0 p-0'>Tasks</h1>
+                    <h1 className='m-0 p-0'>Tasks.</h1>
                     <button className='bg-red-500 mr-4 py-1.5 px-4 text-white font-medium rounded-full cursor-pointer'
                             onClick={()=>setOpenAddTask(true)}
                         >
