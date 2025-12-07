@@ -1,26 +1,29 @@
 import React from 'react'
-
-function ProjectCard({item}) {
-
-    const getInitials = (name) =>
-        name
-        .split(' ')
-        .map((part) => part[0])
-        .join('')
-        .toUpperCase();
+import { getInitials } from '../../utils/getInitials';
+function ProjectCard({item, setViewProject, setProjectItem}) {
     
     return (
         <div className='flex flex-col rounded-xl shadow bg-white p-6 min-w-100 gap-3 transition duration-300 hover:-translate-y-1 cursor-pointer'>
             {/* project icon */}
-            <div className={`flex items-center justify-center bg-linear-to-br ${item.color} h-12 w-12 rounded-xl`}>
-                <span className='font-bold text-white text-xl'>{item.name[0]}</span>
+            <div className='flex flex-row justify-between'>
+                <div style={{ backgroundColor: item.color }} 
+                    className='flex items-center justify-center bg-linear-to-br h-12 w-12 rounded-xl'>
+                    <span className='font-bold text-white text-xl'>{item.name[0]}</span>
+                </div>
+
+                <button onClick={() =>{
+                        setViewProject(true);
+                        setProjectItem(item);
+                    }}>
+                    <i className='fas fa-ellipsis-v w-4'></i>
+                </button>
+                
             </div>
+            
 
             {/* project name */}
-            <div className='flex flex-row justify-between'>
-                <span className='font-semibold text-gray-900 text-md'>{item.name}</span>
-                <i className='fas fa-ellipsis-v'></i>
-            </div>
+            <span className='font-semibold text-gray-900 text-md'>{item.name}</span>
+            
 
             {/* dates */}
             <div className='text-sm text-gray-700'>
@@ -66,7 +69,8 @@ function ProjectCard({item}) {
                         {item.members.slice(0, 5).map((mem, index) => (
                             <li
                                 key={mem.id}
-                                className={`flex items-center justify-center ${mem.avatarColor} rounded-full h-9 w-9 text-white text-sm font-semibold border-white border-2 transition duration-300 hover:-translate-y-1 cursor-pointer
+                                style={{ backgroundColor: mem.avatarColor }}
+                                className={`flex items-center justify-center rounded-full h-9 w-9 text-white text-sm font-semibold border-white border-2 transition duration-300 hover:-translate-y-1 cursor-pointer
                                             ${index !== 0 ? 'ml-[-7px]' : ''}`}>
                                 {getInitials(mem.name)}
                             </li>

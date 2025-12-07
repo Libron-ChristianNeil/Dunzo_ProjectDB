@@ -1,5 +1,7 @@
 import React from 'react'
-import { sampleTaskData } from '../components/data/taskSampleData';
+import { sampleTaskData } from '../data/taskSampleData';
+import { projectSampleData } from '../data/projectSampleData';
+import { useNavigate } from 'react-router-dom';
 import Statcard from '../components/dashboard-components/Statcard';
 import QuickTaskCard from '../components/dashboard-components/QuickTaskCard';
 import QuickProjectCard from '../components/dashboard-components/QuickProjectCard';
@@ -8,6 +10,7 @@ import QuickDeadlineCard from '../components/dashboard-components/QuickDeadlineC
 
 
 function Dashboard() {
+    const navigate = useNavigate()
     // data para sa stat cards, add ra og value: 
     const statCardItems = [
         { icon: 'fas fa-tasks', title: 'Active Tasks', bgColor: 'bg-green-100', iconColor: 'text-green-500' },
@@ -15,80 +18,6 @@ function Dashboard() {
         { icon: 'fas fa-bell', title: 'Notifications', bgColor: 'bg-red-100', iconColor: 'text-red-500' },
         { icon: 'fas fa-calendar-check', title: 'Upcoming Deadlines', bgColor: 'bg-yellow-100', iconColor: 'text-yellow-500' }
     ]
-
-    // sample data para sa quick task cards
-    const quickTaskItems = [
-        {
-            id: 1,
-            taskName: 'Cram Djangoooo',
-            dueDate: 'Dec 9',
-            projectName: 'Django',
-            priority: 'High'
-        },
-
-        {
-            id: 2,
-            taskName: 'Project Report',
-            dueDate: 'Dec 3',
-            projectName: '',
-            priority: 'High'
-        },
-
-        {
-            id: 3,
-            taskName: 'App Dev',
-            dueDate: 'Dec 15',
-            projectName: 'NavCIT',
-            priority: 'Medium'
-        }
-        // add more tasks as needed
-    ];
-
-    // sample data for recent projects
-
-    const recentProjects = [
-        {
-            projectName: 'Django',
-            color: 'bg-green-500',
-            numTask: 12,
-            percentage: 75
-        },
-
-        {
-            projectName: 'NavCIT',
-            color: 'bg-yellow-500',
-            numTask: 20,
-            percentage: 75
-        },
-
-        {
-            projectName: 'Django',
-            color: 'bg-green-500',
-            numTask: 12,
-            percentage: 75
-        },
-
-        {
-            projectName: 'Django',
-            color: 'bg-green-500',
-            numTask: 12,
-            percentage: 75
-        },
-
-        {
-            projectName: 'Django',
-            color: 'bg-green-500',
-            numTask: 12,
-            percentage: 75
-        },
-
-        {
-            projectName: 'Django',
-            color: 'bg-green-500',
-            numTask: 12,
-            percentage: 75
-        }
-    ];
 
     //sample data for notifications
 
@@ -173,7 +102,8 @@ function Dashboard() {
                 <div className='flex flex-col bg-white p-5 rounded-sm shadow-md max-h-100 shrink-0'>
                     <div className='flex flex-row mb-3 justify-between'>
                         <span className='font-semibold text-xl'>My Task</span>
-                        <button className='bg-none font-medium text-red-500 hover:underline cursor-pointer'>
+                        <button className='bg-none font-medium text-red-500 hover:underline cursor-pointer'
+                                onClick={()=> navigate('/task')}>
                             View All
                         </button>
                     </div>
@@ -184,7 +114,6 @@ function Dashboard() {
                             <p className='text-gray-500'>No tasks available.</p>
                         ) : (
                             <ul>
-                            
                             {sampleTaskData.map((task) => (
                                 <li key={task.id}>
                                     <QuickTaskCard
@@ -201,11 +130,8 @@ function Dashboard() {
 
                 {/* Notifications */}
                 <div className='flex flex-col shrink-0 max-h-100 bg-white p-5 rounded-sm shadow-md'>
-                    <div className='flex flex-row mb-3 justify-between'>
+                    <div className='flex flex-row mb-3'>
                         <span className='font-semibold text-xl'>Notifications</span>
-                        <button className='bg-none  text-red-500 font-medium hover:underline cursor-pointer'>
-                            View All
-                        </button>
                     </div>
 
                     <div className='overflow-y-auto flex-1'>
@@ -221,37 +147,29 @@ function Dashboard() {
                                         />
                                     </li>
                                 ))}
-                                
                             </ul>
-                        )}
-                        
-                    </div>
-                    
-                    
+                        )}  
+                    </div> 
                 </div>
                 
                 {/* projects */}
                 <div className='flex flex-col shrink-0 max-h-100 bg-white p-5 rounded-sm shadow-md'>
                     <div className='flex flex-row mb-3 justify-between'>
                         <span className='font-semibold text-xl'>Recent Projects</span>
-                        <button className='bg-none  text-red-500 font-medium hover:underline cursor-pointer'>
+                        <button className='bg-none  text-red-500 font-medium hover:underline cursor-pointer'
+                                onClick={()=> navigate('/project')}>
                             View All
                         </button>
                     </div>
                     
                     <div className='overflow-y-auto flex-1'>
-                        {recentProjects.length === 0 ? (
-                            <p className='text-gray-500'>No recent projects available.</p>
+                        {projectSampleData.length === 0 ? (
+                            <p className='text-gray-500'>No projects available.</p>
                         ) : (
                             <ul>
-                                {recentProjects.map((project, index) => (
+                                {projectSampleData.map((project, index) => (
                                     <li key={index}>
-                                        <QuickProjectCard
-                                            projectName={project.projectName}
-                                            numTask={project.numTask}
-                                            percentage={project.percentage}
-                                            projectColor={project.color}
-                                        />
+                                        <QuickProjectCard item={project}/>
                                     </li>
                                 ))}
                             </ul>
@@ -264,7 +182,8 @@ function Dashboard() {
                 <div className='flex flex-col shrink-0 max-h-100 bg-white p-5 rounded-sm shadow-md'>
                     <div className='flex flex-row mb-3 justify-between'>
                         <span className='font-semibold text-xl'>Upcoming Deadlines</span>
-                        <button className='bg-none  text-red-500 font-medium hover:underline cursor-pointer'>
+                        <button className='bg-none  text-red-500 font-medium hover:underline cursor-pointer'
+                                onClick={()=> navigate('/task')}>
                             View All
                         </button>
                     </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
-import { projectSampleData } from '../data/projectSampleData'
+import { projectSampleData } from '../../data/projectSampleData'
 function ModalAddTask({onClose}) {
 
     const [selected, setSelected] = useState(projectSampleData[0]?.id || "");

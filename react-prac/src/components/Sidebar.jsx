@@ -1,28 +1,13 @@
 import React from 'react'
 // import { useState } from 'react'
 import { useNavigate, useLocation} from 'react-router-dom';
+import { menuItems } from '../data/menuItems';
+import { getInitials } from '../utils/getInitials'; // helper function to get initials from fullname
 
 function Sidebar({fullname = 'Josephs Victors', position = 'Product Manager'}) {
     // const [activeTab, setActiveTab] = useState('Dashboard');
     const navigate = useNavigate();
     const location = useLocation();
-
-    const menuItems = [
-        { name: 'Dashboard', icon: 'fa-chart-line', path: '/dashboard' },
-        { name: 'Project', icon: 'fa-folder', path: '/project' },
-        { name: 'Task', icon: 'fa-list-check', path: '/task' },
-        { name: 'Timeline', icon: 'fa-bars-staggered', path: '/timeline' },
-        { name: 'Calendar', icon: 'fa-calendar', path: '/calendar' },
-    ];
-
-    // helper function to get initials from fullname
-    const getInitials = (name) =>
-        name
-        .split(' ')
-        .map((part) => part[0])
-        .join('')
-        .toUpperCase();
-        
     // const isActive = location.pathname === item.path || (location.pathname === '/' && item.path === '/dashboard');
 
     return (

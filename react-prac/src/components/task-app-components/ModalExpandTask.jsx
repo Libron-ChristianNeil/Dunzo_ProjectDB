@@ -1,26 +1,15 @@
 import React from 'react'
-
+import { getInitials } from '../../utils/getInitials';
 function ModalExpandTask({item, onClose}) {
-
-    const getInitials = (name) =>
-        name
-        .split(' ')
-        .map((part) => part[0])
-        .join('')
-        .toUpperCase();
-
-
     return (
         <div className='flex fixed justify-center overflow-y-scroll inset-0 z-1000 bg-zinc-300/80'>
             <div className='flex flex-row my-auto min-h-100 h-fit rounded-2xl shadow'>
-                <div className='flex flex-col w-160 py-5 px-5 bg-white gap-1 transition duration-300'
-                    onClick={() => setView(true)}>
+                <div className='flex flex-col w-160 py-5 px-5 bg-white gap-1 transition duration-300'>
                     <div className='flex flex-row justify-between'>
                         <div className='flex flex-row gap-2'>
                             <input type='checkbox'/>
                             <span className='text-xl text-gray-900 font-semibold'>{item.title}</span>
                         </div>
-
                         <button>
                             <i className="fa-regular fa-pen-to-square"></i>
                         </button>
@@ -99,7 +88,7 @@ function ModalExpandTask({item, onClose}) {
                     </div>
 
                 </div>
-
+                {/* comment section */}
                 <div className='flex flex-col w-120 py-5 px-5 bg-gray-100'>
                     <div className='flex flex-row justify-between gap-2 '>
                         <div className='flex flex-row items-center gap-2 text-md font-medium text-gray-900'>

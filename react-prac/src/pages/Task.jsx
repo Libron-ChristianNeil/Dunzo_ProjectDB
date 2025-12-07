@@ -1,13 +1,13 @@
 import React from 'react'
 import { useState } from 'react';
-import { sampleTaskData } from '../components/data/taskSampleData';
+import { sampleTaskData } from '../data/taskSampleData';
+import { projectSampleData } from '../data/projectSampleData';
 import SelectOptions from '../components/SelectOptions';
 import TaskCard from '../components/task-app-components/TaskCard';
 import ModalExpandTask from '../components/task-app-components/ModalExpandTask';
 import ModalAddTask from '../components/task-app-components/ModalAddTask';
 function Task() {
     
-
     // para dali ra ma edit lols XDXDXD
     const taskStatus = [
         { id: 0, name: 'All' },
@@ -23,16 +23,9 @@ function Task() {
         { id: 2, name: 'Due Date' }
     ]
 
-    //sample datas
-    const projectList = [
-        {id: 0, name: 'All'},
-        {id: 1, name: 'ProjectDB'},
-        {id: 2, name: 'Pyongyang AI Liberation Front'}
-    ]
-
-    const [view, setView] = useState(false)
-    const [taskItem, setTaskItem] = useState(null)
-    const [openAddTask, setOpenAddTask] = useState(false)
+    const [view, setView] = useState(false) //for sa view task pero ari ibutang kay mao man ang parent
+    const [taskItem, setTaskItem] = useState(null) // para sa pagselect sa item ex(task[0] <-- mao ni i display)
+    const [openAddTask, setOpenAddTask] = useState(false) // para sa modal sa add task
 
 
     return (
@@ -54,7 +47,7 @@ function Task() {
                 {/* filter */}
                 <div className='flex flex-row gap-3 my-2'>
                     <SelectOptions context={'Status'} items={taskStatus}/>
-                    <SelectOptions context={'Project'} items={projectList}/>
+                    <SelectOptions context={'Project'} items={projectSampleData}/>
                     <SelectOptions context={'Sort by'} items={sortList}/>
                 </div>
             </div>

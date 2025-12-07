@@ -1,8 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 
-function SelectOptions({context, items}) {
-                                                // pra pina kauna sa array ipakita lol
+function SelectOptions({context, items}) {                                         // pra pina kauna sa array ipakita lol
     const [selected, setSelected] = useState(items.length > 0 ? items[0].id : '');
     return (
         <div className='flex flex-row gap-2 items-center'>
