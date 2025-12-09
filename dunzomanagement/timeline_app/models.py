@@ -4,7 +4,7 @@ from user_app.models import User
 from django.utils import timezone
 
 class TimelineEntry(models.Model):
-    timeline_id = models.IntegerField(primary_key=True, null=False)
+    timeline_id = models.AutoField(primary_key=True)
     project_id = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
