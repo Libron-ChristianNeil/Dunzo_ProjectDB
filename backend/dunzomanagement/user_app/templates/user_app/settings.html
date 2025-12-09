@@ -1,0 +1,292 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dunzo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'user_app/css/settings-styles.css' %}">
+
+</head>
+<body>
+    <div class="outer-container">
+        <!-- sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <button class="toggleSidebar">
+                    <i class="fa-solid fa-bars-progress"></i>
+                </button>
+                <p>Dunzo</p>
+            </div>
+
+            <!-- navigation links -->
+            <ul class="navigation">
+                <li class="nav-item">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <a href="{% url 'user_app:dashboard' %}">Dashboard</a>
+                    
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-folder"></i>
+                    <a href="{% url 'project_app:project' %}">Project</a>
+                    
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-list-check"></i>
+                    <a href="{% url 'task_app:task' %}">Task</a>
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                    <a href="{% url 'timeline_app:timeline' %}">Timeline</a>
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-calendar"></i>
+                    <a href="{% url 'calendarevent_app:calendar' %}">Calendar</a>
+                </li>
+
+                <li class="nav-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <a href="{% url 'user_app:settings' %}">Settings</a>
+                </li>
+            </ul>
+
+             <!-- User SECTION-->
+            <div class="user-profile">
+                <div class="user-avatar">
+                    JV
+                </div>
+
+                <div class="user-info">
+                    <p class="user-name">Josephs Victors</p>
+                    <p class="user-role">Student</p>
+                </div>
+            </div>
+
+        </div>
+        
+        <!-- main section --> 
+        <div class="main-section" id="main-content">
+            <div class="top-bar">
+        <div class="top-left">
+            <h1 class="page-title">Settings</h1>
+        </div>
+            </div> 
+
+            <div class="settings-container">
+                <div class="settings-layout">
+                    <!-- Settings Menu -->
+                    <div class="settings-menu">
+                        <div class="settings-menu-item active" onclick="showSection('profile')">
+                            <i class="fas fa-user"></i>
+                            <span>Profile</span>
+                        </div>
+                        <div class="settings-menu-item" onclick="showSection('preferences')">
+                            <i class="fas fa-sliders-h"></i>
+                            <span>Preferences</span>
+                        </div>
+                        <div class="settings-menu-item" onclick="showSection('notifications')">
+                            <i class="fas fa-bell"></i>
+                            <span>Notifications</span>
+                        </div>
+                        <div class="settings-menu-item" onclick="showSection('security')">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Security</span>
+                        </div>
+                        <div class="settings-menu-item" onclick="showSection('team')">
+                            <i class="fas fa-users"></i>
+                            <span>Team</span>
+                        </div>
+                    </div>
+
+                    <!-- Settings Content -->
+                    <div class="settings-content">
+                        <!-- Profile Section -->
+                        <div class="settings-section" id="profile-section">
+                            <div class="section-header">
+                                <h2 class="section-title">Profile Settings</h2>
+                                <p class="section-description">Manage your personal information and public profile</p>
+                            </div>
+
+                            <div class="profile-header">
+                                <div class="profile-avatar-large">
+                                    JV
+                                    <div class="avatar-upload">
+                                        <i class="fas fa-camera"></i>
+                                    </div>
+                                </div>
+                                <div class="profile-info">
+                                    <h3 class="profile-name">Josephs Victors</h3>
+                                    <p class="profile-email">josephs.victors@company.com</p>
+                                    <span class="badge">Administrator</span>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-field">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" class="form-input" value="Josephs">
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-input" value="Victors">
+                                </div>
+                                <div class="form-field full-width">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" class="form-input" value="osephs.victors@company.com">
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-input" value="+67 696 767 9669">
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label">Job Title</label>
+                                    <input type="text" class="form-input" value="Project Manager">
+                                </div>
+                                <div class="form-field full-width">
+                                    <label class="form-label">Bio</label>
+                                    <textarea class="form-input form-textarea" placeholder="Tell us about yourself...">Experienced project manager with a passion for building great products and leading amazing teams.</textarea>
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label">Location</label>
+                                    <input type="text" class="form-input" value="Consolacion, Cebu">
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label">Time Zone</label>
+                                    <select class="form-select">
+                                        <option>Pacific Time (PT)</option>
+                                        <option>Mountain Time (MT)</option>
+                                        <option>Central Time (CT)</option>
+                                        <option>Eastern Time (ET)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn btn-primary">Save Changes</button>
+                                <button class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </div>
+
+                        <!-- Notifications Section -->
+                        <div class="settings-section">
+                            <div class="section-header">
+                                <h2 class="section-title">Notification Preferences</h2>
+                                <p class="section-description">Manage how you receive notifications</p>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Email Notifications</h4>
+                                    <p>Receive email updates about your projects and tasks</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Task Assignments</h4>
+                                    <p>Get notified when you're assigned to a new task</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Project Updates</h4>
+                                    <p>Receive updates about projects you're working on</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Comments & Mentions</h4>
+                                    <p>Get notified when someone mentions you or comments</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Weekly Summary</h4>
+                                    <p>Receive a weekly summary of your activity</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Security Section -->
+                        <div class="settings-section">
+                            <div class="section-header">
+                                <h2 class="section-title">Security Settings</h2>
+                                <p class="section-description">Manage your password and security preferences</p>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-field full-width">
+                                    <label class="form-label">Current Password</label>
+                                    <input type="password" class="form-input" placeholder="Enter current password">
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label">New Password</label>
+                                    <input type="password" class="form-input" placeholder="Enter new password">
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label">Confirm Password</label>
+                                    <input type="password" class="form-input" placeholder="Confirm new password">
+                                </div>
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn btn-primary">Update Password</button>
+                            </div>
+
+                            <div class="setting-item" style="margin-top: 32px;">
+                                <div class="setting-info">
+                                    <h4>Two-Factor Authentication</h4>
+                                    <p>Add an extra layer of security to your account</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="danger-zone">
+                                <h3 class="danger-title">Danger Zone</h3>
+                                <p class="danger-description">Once you delete your account, there is no going back. Please be certain.</p>
+                                <button class="btn btn-danger">Delete Account</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    
+</script>
+
+</html>
