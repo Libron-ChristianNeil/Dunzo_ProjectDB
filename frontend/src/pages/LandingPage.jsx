@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react'
 import Login from './Login';
 import Register from './Register';
+
 function LandingPage() {
 
     const navigate = useNavigate();
@@ -14,6 +14,7 @@ function LandingPage() {
         setLogin(true);
         setRegister(false);
     }
+    // onLogin={openLogin}
 
     const openRegister = () => {
         setRegister(true);
@@ -24,7 +25,7 @@ function LandingPage() {
     return (
         <div className='flex flex-col items-center inset-0 w-screen min-h-screen'>
             {/* Header kuno */}
-            {register && <Register onClose={()=>setRegister(false)}/>}
+            {register && <Register onClose={()=>setRegister(false)} onLogin={openLogin}/>}
             {login && <Login onClose={()=>setLogin(false)} onRegister={openRegister}/>}
             <div className='bg-white max-w-[1200px] min-h-screen px-10 pt-8 '>
                 <div className='flex flex-row justify-between'>
@@ -208,4 +209,4 @@ function LandingPage() {
     )
 }
 
-export default LandingPage
+export default LandingPage;

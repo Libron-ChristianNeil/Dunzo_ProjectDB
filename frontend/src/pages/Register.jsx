@@ -1,8 +1,35 @@
-import React from 'react'
+import React, {useState} from 'react'
 import register_illustration from '../assets/register_illustration.jpg';
 import { useNavigate } from 'react-router-dom'
+import { registerUser} from '../https';
+
 function Register() {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [errorMsg, setErrorMsg] = useState('');
+
     const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // 1. Client-side Validation
+        if (password !== confirmPassword) {
+            setErrorMsg("Passwords do not match.");
+            return;
+        }
+
+        // Call the backend
+        const data = await registerUser(username, password);
+
+        if (data.success) {
+            console.log("Register Success!", data);
+            navigate('/user/dashboard');
+        } else {
+            setErrorMsg(data.error || "Register failed.");
+        }
+    };
     return (
         <div className='flex fixed items-center justify-center overflow-y-scroll inset-0 z-1000 bg-zinc-200'>
 
@@ -25,56 +52,73 @@ function Register() {
 
                     <span className='text-gray-600 font-medium text-md'>Create your account to manage projects<br/> and stay on track.</span>
 
-                    <div className='flex flex-col my-5 font-medium text-gray-900 gap-3'>
+                    {/* ERROR MESSAGE BOX */}
+                    {errorMsg && (
+                        <div className="mt-2 p-2 bg-red-100 border border-red-400 text-red-700 text-sm rounded">
+                            {errorMsg}
+                        </div>
+                    )}
+
+                    {/* FORM START */}
+                    <form onSubmit={handleSubmit} className='flex flex-col my-5 font-medium text-gray-900 gap-3'>
+
+                        {/* USERNAME */}
                         <div className='flex flex-col gap-1'>
                             <p>Username</p>
-
-                            <input type='text'
+                            <input
+                                type='text'
                                 placeholder='Create a username'
-                                className='w-100 py-2 pl-2 border border-gray-400 rounded-sm'/>
+                                className='w-100 py-2 pl-2 border border-gray-400 rounded-sm'
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                            />
                         </div>
 
-                        <div className='flex flex-col gap-1'>
-                            <p>Email</p>
-
-                            <input type='email'
-                                placeholder='Enter your email'
-                                className='w-100 py-2 pl-2 border border-gray-400 rounded-sm'/>
-                        </div>
-
+                        {/* PASSWORD */}
                         <div className='flex flex-col gap-1'>
                             <p>Password</p>
-                            <div>
-                                <input type='Password'
+                            <div className="relative">
+                                <input
+                                    type='password'
                                     placeholder='Create a strong password'
-                                    className='w-100 py-2 pl-2 border border-gray-400 rounded-sm'/>
-                                <button className='-ml-10 cursor-pointer p-2'>
+                                    className='w-100 py-2 pl-2 border border-gray-400 rounded-sm'
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                                <button type="button" className='absolute right-2 top-2 text-gray-500 cursor-pointer'>
                                     <i className="fa-regular fa-eye"></i>
                                 </button>
                             </div>
                         </div>
 
+                        {/* CONFIRM PASSWORD */}
                         <div className='flex flex-col gap-1'>
                             <p>Confirm Password</p>
-                            <div>
-                                <input type='Password'
+                            <div className="relative">
+                                <input
+                                    type='password'
                                     placeholder='Confirm your password'
-                                    className='w-100 py-2 pl-2 border border-gray-400 rounded-sm'/>
-                                <button className='-ml-10 cursor-pointer p-2'>
+                                    className='w-100 py-2 pl-2 border border-gray-400 rounded-sm'
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                />
+                                <button type="button" className='absolute right-2 top-2 text-gray-500 cursor-pointer'>
                                     <i className="fa-regular fa-eye"></i>
                                 </button>
                             </div>
                         </div>
 
-                    </div>
-                    
-
-                    
-
-                    <button className='bg-red-500 text-md py-2 my-4 rounded-xl font-semibold text-white cursor-pointer transition duration-300 hover:-translate-y-1'
-                        onClick={() => navigate('/user/dashboard')}>
-                        Register
-                    </button>
+                        <button
+                            type="submit"
+                            className='bg-red-500 text-md py-2 my-4 rounded-xl font-semibold text-white cursor-pointer transition duration-300 hover:-translate-y-1'
+                        >
+                            Register
+                        </button>
+                    </form>
+                    {/* FORM END */}
 
                     <div className='flex flex-row gap-1 justify-center'>
                         <p className='text-sm font-medium text-gray-700'>Already have an account?</p>
@@ -94,4 +138,4 @@ function Register() {
     )
 }
 
-export default Register
+export default Register;

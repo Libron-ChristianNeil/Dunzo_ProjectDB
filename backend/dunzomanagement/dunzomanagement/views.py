@@ -1,7 +1,6 @@
 import json
 from django.contrib.auth import login, authenticate, get_user_model
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
 User = get_user_model()
@@ -50,6 +49,3 @@ def login_user(request):
             }, status=401)
 
     return JsonResponse({'error': 'Method not allowed'}, status=405)
-
-def landing_page(request):
-    return render(request)

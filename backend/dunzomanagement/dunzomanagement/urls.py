@@ -20,15 +20,14 @@ from . import views
 from user_app import views as user_views
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
-    path('', views.landing_page, name='landing'),
+    path('admin/', admin.site.urls),
     path('login/', views.login_user, name='login'),
     path('register/', user_views.create_user, name='signup'),
-    path('dashboard/', include('user_app.urls')),
-    path('timeline/', include('timeline_app.urls')),
-    path('calendar/', include('calendarevent_app.urls')),
-    path('project/', include('project_app.urls')),
-    path('task/', include('task_app.urls')),
+    path('user/dashboard/', include('user_app.urls')),
+    path('user/timeline/', include('timeline_app.urls')),
+    path('user/calendar/', include('calendarevent_app.urls')),
+    path('user/project/', include('project_app.urls')),
+    path('user/task/', include('task_app.urls')),
 ]
 
 

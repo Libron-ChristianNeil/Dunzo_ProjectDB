@@ -9,14 +9,14 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('calendarevent_app', '0001_initial'),
-        ('project_app', '0001_initial'),
+        ('calendarevent_app', '0002_initial'),
+        ('task_app', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='calendarevent',
-            name='project',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='project_app.project'),
+            name='task',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='task_app.task'),
         ),
     ]

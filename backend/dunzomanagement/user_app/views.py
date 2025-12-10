@@ -1,7 +1,10 @@
+import json
 from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from task_app.models import Task
+from django.views.decorators.csrf import csrf_exempt
+
 from project_app.models import Project
 from .models import User, Notification
 from calendarevent_app.models import CalendarEvent
@@ -15,38 +18,43 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password'] #email is optional
 
-### URL names to use for redirect function
-DASHBOARD = 'user_app:dashboard'
-SETTINGS = 'user:app:settings'
-LANDING_PAGE = 'landingpage'
+def decode_body(request):
+    try:
+        return json.loads(request.body.decode('utf-8'))
+    except json.JSONDecodeError:
+        return {}
 
-
-dashboard = 'user_app/dashboard.html'
-settings = 'user_app/settings.html' # limit to editing profile and showing info and logging out
-notifications = 'user_app/notifications.html' # pinafacebook na style, overlay
-
-create = 'user_app/sign_up.html' # url naa sa dunzomanagement/urls.py
-edit = 'user_app/edit_user.html'
-delete = 'user_app/delete_user.html' # confirmation overlay
-user_logout = 'user_app/logout.html' #  confirmation overlay
-
-delete_notif = 'user_app/delete_notification.html' # confirmation overlay
-
+@csrf_exempt
 def create_user(request):
     if request.method == 'POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])  # hash password properly
-            user.save()
-            login(request, user)  # log in the user immediately after signup
-            return redirect(DASHBOARD)  # redirect to dashboard
-    else:
-        form = UserForm()
+        data = decode_body(request)
 
-    return render(request, create, {
-        'form': form,
-    })
+        username = data.get('username')
+        password = data.get('password')
+
+        # 1. Basic Validation
+        if not username or not password:
+            return JsonResponse({'success': False, 'error': 'All fields are required.'}, status=400)
+
+        # 2. Check if User already exists
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({'success': False, 'error': 'Username already taken.'}, status=400)
+
+        # 3. Create User
+        try:
+            # create_user automatically hashes the password
+            user = User.objects.create_user(username=username, password=password)
+            user.save()
+
+            # 4. Log them in immediately
+            login(request, user)
+
+            return JsonResponse({'success': True, 'message': 'Registration successful'})
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 # @login_required
 def get_dashboard(request):

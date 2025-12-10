@@ -18,7 +18,7 @@ function Login() {
 
         if (data.success) {
             console.log("Login Success!", data);
-            navigate('/dashboard');
+            navigate('/user/dashboard');
         } else {
             setErrorMsg(data.error || "Login failed. Please check your credentials.");
         }
@@ -51,42 +51,62 @@ function Login() {
                         </div>
                     )}
 
-                    <div className='flex flex-col mt-5 font-medium text-gray-900 gap-1'>
-                        <p>Username/Email</p>
+                    {/* --- FORM START ---
+                        Wrapping inputs in a form allows "Enter" key to submit
+                    */}
+                    <form onSubmit={handleSubmit} className='mt-5'>
 
-                        <input type='text'
-                            placeholder='Enter your username/email'
-                            className='w-100 py-2 pl-2 border border-gray-400 rounded-sm'/>
-                    </div>
+                        <div className='flex flex-col font-medium text-gray-900 gap-1'>
+                            <p>Username/Email</p>
+                            <input
+                                type='text'
+                                placeholder='Enter your username/email'
+                                className='w-100 py-2 pl-2 border border-gray-400 rounded-sm'
+                                // 1. BIND VALUE AND ONCHANGE
+                                value={identifier}
+                                onChange={(e) => setIdentifier(e.target.value)}
+                            />
+                        </div>
 
-                    <div className='flex flex-col mt-4 pb-3 font-medium text-gray-900 gap-1'>
-                        <p>Password</p>
-                        <div>
-                            <input type='Password'
-                                placeholder='Password'
-                                className='w-100 py-2 pl-2 border border-gray-400 rounded-sm'/>
-                            <button className='-ml-10 cursor-pointer p-2'>
-                                <i className="fa-regular fa-eye"></i>
+                        <div className='flex flex-col mt-4 pb-3 font-medium text-gray-900 gap-1'>
+                            <p>Password</p>
+                            <div className="relative"> {/* Added relative for positioning if needed */}
+                                <input
+                                    type='password'
+                                    placeholder='Password'
+                                    className='w-100 py-2 pl-2 border border-gray-400 rounded-sm'
+                                    // 2. BIND VALUE AND ONCHANGE
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                                {/* Ensure eye button doesn't submit form */}
+                                <button type="button" className='absolute right-2 top-2 cursor-pointer text-gray-500'>
+                                    <i className="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className='flex flex-row justify-between'>
+                            <div className='flex flex-row items-center gap-2'>
+                                <input type='checkbox' className='w-3 h-3 ml-0.5'/>
+                                <p>Remember me</p>
+                            </div>
+
+                            <button type="button" className='text-red-500 font-medium text-sm hover:underline cursor-pointer mr-1'>
+                                Forgot Password
                             </button>
                         </div>
-                    </div>
 
-                    <div className='flex flex-row justify-between'>
-                        <div className='flex flex-row items-center gap-2'>
-                            <input type='checkbox'
-                                    className='w-3 h-3 ml-0.5'/>
-                            <p>Remember me</p>
-                        </div>
-
-                        <button className='text-red-500 font-medium text-sm hover:underline cursor-pointer mr-1'>
-                            Forgot Password
+                        {/* 3. SUBMIT BUTTON */}
+                        <button
+                            type="submit"
+                            className='w-full bg-red-500 text-md py-2 my-4 rounded-xl font-semibold text-white cursor-pointer transition duration-300 hover:-translate-y-1'
+                        >
+                            Login
                         </button>
-                    </div>
 
-                    <button className='bg-red-500 text-md py-2 my-4 rounded-xl font-semibold text-white cursor-pointer transition duration-300 hover:-translate-y-1'
-                        onClick={() => navigate('/user/dashboard')}>
-                        Login
-                    </button>
+                    </form>
+                    {/* --- FORM END --- */}
 
                     <div className='flex flex-row gap-1 justify-center'>
                         <p className='text-sm font-medium text-gray-700'>Don't have an account?</p>
