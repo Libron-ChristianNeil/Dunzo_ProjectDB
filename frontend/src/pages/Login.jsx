@@ -1,9 +1,28 @@
-import React from 'react'
+import React, {useState} from 'react'
 import login_illustration from '../assets/login_illustration.jpg';
 import { useNavigate } from 'react-router-dom'
+import { loginUser } from '../https';
 
 function Login() {
+    const [identifier, setIdentifier] = useState('');
+    const [password, setPassword] = useState('');
+    const [errorMsg, setErrorMsg] = useState('');
+
     const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Call the backend
+        const data = await loginUser(identifier, password);
+
+        if (data.success) {
+            console.log("Login Success!", data);
+            navigate('/dashboard');
+        } else {
+            setErrorMsg(data.error || "Login failed. Please check your credentials.");
+        }
+    };
     return (
         <div className='flex fixed items-center justify-center overflow-y-scroll inset-0 z-1000 bg-zinc-200'>
             <div className='flex felx-row'>
@@ -25,11 +44,18 @@ function Login() {
 
                     <span className='text-gray-600 font-medium text-md'>Log in to manage your tasks.</span>
 
-                    <div className='flex flex-col mt-5 font-medium text-gray-900 gap-1'>
-                        <p>Email</p>
+                    {/* --- ERROR MESSAGE DISPLAY --- */}
+                    {errorMsg && (
+                        <div className="mt-2 p-2 bg-red-100 border border-red-400 text-red-700 text-sm rounded">
+                            {errorMsg}
+                        </div>
+                    )}
 
-                        <input type='email'
-                            placeholder='Enter your email'
+                    <div className='flex flex-col mt-5 font-medium text-gray-900 gap-1'>
+                        <p>Username/Email</p>
+
+                        <input type='text'
+                            placeholder='Enter your username/email'
                             className='w-100 py-2 pl-2 border border-gray-400 rounded-sm'/>
                     </div>
 
@@ -80,4 +106,4 @@ function Login() {
     )
 }
 
-export default Login
+export default Login;
