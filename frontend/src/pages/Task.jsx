@@ -10,7 +10,6 @@ function Task() {
     
     // para dali ra ma edit lols XDXDXD
     const taskStatus = [
-        { id: 0, name: 'All' },
         { id: 1, name: 'To Do' },
         { id: 2, name: 'In Progress' },
         { id: 3, name: 'Done' },
