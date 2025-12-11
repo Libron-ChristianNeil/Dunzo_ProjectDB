@@ -5,13 +5,8 @@ from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views import View
-from django.apps import apps
 
 from .models import *
-User = apps.get_model(app_label='user_app', model_name='User')
-Project = apps.get_model(app_label='project_app', model_name='Project')
-Tag = apps.get_model(app_label='project_app', model_name='Tag')
-
 
 def decode_body(request):
     try:
