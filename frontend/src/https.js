@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1:8000/"
+const BASE_URL = "http://127.0.0.1:8000"
 
 //***********************
 //* dunzomanagement
@@ -7,6 +7,7 @@ export const loginUser = async (identifier, password) => {
     try {
         const response = await fetch(`${BASE_URL}/login/`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -30,6 +31,7 @@ export const registerUser = async (username, password) => {
     try {
         const response = await fetch(`${BASE_URL}/register/`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },

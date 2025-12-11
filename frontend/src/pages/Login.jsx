@@ -18,6 +18,13 @@ function Login() {
 
         if (data.success) {
             console.log("Login Success!", data);
+            // Minimal compatibility fix: ProtectedRoute checks localStorage for 'authToken'.
+            // Store a simple token/flag so the existing guard will allow access.
+            try {
+                localStorage.setItem('authToken', data.username || 'true');
+            } catch (e) {
+                console.warn('Failed to write authToken to localStorage', e);
+            }
             navigate('/user/dashboard');
         } else {
             setErrorMsg(data.error || "Login failed. Please check your credentials.");
