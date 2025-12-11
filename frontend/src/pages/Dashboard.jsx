@@ -103,7 +103,7 @@ function Dashboard() {
                     <div className='flex flex-row mb-3 justify-between'>
                         <span className='font-semibold text-xl'>My Task</span>
                         <button className='bg-none font-medium text-red-500 hover:underline cursor-pointer'
-                                onClick={()=> navigate('/task')}>
+                                onClick={()=> navigate('/user/task')}>
                             View All
                         </button>
                     </div>
@@ -157,7 +157,7 @@ function Dashboard() {
                     <div className='flex flex-row mb-3 justify-between'>
                         <span className='font-semibold text-xl'>Recent Projects</span>
                         <button className='bg-none  text-red-500 font-medium hover:underline cursor-pointer'
-                                onClick={()=> navigate('/project')}>
+                                onClick={()=> navigate('/user/project')}>
                             View All
                         </button>
                     </div>
@@ -183,7 +183,7 @@ function Dashboard() {
                     <div className='flex flex-row mb-3 justify-between'>
                         <span className='font-semibold text-xl'>Upcoming Deadlines</span>
                         <button className='bg-none  text-red-500 font-medium hover:underline cursor-pointer'
-                                onClick={()=> navigate('/task')}>
+                                onClick={()=> navigate('/user/task')}>
                             View All
                         </button>
                     </div>

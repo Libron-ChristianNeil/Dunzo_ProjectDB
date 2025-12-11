@@ -2,7 +2,7 @@ import React from 'react'
 import TimelineEntryCard from './TimelineEntryCard'
 function TimelineCard({isExpanded = false, setIsExpanded, item}) {
     return (
-        <div className='flex flex-col justify-center mx-auto mt-7 bg-white px-3 py-2 shadow-md rounded-xl'>
+        <div className='flex flex-col justify-center mx-auto bg-white px-3 py-2 shadow-md rounded-xl'>
             <div className='flex flex-row justify-between items-center min-w-[1000px]'>
                 <div className='flex flex-row items-center gap-4'>
                     <div className='flex items-center justify-center bg-linear-to-br h-12 w-12 rounded-xl '
