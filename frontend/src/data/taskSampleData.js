@@ -59,7 +59,7 @@ export const sampleTaskData = [
     due_date: "Dec 20, 2025",
     priority: "Low",
     status: "Archived",
-    project: '',
+    project: 'General',
     tags: [
     { id: "t5", color: "#6B7280", name: "Meeting" },
     ],
