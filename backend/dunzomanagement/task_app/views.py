@@ -1,746 +1,389 @@
-
-from django.shortcuts import render
-from django.views import View
-
-# from django.shortcuts import render, get_object_or_404, redirect
-# from django.contrib.auth.decorators import login_required
-# from django.http import HttpResponseForbidden
-# from .models import Task, Assignment, Comment
-# from project_app.models import Project
-# from user_app.models import User
-#
-# task = 'task_app/task_app.html'
-# details = 'task_app/task_details.html'
-#
-# create = 'task_app/create_task.html'
-# edit_task = 'task_app/edit_task.html'
-# delete_task = 'task_app/delete_task.html'
-#
-# manage_users = 'task_app/manage_users.html'
-# add_self = 'task_app/assign_self.html'
-#
-# comment = 'task_app/add_comment.html'
-# edit_comment = 'task_app/edit_comment.html'
-# delete_comment = 'task_app/delete_comment.html'
-#
-# manage_tags = 'task_app/manage_tags.html'
-#
-# # @login_required
-# def get_tasks(request):
-#     tasks = Task.objects.filter(users=request.user.pk)
-#
-#     return render(request, task, {"tasks": tasks})
-#
-# # @login_required
-# def get_tasks_by_project(request, project_id):
-#     tasks = Task.objects.filter(project_id=project_id)
-#
-#     return render(request, task, {"tasks": tasks})
-#
-# # @login_required
-# def get_tasks_by_status(request, status):
-#     tasks = Task.objects.filter(status=status)
-#
-#     return render(request, task, {"tasks": tasks})
-#
-# # @login_required
-# def get_details(request, task_id):
-#     obj_task = get_object_or_404(Task, pk=task_id)
-#     assignments = Assignment.objects.filter(task=obj_task)
-#     comments = Comment.objects.filter(task=obj_task)
-#
-#     return render(request, details, {
-#         "task": obj_task,
-#         "assignments": assignments,
-#         "comments": comments,
-#     })
-#
-#
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden, JsonResponse, HttpResponse
+import json
+from django.utils import timezone
 from django.db import connection
-from django.views.decorators.http import require_http_methods
+from django.http import JsonResponse
+from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views import View
-from django.utils.decorators import method_decorator
-import json
-from datetime import datetime
+from django.apps import apps
 
-from .models import Task, Assignment, Comment
-from project_app.models import Project, Tag
-from user_app.models import User
-
-# Template paths (kept as module-level variables for consistency)
-TASK_TEMPLATE = 'task_app/task_app.html'
-DETAILS_TEMPLATE = 'task_app/task_details.html'
-CREATE_TEMPLATE = 'task_app/create_task.html'
-EDIT_TASK_TEMPLATE = 'task_app/edit_task.html'
-DELETE_TASK_TEMPLATE = 'task_app/delete_task.html'
-MANAGE_USERS_TEMPLATE = 'task_app/manage_users.html'
-ADD_SELF_TEMPLATE = 'task_app/assign_self.html'
-COMMENT_TEMPLATE = 'task_app/add_comment.html'
-EDIT_COMMENT_TEMPLATE = 'task_app/edit_comment.html'
-DELETE_COMMENT_TEMPLATE = 'task_app/delete_comment.html'
-MANAGE_TAGS_TEMPLATE = 'task_app/manage_tags.html'
-STATISTICS_TEMPLATE = 'task_app/statistics.html'
+from .models import *
+User = apps.get_model(app_label='user_app', model_name='User')
+Project = apps.get_model(app_label='project_app', model_name='Project')
+Tag = apps.get_model(app_label='project_app', model_name='Tag')
 
 
-# ========== HELPER DECORATOR ==========
-def login_required_cbv(view_func):
-    """Decorator for class-based views to require login"""
-    return method_decorator(login_required, name='dispatch')(view_func)
+def decode_body(request):
+    try:
+        return json.loads(request.body.decode('utf-8'))
+    except json.JSONDecodeError:
+        return {}
+def dictfetchall(cursor):
+    columns = [col[0] for col in cursor.description]
+    return [
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+    ]
 
-
-# ========== CLASS-BASED VIEWS ==========
-
-class GetTasks(View):
-    template = TASK_TEMPLATE
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
+@method_decorator(csrf_exempt, name='dispatch')
+class TaskView(View):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({'success': False, 'error': 'Unauthorized'}, status=401)
+        return super().dispatch(request, *args, **kwargs)
+    # get tasks for a project with filters so use switch cases
     def get(self, request):
-        tasks = Task.objects.filter(users=request.user.pk)
-        return render(request, self.template, {"tasks": tasks})
+        try:
+            # Extract parameters from Query String
+            project_id = request.GET.get('project_id')
+            status_filter = request.GET.get('status')  # Optional
+            filter_type = request.GET.get('filter_type', 'All')  # Default to 'All'
 
+            user_id = request.user.user_id
 
-class GetTasksByProject(View):
-    template = TASK_TEMPLATE
+            if not project_id:
+                return JsonResponse({'success': False, 'error': 'project_id is required'}, status=400)
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+            # Call the Stored Procedure
+            with connection.cursor() as cursor:
+                cursor.callproc('get_user_tasks', [
+                    user_id,
+                    project_id,
+                    status_filter,
+                    filter_type
+                ])
+                # Fetch results
+                tasks = dictfetchall(cursor)
 
-    def get(self, request, project_id):
-        tasks = Task.objects.filter(project_id=project_id)
-        return render(request, self.template, {"tasks": tasks})
+            return JsonResponse({'success': True, 'data': tasks}, safe=False)
 
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
-class GetTasksByStatus(View):
-    template = TASK_TEMPLATE
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-    def get(self, request, status):
-        tasks = Task.objects.filter(status=status)
-        return render(request, self.template, {"tasks": tasks})
-
-
-class GetTaskDetails(View):
-    template = DETAILS_TEMPLATE
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-    def get(self, request, task_id):
-        obj_task = get_object_or_404(Task, pk=task_id)
-        assignments = Assignment.objects.filter(task=obj_task)
-        comments = Comment.objects.filter(task=obj_task)
-
-        return render(request, self.template, {
-            "task": obj_task,
-            "assignments": assignments,
-            "comments": comments,
-        })
-
-
-# ========== STORED PROCEDURE CLASS-BASED VIEWS ==========
-
-class CreateTaskSP(View):
-    template = CREATE_TEMPLATE
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-    def get(self, request):
-        # Get available projects for the current user
-        user_projects = Project.objects.filter(users=request.user)
-        tags = Tag.objects.all()
-        return render(request, self.template, {
-            'projects': user_projects,
-            'tags': tags,
-            'status_choices': Task.STATUS_CHOICES,
-            'role_choices': Assignment.ROLE_CHOICES
-        })
-
+    # create new task, upon creation it should be able to assign 0 or more members(users in the project) to the task
+    # calendarevent will only have its end_date set to the task's due date and leave start_date null, it will also only have the task_id as reference
     def post(self, request):
         try:
-            # Get form data
-            project_id = request.POST.get('project_id')
-            title = request.POST.get('title')
-            description = request.POST.get('description')
-            status = request.POST.get('status', 'To Do')
-            due_date_str = request.POST.get('due_date')
+            data = decode_body(request)
+            user_id = request.user.user_id
 
-            if not all([project_id, title, description, due_date_str]):
-                user_projects = Project.objects.filter(users=request.user)
-                tags = Tag.objects.all()
-                return render(request, self.template, {
-                    'projects': user_projects,
-                    'tags': tags,
-                    'error': 'All required fields must be filled',
-                    'form_data': request.POST
-                })
+            # Extract Fields
+            project_id = data.get('project_id')
+            title = data.get('title')
+            description = data.get('description', '')
+            due_date = data.get('due_date')  # ISO format 'YYYY-MM-DD HH:MM:SS'
+            assignee_ids = data.get('assignee_ids', [])  # List of User IDs
+            tag_ids = data.get('tag_ids', [])  # List of Tag IDs
 
-            # Parse due date
-            try:
-                if 'T' in due_date_str:
-                    due_date = datetime.strptime(due_date_str, '%Y-%m-%dT%H:%M')
-                else:
-                    due_date = datetime.strptime(due_date_str, '%Y-%m-%d %H:%M:%S')
-            except ValueError:
-                due_date = datetime.strptime(due_date_str, '%Y-%m-%d')
+            # Validation
+            if not all([project_id, title, due_date]):
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Missing required fields: project_id, title, or due_date'
+                }, status=400)
 
-            # Get user assignments from form
-            user_assignments = []
-
-            # Check if creator wants to assign themselves
-            if request.POST.get('assign_self') == 'on':
-                user_assignments.append({
-                    "user_id": request.user.id,
-                    "role": request.POST.get('self_role', 'Owner')
-                })
-
-            # Check for additional assigned users
-            assigned_users = request.POST.getlist('assigned_users[]')
-            assigned_roles = request.POST.getlist('assigned_roles[]')
-
-            for i, user_id in enumerate(assigned_users):
-                if user_id and i < len(assigned_roles):
-                    try:
-                        user_assignments.append({
-                            "user_id": int(user_id),
-                            "role": assigned_roles[i]
-                        })
-                    except ValueError:
-                        continue
-
-            # Get tag IDs
-            tag_ids = request.POST.getlist('tags[]')
-            tag_ids = [int(tag_id) for tag_id in tag_ids if tag_id]
-
-            # Call the PostgreSQL function
+            # Call Stored Procedure
             with connection.cursor() as cursor:
-                user_assignments_json = json.dumps(user_assignments) if user_assignments else None
-                tag_ids_json = json.dumps(tag_ids) if tag_ids else None
+                cursor.callproc('create_task', [
+                    project_id,
+                    user_id,
+                    title,
+                    description,
+                    due_date,
+                    assignee_ids,
+                    tag_ids
+                ])
 
-                cursor.execute("""
-                    SELECT * FROM create_task_with_deadline(
-                        %s, %s, %s, %s, %s, %s, %s::jsonb, %s::jsonb
-                    )
-                """, [
-                    int(project_id),
+                # Fetch the returned new_task_id
+                result = cursor.fetchone()
+                new_task_id = result[0] if result else None
+
+            return JsonResponse({
+                'success': True,
+                'message': 'Task created successfully',
+                'task_id': new_task_id
+            }, status=201)
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    # delete task
+    def delete(self, request):
+        try:
+            data = decode_body(request)
+            user_id = request.user.user_id
+
+            task_id = data.get('task_id')
+
+            if not task_id:
+                return JsonResponse({'success': False, 'error': 'task_id is required'}, status=400)
+
+            with connection.cursor() as cursor:
+                cursor.callproc('delete_task', [
+                    task_id,
+                    user_id
+                ])
+
+            return JsonResponse({'success': True, 'message': 'Task deleted successfully'}, status=200)
+
+        except Exception as e:
+            # If user is not Leader/Manager, this returns { success: False, error: "Access Denied..." }
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TaskDetailView(View):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({'success': False, 'error': 'Unauthorized'}, status=401)
+        return super().dispatch(request, *args, **kwargs)
+    # get task details, comments, and the assigned users
+    def get(self, request):
+        try:
+            # 1. Extract task_id from Query Parameters
+            task_id = request.GET.get('task_id')
+            user_id = request.user.user_id
+
+            if not task_id:
+                return JsonResponse({'success': False, 'error': 'task_id is required'}, status=400)
+
+            # 2. Call Stored Procedure
+            with connection.cursor() as cursor:
+                cursor.callproc('get_task_details', [
+                    task_id,
+                    user_id
+                ])
+
+                # 3. Fetch Result (It returns 1 row with nested JSONs)
+                result = dictfetchall(cursor)
+
+            if not result:
+                # Should have been caught by SP exception, but double check
+                return JsonResponse({'success': False, 'error': 'Task not found'}, status=404)
+
+            # Return the single object, not a list of 1 object
+            return JsonResponse({'success': True, 'data': result[0]}, safe=False)
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    # edit task details
+    def put(self, request):
+        try:
+            data = decode_body(request)
+            user_id = request.user.user_id
+
+            # Extract Fields
+            task_id = data.get('task_id')
+            title = data.get('title')
+            description = data.get('description', '')
+            status = data.get('status')  # e.g., 'In Progress'
+            due_date = data.get('due_date')  # ISO format
+            tag_ids = data.get('tag_ids')  # List [1, 2] or None
+
+            # Validation
+            if not all([task_id, title, status, due_date]):
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Missing required fields: task_id, title, status, or due_date'
+                }, status=400)
+
+            # Call Stored Procedure
+            with connection.cursor() as cursor:
+                cursor.callproc('update_task', [
+                    task_id,
+                    user_id,
                     title,
                     description,
                     status,
                     due_date,
-                    request.user.id,
-                    user_assignments_json,
-                    tag_ids_json
+                    tag_ids  # Can be list or None
                 ])
+                # Returns VOID, so no fetchone needed
 
-                results = cursor.fetchall()
-
-                if results:
-                    task_id, message = results[0]
-
-                    if task_id > 0:
-                        return redirect('task_app:get_details', task_id=task_id)
-                    else:
-                        user_projects = Project.objects.filter(users=request.user)
-                        tags = Tag.objects.all()
-                        return render(request, self.template, {
-                            'projects': user_projects,
-                            'tags': tags,
-                            'error': message,
-                            'form_data': request.POST
-                        })
-                else:
-                    user_projects = Project.objects.filter(users=request.user)
-                    tags = Tag.objects.all()
-                    return render(request, self.template, {
-                        'projects': user_projects,
-                        'tags': tags,
-                        'error': 'No results returned from database',
-                        'form_data': request.POST
-                    })
+            return JsonResponse({'success': True, 'message': 'Task updated successfully'}, status=200)
 
         except Exception as e:
-            user_projects = Project.objects.filter(users=request.user)
-            tags = Tag.objects.all()
-            return render(request, self.template, {
-                'projects': user_projects,
-                'tags': tags,
-                'error': f"Error: {str(e)}",
-                'form_data': request.POST
-            })
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
-
-class UpdateTaskStatusSP(View):
-
-    @method_decorator(login_required)
-    @method_decorator(require_http_methods(["POST"]))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-    def post(self, request, task_id):
+@method_decorator(csrf_exempt, name='dispatch')
+class AssignmentView(View):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({'success': False, 'error': 'Unauthorized'}, status=401)
+        return super().dispatch(request, *args, **kwargs)
+    # assign user to task
+    def post(self, request):
         try:
-            if request.content_type == 'application/json':
-                data = json.loads(request.body)
-                new_status = data.get('status')
-            else:
-                new_status = request.POST.get('status')
+            data = decode_body(request)
+            requester_id = request.user.user_id
 
-            if not new_status:
-                return JsonResponse({'success': False, 'message': 'Status is required'})
+            # Extract Fields
+            task_id = data.get('task_id')
+            # If assigning self, user_id might not be sent, defaulting to requester
+            target_user_id = data.get('user_id', requester_id)
+            role = data.get('role', 'Contributor')
 
+            if not task_id:
+                return JsonResponse({'success': False, 'error': 'task_id is required'}, status=400)
+
+            # Call Stored Procedure
             with connection.cursor() as cursor:
-                cursor.execute("""
-                    SELECT * FROM update_task_status(%s, %s, %s)
-                """, [task_id, new_status, request.user.id])
-
-                results = cursor.fetchall()
-
-                if results:
-                    success, message = results[0]
-
-                    if success:
-                        try:
-                            task = Task.objects.get(task_id=task_id)
-                            task.status = new_status
-                            task.save()
-                        except Task.DoesNotExist:
-                            pass
-
-                        return JsonResponse({
-                            'success': True,
-                            'message': message,
-                            'new_status': new_status
-                        })
-                    else:
-                        return JsonResponse({'success': False, 'message': message})
-                else:
-                    return JsonResponse({'success': False, 'message': 'No results returned from database'})
-
-        except Task.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Task not found'})
-        except Exception as e:
-            return JsonResponse({'success': False, 'message': f'Error: {str(e)}'})
-
-
-class AddCommentSP(View):
-    template = COMMENT_TEMPLATE
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-    def get(self, request, task_id):
-        task = get_object_or_404(Task, pk=task_id)
-        is_assigned = Assignment.objects.filter(
-            task_id=task_id,
-            user=request.user
-        ).exists()
-
-        if not is_assigned:
-            return HttpResponseForbidden("You must be assigned to this task to comment")
-
-        return render(request, self.template, {'task': task})
-
-    def post(self, request, task_id):
-        try:
-            content = request.POST.get('content')
-            parent_comment_id = request.POST.get('parent_comment_id')
-
-            if not content:
-                if request.content_type == 'application/json':
-                    return JsonResponse({'success': False, 'message': 'Comment content is required'})
-                else:
-                    task = get_object_or_404(Task, pk=task_id)
-                    return render(request, self.template, {
-                        'task': task,
-                        'error': 'Comment content is required'
-                    })
-
-            if parent_comment_id:
-                try:
-                    parent_comment_id = int(parent_comment_id)
-                except ValueError:
-                    parent_comment_id = None
-            else:
-                parent_comment_id = None
-
-            with connection.cursor() as cursor:
-                cursor.execute("""
-                    SELECT * FROM add_comment_with_notification(%s, %s, %s, %s)
-                """, [task_id, request.user.id, content, parent_comment_id])
-
-                results = cursor.fetchall()
-
-                if results:
-                    new_comment_id, message = results[0]
-
-                    if new_comment_id > 0:
-                        if request.content_type == 'application/json':
-                            comment = Comment.objects.get(comment_id=new_comment_id)
-                            comment_data = {
-                                'comment_id': comment.comment_id,
-                                'content': comment.content,
-                                'created_at': comment.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-                                'user_id': comment.user_id,
-                                'user_name': comment.user.username if comment.user else 'Unknown',
-                                'parent_id': comment.parent_id
-                            }
-
-                            return JsonResponse({
-                                'success': True,
-                                'message': message,
-                                'comment': comment_data
-                            })
-                        else:
-                            return redirect('task_app:get_details', task_id=task_id)
-                    else:
-                        if request.content_type == 'application/json':
-                            return JsonResponse({'success': False, 'message': message})
-                        else:
-                            task = get_object_or_404(Task, pk=task_id)
-                            return render(request, self.template, {
-                                'task': task,
-                                'error': message
-                            })
-                else:
-                    if request.content_type == 'application/json':
-                        return JsonResponse({'success': False, 'message': 'No results returned from database'})
-                    else:
-                        task = get_object_or_404(Task, pk=task_id)
-                        return render(request, self.template, {
-                            'task': task,
-                            'error': 'No results returned from database'
-                        })
-
-        except Exception as e:
-            if request.content_type == 'application/json':
-                return JsonResponse({'success': False, 'message': f'Error: {str(e)}'})
-            else:
-                task = get_object_or_404(Task, pk=task_id)
-                return render(request, self.template, {
-                    'task': task,
-                    'error': f'Error: {str(e)}'
-                })
-
-
-class ManageTaskUsersSP(View):
-    template = MANAGE_USERS_TEMPLATE
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-    def get(self, request, task_id):
-        task = get_object_or_404(Task, pk=task_id)
-        current_assignments = Assignment.objects.filter(task=task)
-        project_users = User.objects.filter(project__project_id=task.project_id).distinct()
-        is_owner = Assignment.objects.filter(
-            task_id=task_id,
-            user=request.user,
-            role='Owner'
-        ).exists()
-
-        if not is_owner:
-            return HttpResponseForbidden("Only the task owner can manage user assignments")
-
-        return render(request, self.template, {
-            'task': task,
-            'current_assignments': current_assignments,
-            'project_users': project_users,
-            'role_choices': Assignment.ROLE_CHOICES,
-            'is_owner': is_owner
-        })
-
-    def post(self, request, task_id):
-        try:
-            if request.content_type == 'application/json':
-                data = json.loads(request.body)
-                new_assignments = data.get('assignments', [])
-            else:
-                user_ids = request.POST.getlist('user_ids[]')
-                roles = request.POST.getlist('roles[]')
-
-                new_assignments = []
-                for i, user_id in enumerate(user_ids):
-                    if user_id and i < len(roles):
-                        try:
-                            new_assignments.append({
-                                "user_id": int(user_id),
-                                "role": roles[i]
-                            })
-                        except ValueError:
-                            continue
-
-            if not new_assignments:
-                if request.content_type == 'application/json':
-                    return JsonResponse({'success': False, 'message': 'No assignments provided'})
-                else:
-                    task = get_object_or_404(Task, pk=task_id)
-                    return render(request, self.template, {
-                        'task': task,
-                        'error': 'No assignments provided'
-                    })
-
-            with connection.cursor() as cursor:
-                cursor.execute("""
-                    SELECT * FROM reassign_users_to_task(%s, %s::jsonb, %s)
-                """, [
+                cursor.callproc('assign_task', [
                     task_id,
-                    json.dumps(new_assignments),
-                    request.user.id
+                    requester_id,
+                    target_user_id,
+                    role
                 ])
+                # Returns VOID
 
-                results = cursor.fetchall()
-
-                if results:
-                    success, message = results[0]
-
-                    if success:
-                        if request.content_type == 'application/json':
-                            updated_assignments = Assignment.objects.filter(task_id=task_id)
-                            assignments_data = []
-                            for assignment in updated_assignments:
-                                assignments_data.append({
-                                    'user_id': assignment.user_id,
-                                    'username': assignment.user.username,
-                                    'role': assignment.role
-                                })
-
-                            return JsonResponse({
-                                'success': True,
-                                'message': message,
-                                'assignments': assignments_data
-                            })
-                        else:
-                            return redirect('task_app:get_details', task_id=task_id)
-                    else:
-                        if request.content_type == 'application/json':
-                            return JsonResponse({'success': False, 'message': message})
-                        else:
-                            task = get_object_or_404(Task, pk=task_id)
-                            project_users = User.objects.filter(project__project_id=task.project_id).distinct()
-                            return render(request, self.template, {
-                                'task': task,
-                                'project_users': project_users,
-                                'error': message
-                            })
-                else:
-                    if request.content_type == 'application/json':
-                        return JsonResponse({'success': False, 'message': 'No results returned from database'})
-                    else:
-                        task = get_object_or_404(Task, pk=task_id)
-                        project_users = User.objects.filter(project__project_id=task.project_id).distinct()
-                        return render(request, self.template, {
-                            'task': task,
-                            'project_users': project_users,
-                            'error': 'No results returned from database'
-                        })
+            return JsonResponse({'success': True, 'message': 'User assigned successfully'}, status=201)
 
         except Exception as e:
-            if request.content_type == 'application/json':
-                return JsonResponse({'success': False, 'message': f'Error: {str(e)}'})
-            else:
-                task = get_object_or_404(Task, pk=task_id)
-                project_users = User.objects.filter(project__project_id=task.project_id).distinct()
-                return render(request, self.template, {
-                    'task': task,
-                    'project_users': project_users,
-                    'error': f'Error: {str(e)}'
-                })
-
-
-class DeleteTaskSP(View):
-    template = DELETE_TASK_TEMPLATE
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-    def get(self, request, task_id):
-        task = get_object_or_404(Task, pk=task_id)
-        is_owner = Assignment.objects.filter(
-            task_id=task_id,
-            user=request.user,
-            role='Owner'
-        ).exists()
-
-        if not is_owner:
-            return HttpResponseForbidden("Only the task owner can delete this task")
-
-        return render(request, self.template, {'task': task})
-
-    def post(self, request, task_id):
+            # Captures "Access Denied", "Already assigned", etc.
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    # unassign user from task
+    def delete(self, request):
         try:
+            data = decode_body(request)
+            requester_id = request.user.user_id
+
+            task_id = data.get('task_id')
+            # If target_user_id not provided, assume self-unassign
+            target_user_id = data.get('user_id', requester_id)
+
+            if not task_id:
+                return JsonResponse({'success': False, 'error': 'task_id is required'}, status=400)
+
             with connection.cursor() as cursor:
-                cursor.execute("""
-                    SELECT * FROM delete_task_with_cleanup(%s, %s)
-                """, [task_id, request.user.id])
+                cursor.callproc('unassign_task', [
+                    task_id,
+                    requester_id,
+                    target_user_id
+                ])
+                # Returns VOID
 
-                results = cursor.fetchall()
-
-                if results:
-                    success, message = results[0]
-
-                    if success:
-                        return redirect('task_app:get_tasks')
-                    else:
-                        task = get_object_or_404(Task, pk=task_id)
-                        return render(request, self.template, {
-                            'task': task,
-                            'error': message
-                        })
-                else:
-                    task = get_object_or_404(Task, pk=task_id)
-                    return render(request, self.template, {
-                        'task': task,
-                        'error': 'No results returned from database'
-                    })
+            return JsonResponse({'success': True, 'message': 'User unassigned successfully'}, status=200)
 
         except Exception as e:
-            task = get_object_or_404(Task, pk=task_id)
-            return render(request, self.template, {
-                'task': task,
-                'error': f'Error: {str(e)}'
-            })
+            error_message = str(e)
+            # You can handle the specific "Owner" error in frontend by checking this string
+            return JsonResponse({'success': False, 'error': error_message}, status=500)
+    # change user role in task
+    def put(self, request):
+        try:
+            data = decode_body(request)
+            requester_id = request.user.user_id
 
+            # 1. Extract Fields
+            task_id = data.get('task_id')
+            target_user_id = data.get('user_id')
+            new_role = data.get('role')
 
-#OPTIONAL KUNG MAKAYA RA
+            # 2. Validation
+            if not all([task_id, target_user_id, new_role]):
+                return JsonResponse({'success': False, 'error': 'Missing required fields'}, status=400)
 
-# class AssignSelfToTaskSP(View):
-#     template = ADD_SELF_TEMPLATE
-#
-#     @method_decorator(login_required)
-#     def dispatch(self, *args, **kwargs):
-#         return super().dispatch(*args, **kwargs)
-#
-#     def get(self, request, task_id):
-#         task = get_object_or_404(Task, pk=task_id)
-#         already_assigned = Assignment.objects.filter(
-#             task_id=task_id,
-#             user=request.user
-#         ).exists()
-#
-#         if already_assigned:
-#             return render(request, self.template, {
-#                 'task': task,
-#                 'error': 'You are already assigned to this task'
-#             })
-#
-#         is_in_project = User.objects.filter(
-#             id=request.user.id,
-#             project__project_id=task.project_id
-#         ).exists()
-#
-#         if not is_in_project:
-#             return HttpResponseForbidden("You must be a member of the project to assign yourself to tasks")
-#
-#         return render(request, self.template, {
-#             'task': task,
-#             'role_choices': [('Contributor', 'Contributor'), ('Reviewer', 'Reviewer')]
-#         })
-#
-#     def post(self, request, task_id):
-#         try:
-#             role = request.POST.get('role', 'Contributor')
-#             owner_exists = Assignment.objects.filter(
-#                 task_id=task_id,
-#                 role='Owner'
-#             ).exists()
-#
-#             if role == 'Owner' and owner_exists:
-#                 return render(request, self.template, {
-#                     'task': get_object_or_404(Task, pk=task_id),
-#                     'error': 'Task already has an Owner'
-#                 })
-#
-#             current_assignments = Assignment.objects.filter(task_id=task_id)
-#             current_assignments_data = []
-#
-#             for assignment in current_assignments:
-#                 current_assignments_data.append({
-#                     "user_id": assignment.user_id,
-#                     "role": assignment.role
-#                 })
-#
-#             all_assignments = current_assignments_data + [{
-#                 "user_id": request.user.id,
-#                 "role": role
-#             }]
-#
-#             is_owner = Assignment.objects.filter(
-#                 task_id=task_id,
-#                 user=request.user,
-#                 role='Owner'
-#             ).exists()
-#
-#             if is_owner:
-#                 with connection.cursor() as cursor:
-#                     cursor.execute("""
-#                         SELECT * FROM reassign_users_to_task(%s, %s::jsonb, %s)
-#                     """, [
-#                         task_id,
-#                         json.dumps(all_assignments),
-#                         request.user.id
-#                     ])
-#
-#                     results = cursor.fetchall()
-#
-#                     if results:
-#                         success, message = results[0]
-#
-#                         if success:
-#                             return redirect('task_app:get_details', task_id=task_id)
-#                         else:
-#                             return render(request, self.template, {
-#                                 'task': get_object_or_404(Task, pk=task_id),
-#                                 'error': message
-#                             })
-#                     else:
-#                         return render(request, self.template, {
-#                             'task': get_object_or_404(Task, pk=task_id),
-#                             'error': 'No results returned from database'
-#                         })
-#             else:
-#                 if role == 'Owner' and owner_exists:
-#                     return render(request, self.template, {
-#                         'task': get_object_or_404(Task, pk=task_id),
-#                         'error': 'Task already has an Owner'
-#                     })
-#
-#                 Assignment.objects.create(
-#                     task_id=task_id,
-#                     user=request.user,
-#                     role=role
-#                 )
-#
-#                 from django.utils import timezone
-#                 from user_app.models import Notification
-#                 Notification.objects.create(
-#                     user=request.user,
-#                     title='Task Assignment',
-#                     message=f'You assigned yourself as {role} to task:',
-#                     is_read=False,
-#                     created_at=timezone.now()
-#                 )
-#
-#                 return redirect('task_app:get_details', task_id=task_id)
-#
-#         except Exception as e:
-#             return render(request, self.template, {
-#                 'task': get_object_or_404(Task, pk=task_id),
-#                 'error': f'Error: {str(e)}'
-#             })
+            # 3. Call Stored Procedure
+            with connection.cursor() as cursor:
+                cursor.callproc('update_assignment_role', [
+                    task_id,
+                    requester_id,
+                    target_user_id,
+                    new_role
+                ])
+                # Returns VOID
 
+            return JsonResponse({'success': True, 'message': 'Role updated successfully'}, status=200)
+
+        except Exception as e:
+            # Will catch "Access Denied", "Task not found", etc.
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class CommentView(View):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({'success': False, 'error': 'Unauthorized'}, status=401)
+        return super().dispatch(request, *args, **kwargs)
+    # add comment to task or reply to comment
+    def post(self, request):
+        try:
+            data = decode_body(request)
+            user_id = request.user.user_id
+
+            task_id = data.get('task_id')
+            content = data.get('content')
+            parent_id = data.get('parent_id')  # Optional (None if root comment)
+
+            if not all([task_id, content]):
+                return JsonResponse({'success': False, 'error': 'task_id and content are required'}, status=400)
+
+            with connection.cursor() as cursor:
+                cursor.callproc('post_comment', [
+                    task_id,
+                    user_id,
+                    content,
+                    parent_id
+                ])
+                result = cursor.fetchone()
+                new_comment_id = result[0] if result else None
+
+            return JsonResponse({'success': True, 'message': 'Comment posted', 'comment_id': new_comment_id},
+                                status=201)
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    # delete comment
+    def delete(self, request):
+        try:
+            data = decode_body(request)
+            comment_id = data.get('comment_id')
+            user_id = request.user.user_id
+
+            if not comment_id:
+                return JsonResponse({'success': False, 'error': 'comment_id is required'}, status=400)
+
+            try:
+                comment = Comment.objects.get(comment_id=comment_id)
+            except Comment.DoesNotExist:
+                return JsonResponse({'success': False, 'error': 'Comment not found'}, status=404)
+
+            # Security: Only the author can delete their comment
+            # (Unless you want Managers to delete any comment, add that logic here)
+            if comment.user_id != user_id:
+                return JsonResponse({'success': False, 'error': 'Access Denied'}, status=403)
+
+            comment.delete()
+
+            return JsonResponse({'success': True, 'message': 'Comment deleted successfully'}, status=200)
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    # edit comment
+    def put(self, request):
+        try:
+            data = decode_body(request)
+            comment_id = data.get('comment_id')
+            new_content = data.get('content')
+            user_id = request.user.user_id
+
+            if not all([comment_id, new_content]):
+                return JsonResponse({'success': False, 'error': 'comment_id and content are required'}, status=400)
+
+            try:
+                comment = Comment.objects.get(comment_id=comment_id)
+            except Comment.DoesNotExist:
+                return JsonResponse({'success': False, 'error': 'Comment not found'}, status=404)
+
+            # Security: Only author can edit
+            if comment.user_id != user_id:
+                return JsonResponse({'success': False, 'error': 'Access Denied'}, status=403)
+
+            # Update fields
+            comment.content = new_content
+            comment.updated_at = timezone.now() # Sets current time, making it non-null
+            comment.save()
+
+            return JsonResponse({'success': True, 'message': 'Comment updated successfully'}, status=200)
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)

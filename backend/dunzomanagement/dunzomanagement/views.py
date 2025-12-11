@@ -1,5 +1,6 @@
 import json
-from django.contrib.auth import login, authenticate, get_user_model
+from django.contrib.auth import login, authenticate, get_user_model, logout
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -49,3 +50,40 @@ def login_user(request):
             }, status=401)
 
     return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def create_user(request):
+    if request.method == 'POST':
+        data = decode_body(request)
+
+        username = data.get('username')
+        password = data.get('password')
+
+        # 1. Basic Validation
+        if not username or not password:
+            return JsonResponse({'success': False, 'error': 'All fields are required.'}, status=400)
+
+        # 2. Check if User already exists
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({'success': False, 'error': 'Username already taken.'}, status=400)
+
+        # 3. Create User
+        try:
+            # create_user automatically hashes the password
+            user = User.objects.create_user(username=username, password=password)
+            user.save()
+
+            # 4. Log them in immediately
+            login(request, user)
+
+            return JsonResponse({'success': True, 'message': 'Registration successful'})
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+@login_required
+def logout_user(request):
+    logout(request)
+    return JsonResponse({'success': True, 'message': 'Logged out successfully'})
