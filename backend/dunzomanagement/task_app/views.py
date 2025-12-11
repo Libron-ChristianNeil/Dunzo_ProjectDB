@@ -34,17 +34,19 @@ class TaskView(View):
     # get tasks for a project with filters so use switch cases
     def get(self, request):
         try:
-            # Extract parameters from Query String
+            # 1. Extract parameters
             project_id = request.GET.get('project_id')
-            status_filter = request.GET.get('status')  # Optional
-            filter_type = request.GET.get('filter_type', 'All')  # Default to 'All'
+            status_filter = request.GET.get('status')  # Optional (e.g., 'To Do', 'Done')
+
+            # Options: 'All', 'Assigned', 'Unassigned'
+            filter_type = request.GET.get('filter_type', 'All')
 
             user_id = request.user.user_id
 
             if not project_id:
                 return JsonResponse({'success': False, 'error': 'project_id is required'}, status=400)
 
-            # Call the Stored Procedure
+            # 2. Call Stored Procedure
             with connection.cursor() as cursor:
                 cursor.callproc('get_user_tasks', [
                     user_id,
@@ -52,14 +54,13 @@ class TaskView(View):
                     status_filter,
                     filter_type
                 ])
-                # Fetch results
+                # 3. Fetch results
                 tasks = dictfetchall(cursor)
 
             return JsonResponse({'success': True, 'data': tasks}, safe=False)
 
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
-
     # create new task, upon creation it should be able to assign 0 or more members(users in the project) to the task
     # calendarevent will only have its end_date set to the task's due date and leave start_date null, it will also only have the task_id as reference
     def post(self, request):
@@ -106,7 +107,6 @@ class TaskView(View):
 
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
-
     # delete task
     def delete(self, request):
         try:

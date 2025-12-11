@@ -42,6 +42,6 @@ export const registerUser = async (username, password) => {
 
     } catch (error) {
         console.error('Error connecting to backend:', error);
-        return { success: false, error: 'Network Error' };
+        return {success: false, error: 'Network Error'};
     }
-}
+};

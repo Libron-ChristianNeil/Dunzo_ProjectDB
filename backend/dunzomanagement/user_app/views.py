@@ -27,7 +27,7 @@ def get_dashboard(request):
 
     try:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT get_user_dashboard_data(%s)", [user_id])
+            cursor.callproc("get_user_dashboard_data", [user_id])
 
             # Fetch the result (returns a tuple, we want the first element)
             row = cursor.fetchone()

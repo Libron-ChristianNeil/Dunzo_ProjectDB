@@ -12,6 +12,8 @@ import Timeline from "./pages/Timeline";
 import Calendar from "./pages/Calendar";
 import Settings from "./pages/Settings";
 
+import ProtectedRoute from './components/ProtectedRoute';
+
 const App = () => {
   return(
     <div className='bg-white min-h-screen min-w-screen'>
@@ -20,14 +22,17 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route path="/user" element={<PageController />}>
-          <Route index element={<Dashboard />} />           {/* /user */}
-          <Route path="dashboard" element={<Dashboard />} /> {/* /user/dashboard */}
-          <Route path="project" element={<Project />} />     {/* /user/project */}
-          <Route path="task" element={<Task />} />           {/* /user/task */}
-          <Route path="timeline" element={<Timeline />} />   {/* /user/timeline */}
-          <Route path="calendar" element={<Calendar />} />   {/* /user/calendar */}
-          <Route path="settings" element={<Settings />} />   {/* /user/settings */}
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/user" element={<PageController />}>
+            <Route index element={<Dashboard />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="project" element={<Project />} />
+            <Route path="task" element={<Task />} />
+            <Route path="timeline" element={<Timeline />} />
+            <Route path="calendar" element={<Calendar />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
         </Route>
       </Routes>
     </div>
