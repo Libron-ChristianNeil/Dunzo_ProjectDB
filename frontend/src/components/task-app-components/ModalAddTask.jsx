@@ -1,8 +1,8 @@
 import React from 'react'
 import { useState } from 'react';
-import { createTask } from '../../utils/https';
+import { createTask } from '../../https';
 
-function ModalAddTask({onClose, projects, refreshTasks}) {
+function ModalAddTask({ onClose, projects, refreshTasks }) {
     const [taskData, setTaskData] = useState({
         project_id: projects[0]?.id || '',
         title: '',
@@ -56,7 +56,7 @@ function ModalAddTask({onClose, projects, refreshTasks}) {
                         placeholder='Name your task'
                         type='text'
                         value={taskData.title}
-                        onChange={(e) => setTaskData({...taskData, title: e.target.value})}
+                        onChange={(e) => setTaskData({ ...taskData, title: e.target.value })}
                         className='min-w-100 w-100% border border-gray-300 py-2 px-3 rounded-sm'
                     />
                 </div>
@@ -66,7 +66,7 @@ function ModalAddTask({onClose, projects, refreshTasks}) {
                     <textarea
                         placeholder='Describe your task…'
                         value={taskData.description}
-                        onChange={(e) => setTaskData({...taskData, description: e.target.value})}
+                        onChange={(e) => setTaskData({ ...taskData, description: e.target.value })}
                         className='min-w-100 w-100% border border-gray-300 py-2 px-3 rounded-sm'
                         rows="3"
                     />
@@ -77,7 +77,7 @@ function ModalAddTask({onClose, projects, refreshTasks}) {
                     <select
                         className='min-w-100 w-100% border border-gray-300 py-2 px-3 rounded-sm cursor-pointer'
                         value={taskData.project_id}
-                        onChange={(e) => setTaskData({...taskData, project_id: e.target.value})}
+                        onChange={(e) => setTaskData({ ...taskData, project_id: e.target.value })}
                     >
                         <option value="">Select a project</option>
                         {projects.map((project) => (
@@ -93,7 +93,7 @@ function ModalAddTask({onClose, projects, refreshTasks}) {
                     <input
                         type='datetime-local'
                         value={taskData.due_date}
-                        onChange={(e) => setTaskData({...taskData, due_date: e.target.value})}
+                        onChange={(e) => setTaskData({ ...taskData, due_date: e.target.value })}
                         className='min-w-100 w-100% border border-gray-300 py-2 px-3 rounded-sm'
                     />
                 </div>
@@ -117,7 +117,7 @@ function ModalAddTask({onClose, projects, refreshTasks}) {
                 </div>
 
             </div>
-            
+
         </div>
     )
 }

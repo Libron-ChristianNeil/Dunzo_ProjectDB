@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { formatToDateInput } from '../../utils/formatToDateInput';
 import { getInitials } from '../../utils/getInitials'
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
     getProjectDetails,
     updateProject,
@@ -11,9 +11,9 @@ import {
     createTag,
     updateTag,
     deleteTag
-} from '../../utils/https';
+} from '../../https';
 
-function ModalExpandProject({projectId, onClose, onDelete, onUpdate}) {
+function ModalExpandProject({ projectId, onClose, onDelete, onUpdate }) {
     const navigate = useNavigate();
     const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);

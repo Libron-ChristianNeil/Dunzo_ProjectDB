@@ -3,8 +3,8 @@ import SelectOptions from '../components/SelectOptions';
 import TaskCard from '../components/task-app-components/TaskCard';
 import ModalExpandTask from '../components/task-app-components/ModalExpandTask';
 import ModalAddTask from '../components/task-app-components/ModalAddTask';
-import { getTasks } from '../utils/https';
-import { getProjects } from '../utils/https';
+import { getTasks } from '../https';
+import { getProjects } from '../https';
 
 function Task() {
 
@@ -173,8 +173,8 @@ function Task() {
                 <div className='flex flex-row justify-between items-center bg-none'>
                     <h1 className='m-0 p-0'>Tasks.</h1>
                     <button className='bg-red-500 mr-4 py-1.5 px-4 text-white font-medium rounded-full cursor-pointer'
-                            onClick={() => setOpenAddTask(true)}
-                        >
+                        onClick={() => setOpenAddTask(true)}
+                    >
                         <span className='mr-2'><i className="fa-solid fa-plus"></i></span>
                         New Task
                     </button>

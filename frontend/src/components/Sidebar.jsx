@@ -1,10 +1,10 @@
 import React from 'react'
 // import { useState } from 'react'
-import { useNavigate, useLocation} from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { menuItems } from '../data/menuItems';
 import { getInitials } from '../utils/getInitials'; // helper function to get initials from fullname
 
-function Sidebar({fullname = 'Josephs Victors', position = 'Product Manager'}) {
+function Sidebar({ fullname = 'Josephs Victors', position = 'Product Manager' }) {
     // const [activeTab, setActiveTab] = useState('Dashboard');
     const navigate = useNavigate();
     const location = useLocation();
@@ -23,11 +23,11 @@ function Sidebar({fullname = 'Josephs Victors', position = 'Product Manager'}) {
 
             <ul className='flex flex-col list-none my-[15px] p-0'>
                 {menuItems.map((item) => (
-                    <li     
+                    <li
                         key={item.name}
-                        className={`nav-item ${location.pathname === item.path ? 'active' : ''}`} 
+                        className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
                         onClick={() => navigate(item.path)} // Navigate on click
-                        >
+                    >
                         <i className={`fa-solid ${item.icon}`}></i>
                         {item.name}
                     </li>
@@ -35,7 +35,7 @@ function Sidebar({fullname = 'Josephs Victors', position = 'Product Manager'}) {
             </ul>
 
 
-            <div className='flex flex-row gap-2 items-center px-6 py-3 cursor-pointer mt-auto mb-2 bg-gray-100 rounded-lg' onClick={() => navigate('/Settings')}>
+            <div className='flex flex-row gap-2 items-center px-6 py-3 cursor-pointer mt-auto mb-2 bg-gray-100 rounded-lg' onClick={() => navigate('/user/settings')}>
                 <div className='flex fex-row items-center justify-center h-10 w-10 text-white font-bold bg-red-500 rounded-full'>
                     {getInitials(fullname)}
                 </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { createProject } from '../../utils/https';
+import { createProject } from '../../https';
 
-function ModalAddProject({onClose, onSuccess}) {
+function ModalAddProject({ onClose, onSuccess }) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [startDate, setStartDate] = useState('');
@@ -26,7 +26,7 @@ function ModalAddProject({onClose, onSuccess}) {
 
         if (result.success) {
             alert('Project created successfully!');
-            onSuccess();
+            onSuccess?.();
             onClose();
         } else {
             alert(`Failed to create project: ${result.error}`);
@@ -45,7 +45,7 @@ function ModalAddProject({onClose, onSuccess}) {
                         type='text'
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className='min-w-100 w-100% border border-gray-300 py-2 px-3 rounded-sm'/>
+                        className='min-w-100 w-100% border border-gray-300 py-2 px-3 rounded-sm' />
                 </div>
 
                 <div className='flex flex-col gap-1'>
@@ -55,7 +55,7 @@ function ModalAddProject({onClose, onSuccess}) {
                         type='text'
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className='min-w-100 w-100% border border-gray-300 py-2 px-3 rounded-sm'/>
+                        className='min-w-100 w-100% border border-gray-300 py-2 px-3 rounded-sm' />
                 </div>
 
                 <div className='grid grid-cols-2 gap-2'>
@@ -66,7 +66,7 @@ function ModalAddProject({onClose, onSuccess}) {
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
                             className='py-2 px-3 border border-gray-300 rounded-sm'
-                            />
+                        />
                     </div>
 
                     <div className='flex flex-col'>
@@ -75,7 +75,7 @@ function ModalAddProject({onClose, onSuccess}) {
                             type='date'
                             value={endDate}
                             onChange={(e) => setEndDate(e.target.value)}
-                            className='py-2 px-3 border border-gray-300 rounded-sm'/>
+                            className='py-2 px-3 border border-gray-300 rounded-sm' />
                     </div>
                 </div>
 
