@@ -3,8 +3,7 @@ import SelectOptions from '../components/SelectOptions';
 import TaskCard from '../components/task-app-components/TaskCard';
 import ModalExpandTask from '../components/task-app-components/ModalExpandTask';
 import ModalAddTask from '../components/task-app-components/ModalAddTask';
-import { getTasks } from '../https';
-import { getProjects } from '../https';
+import { getTasks, getProjects } from '../https';
 
 function Task() {
 
@@ -47,8 +46,10 @@ function Task() {
         const fetchProjects = async () => {
             try {
                 const response = await getProjects('Active');
+                console.log('Projects API response:', response);
                 if (response.success) {
-                    setProjects(response.data || []);
+                    setProjects(response.projects || []);
+                    console.log('Projects loaded:', response.projects);
                 } else {
                     setError('Failed to load projects');
                 }
@@ -62,12 +63,16 @@ function Task() {
     // Fetch tasks when filters change
     useEffect(() => {
         const fetchTasks = async () => {
+            console.log('fetchTasks called, selectedProject:', selectedProject);
+
             if (selectedProject === 'all') {
+                console.log('selectedProject is "all", skipping task fetch');
                 setTasks([]);
                 setLoading(false);
                 return;
             }
 
+            console.log('Fetching tasks for project:', selectedProject);
             setLoading(true);
             try {
                 const response = await getTasks(
@@ -75,14 +80,17 @@ function Task() {
                     statusFilter === 'all' ? null : statusFilter,
                     filterType
                 );
+                console.log('Tasks API response:', response);
 
                 if (response.success) {
-                    setTasks(response.data || []);
+                    setTasks(response.tasks || response.data || []);
+                    console.log('Tasks loaded:', response.tasks || response.data);
                 } else {
                     setError('Failed to load tasks');
                     setTasks([]);
                 }
             } catch (err) {
+                console.error('Error fetching tasks:', err);
                 setError('Network error loading tasks');
                 setTasks([]);
             } finally {
@@ -98,6 +106,7 @@ function Task() {
     };
 
     const handleProjectFilter = (value) => {
+        console.log('Project filter changed to:', value);
         setSelectedProject(value);
     };
 
@@ -112,7 +121,7 @@ function Task() {
     // Sort logic
     const displayedTasks = [...tasks].sort((a, b) => {
         if (sortFilter === 'Name') {
-            return a.title.localeCompare(b.title);
+            return (a.title || '').localeCompare(b.title || '');
         }
         if (sortFilter === 'Due Date') {
             return new Date(a.due_date) - new Date(b.due_date);
@@ -120,53 +129,44 @@ function Task() {
         return 0; // Default order
     });
 
+    // Build project options - use project_id from backend
     const projectOptions = [
         { id: 'all', name: 'All Projects' },
         ...projects.map(project => ({
-            id: project.id.toString(),
+            id: (project.project_id || project.id)?.toString(),
             name: project.title
         }))
     ];
+
+    console.log('projectOptions:', projectOptions);
+
+    const refreshTasks = async () => {
+        if (selectedProject === 'all') return;
+        try {
+            const response = await getTasks(
+                selectedProject,
+                statusFilter === 'all' ? null : statusFilter,
+                filterType
+            );
+            if (response.success) {
+                setTasks(response.tasks || response.data || []);
+            }
+        } catch (err) {
+            console.error('Error refreshing tasks:', err);
+        }
+    };
 
     return (
         <div className='flex flex-col h-screen mx-4'>
             {view && <ModalExpandTask
                 item={taskItem}
                 onClose={() => setView(false)}
-                refreshTasks={() => {
-                    // Refresh tasks when task is updated
-                    const fetchTasks = async () => {
-                        if (selectedProject === 'all') return;
-                        const response = await getTasks(
-                            selectedProject,
-                            statusFilter === 'all' ? null : statusFilter,
-                            filterType
-                        );
-                        if (response.success) {
-                            setTasks(response.data || []);
-                        }
-                    };
-                    fetchTasks();
-                }}
+                refreshTasks={refreshTasks}
             />}
             {openAddTask && <ModalAddTask
                 onClose={() => setOpenAddTask(false)}
                 projects={projects}
-                refreshTasks={() => {
-                    // Refresh tasks when new task is added
-                    const fetchTasks = async () => {
-                        if (selectedProject === 'all') return;
-                        const response = await getTasks(
-                            selectedProject,
-                            statusFilter === 'all' ? null : statusFilter,
-                            filterType
-                        );
-                        if (response.success) {
-                            setTasks(response.data || []);
-                        }
-                    };
-                    fetchTasks();
-                }}
+                refreshTasks={refreshTasks}
             />}
 
             <div className='sticky top-0 z-100 bg-gray-100 py-3'>

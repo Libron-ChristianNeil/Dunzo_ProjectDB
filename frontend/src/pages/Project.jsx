@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { projectSampleData } from '../data/projectSampleData';
+import React, { useState, useEffect } from 'react';
+import { getProjects } from '../https';
 import SelectOptions from '../components/SelectOptions';
 import ProjectCard from '../components/projects-app-components/ProjectCard';
 import ModalAddProject from '../components/projects-app-components/ModalAddProject';
 import ModalExpandProject from '../components/projects-app-components/ModalExpandProject';
 
 function Project() {
-    
+
     const projectStatuses = [
         { id: 'Active', name: 'Active' },
         { id: 'Completed', name: 'Completed' },
@@ -19,8 +19,33 @@ function Project() {
         { id: 'Due Date', name: 'Due Date' }
     ];
 
-    const [selectedProjectStatus, setSelectedProjectStatus] = useState('all');
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [selectedProjectStatus, setSelectedProjectStatus] = useState('Active');
     const [selectedSortOption, setSelectedSortOption] = useState('all');
+
+    // Fetch projects from API
+    const fetchProjects = async () => {
+        setLoading(true);
+        try {
+            const response = await getProjects(selectedProjectStatus === 'all' ? 'Active' : selectedProjectStatus);
+            if (response.success) {
+                setProjects(response.projects || []);
+            } else {
+                setError('Failed to load projects');
+            }
+        } catch (err) {
+            setError('Network error loading projects');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Fetch on mount and when filter changes
+    useEffect(() => {
+        fetchProjects();
+    }, [selectedProjectStatus]);
 
     const handleProjectStatusFilter = (value) => {
         setSelectedProjectStatus(value);
@@ -31,85 +56,105 @@ function Project() {
     };
 
     // ==========================================
-    // 1. FILTER STEP
+    // SORT STEP
     // ==========================================
-    const filteredList = projectSampleData.filter((item) => {
-        if (selectedProjectStatus === 'all') return true;
-        return item.status === selectedProjectStatus;
-    });
+    const displayedProjects = [...projects].sort((a, b) => {
 
-    // ==========================================
-    // 2. SORT STEP
-    // ==========================================
-    // We use [...filteredList] to create a copy so we don't mutate the original data
-    const displayedProjects = [...filteredList].sort((a, b) => {
-        
         if (selectedSortOption === 'Name') {
-            return a.name.localeCompare(b.name);
+            return (a.title || '').localeCompare(b.title || '');
         }
-        
+
         if (selectedSortOption === 'Progress') {
-            return b.percentage - a.percentage;
+            return (b.percentage || 0) - (a.percentage || 0);
         }
 
         if (selectedSortOption === 'Due Date') {
-            return new Date(a.endDate) - new Date(b.endDate);
+            return new Date(a.end_date) - new Date(b.end_date);
         }
 
-        // Default: Sort by ID (0, 1, 2...) so it always goes back to original state
-        return a.id - b.id; 
+        // Default: Sort by ID
+        return (a.project_id || 0) - (b.project_id || 0);
     });
 
     //for modal
     const [openAddProject, setOpenAddProject] = useState(false);
-    const [viewProject, setViewProject] = useState(false); 
+    const [viewProject, setViewProject] = useState(false);
     const [projectItem, setProjectItem] = useState(null);
+
+    // Transform API project to format expected by ProjectCard
+    const transformProject = (project) => ({
+        ...project,
+        id: project.project_id,
+        name: project.title,
+        desc: project.description,
+        startDate: project.start_date ? new Date(project.start_date).toLocaleDateString() : '',
+        endDate: project.end_date ? new Date(project.end_date).toLocaleDateString() : '',
+        numTask: project.total_tasks || 0,
+        numComplete: project.completed_tasks || 0,
+        numMembers: project.member_count || 0,
+        percentage: project.progress || 0,
+        color: '#EF4444', // Default red color
+        members: project.members || [],
+    });
 
     return (
         <div className='flex flex-col h-screen mx-4'>
-            {openAddProject && <ModalAddProject onClose={() => setOpenAddProject(false)}/>}
-            {viewProject && <ModalExpandProject item={projectItem} onClose={() => setViewProject(false)}/>}
+            {openAddProject && (
+                <ModalAddProject
+                    onClose={() => setOpenAddProject(false)}
+                    onSuccess={fetchProjects}
+                />
+            )}
+            {viewProject && (
+                <ModalExpandProject
+                    item={projectItem}
+                    onClose={() => setViewProject(false)}
+                    onUpdate={fetchProjects}
+                />
+            )}
 
             <div className='sticky top-0 z-100 bg-gray-100 py-3'>
                 <div className='flex flex-row justify-between items-center bg-none'>
                     <h1 className='m-0 p-0'>Projects.</h1>
                     <button className='bg-red-500 mr-4 py-1.5 px-4 text-white font-medium rounded-full cursor-pointer'
-                            onClick={() => setOpenAddProject(true)}>
+                        onClick={() => setOpenAddProject(true)}>
                         <span className='mr-2'><i className="fa-solid fa-plus"></i></span>
                         New Project
                     </button>
-                    
+
                 </div>
 
                 {/* filter */}
                 <div className='flex flex-row gap-3 my-2'>
-                    <SelectOptions 
+                    <SelectOptions
                         context={'Status'}
                         items={projectStatuses}
-                        onValueChange={handleProjectStatusFilter}/>
+                        onValueChange={handleProjectStatusFilter} />
 
-                    {/* FIXED: Added onValueChange here */}
-                    <SelectOptions 
-                        context={'Sort by'} 
+                    <SelectOptions
+                        context={'Sort by'}
                         items={sortList}
-                        onValueChange={handleSortOptionChange} 
-                        />
+                        onValueChange={handleSortOptionChange}
+                    />
                 </div>
             </div>
-            
-            {/* FIXED: Map over displayedProjects */}
+
             <div className='mt-4 grid gap-4 grid-cols-[repeat(auto-fit,minmax(360px,1fr))]'>
-                {displayedProjects.map((project, index)=>(
-                    <ProjectCard
-                        key={project.id}
-                        item={project}
-                        setViewProject={setViewProject}
-                        setProjectItem={setProjectItem}
+                {loading ? (
+                    <p className="text-gray-500 mt-10">Loading projects...</p>
+                ) : error ? (
+                    <p className="text-red-500 mt-10">{error}</p>
+                ) : displayedProjects.length === 0 ? (
+                    <p className="text-gray-500 mt-10">No projects found.</p>
+                ) : (
+                    displayedProjects.map((project) => (
+                        <ProjectCard
+                            key={project.project_id}
+                            item={transformProject(project)}
+                            setViewProject={setViewProject}
+                            setProjectItem={setProjectItem}
                         />
-                ))}
-                
-                {displayedProjects.length === 0 && (
-                        <p className="text-gray-500 mt-10">No projects found.</p>
+                    ))
                 )}
             </div>
         </div>

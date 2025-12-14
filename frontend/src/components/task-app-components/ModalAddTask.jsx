@@ -4,7 +4,7 @@ import { createTask } from '../../https';
 
 function ModalAddTask({ onClose, projects, refreshTasks }) {
     const [taskData, setTaskData] = useState({
-        project_id: projects[0]?.id || '',
+        project_id: projects[0]?.project_id || projects[0]?.id || '',
         title: '',
         description: '',
         due_date: '',
@@ -29,7 +29,7 @@ function ModalAddTask({ onClose, projects, refreshTasks }) {
 
             if (response.success) {
                 alert('Task created successfully!');
-                refreshTasks();
+                refreshTasks?.();
                 onClose();
             } else {
                 setError(response.error || 'Failed to create task');
@@ -81,7 +81,7 @@ function ModalAddTask({ onClose, projects, refreshTasks }) {
                     >
                         <option value="">Select a project</option>
                         {projects.map((project) => (
-                            <option key={project.id} value={project.id}>
+                            <option key={project.project_id || project.id} value={project.project_id || project.id}>
                                 {project.title}
                             </option>
                         ))}
