@@ -1,4 +1,5 @@
 import { StrictMode } from 'react'
+import 'temporal-polyfill/global'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
