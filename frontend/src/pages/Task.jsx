@@ -8,7 +8,7 @@ import { getTasks, getProjects } from '../https';
 function Task() {
 
     const taskStatus = [
-        { id: 'all', name: 'All Statuses' },
+        { id: 'All', name: 'All Statuses' },
         { id: 'To Do', name: 'To Do' },
         { id: 'In Progress', name: 'In Progress' },
         { id: 'Done', name: 'Done' },
@@ -16,7 +16,7 @@ function Task() {
     ];
 
     const sortList = [
-        { id: 'all', name: 'Default' },
+        { id: 'All', name: 'Default' },
         { id: 'Name', name: 'Name' },
         { id: 'Due Date', name: 'Due Date' }
     ]
@@ -36,10 +36,10 @@ function Task() {
     const [error, setError] = useState(null)
 
     // Filters State
-    const [selectedProject, setSelectedProject] = useState('all');
-    const [statusFilter, setStatusFilter] = useState('all');
+    const [selectedProject, setSelectedProject] = useState('All');
+    const [statusFilter, setStatusFilter] = useState('All');
     const [filterType, setFilterType] = useState('All');
-    const [sortFilter, setSortFilter] = useState('all');
+    const [sortFilter, setSortFilter] = useState('All');
 
     // Fetch projects on component mount
     useEffect(() => {
@@ -65,10 +65,57 @@ function Task() {
         const fetchTasks = async () => {
             console.log('fetchTasks called, selectedProject:', selectedProject);
 
-            if (selectedProject === 'all') {
-                console.log('selectedProject is "all", skipping task fetch');
-                setTasks([]);
-                setLoading(false);
+            // If "All Projects" is selected, fetch tasks from all projects
+            if (selectedProject === 'All') {
+                console.log('Fetching tasks from ALL projects');
+                setLoading(true);
+                setError(null);
+
+                if (projects.length === 0) {
+                    setTasks([]);
+                    setLoading(false);
+                    return;
+                }
+
+                try {
+                    // Fetch tasks from each project in parallel
+                    const allTaskPromises = projects.map(async (project) => {
+                        try {
+                            const response = await getTasks(
+                                (project.project_id || project.id)?.toString(),
+                                statusFilter === 'All' ? null : statusFilter,
+                                filterType
+                            );
+                            if (response.success) {
+                                // Inject project_id into each task
+                                const tasksWithProjectId = (response.tasks || response.data || []).map(t => ({
+                                    ...t,
+                                    project_id: project.project_id || project.id
+                                }));
+                                return { success: true, tasks: tasksWithProjectId };
+                            }
+                            return { success: false, data: [] };
+                        } catch (err) {
+                            return { success: false, data: [] };
+                        }
+                    });
+
+                    const results = await Promise.all(allTaskPromises);
+
+                    // Combine all tasks from all projects
+                    const allTasks = results.flatMap(response =>
+                        response.success ? (response.tasks || []) : []
+                    );
+
+                    console.log('All projects tasks loaded:', allTasks.length, 'tasks');
+                    setTasks(allTasks);
+                } catch (err) {
+                    console.error('Error fetching all project tasks:', err);
+                    setError('Network error loading tasks');
+                    setTasks([]);
+                } finally {
+                    setLoading(false);
+                }
                 return;
             }
 
@@ -77,14 +124,19 @@ function Task() {
             try {
                 const response = await getTasks(
                     selectedProject,
-                    statusFilter === 'all' ? null : statusFilter,
+                    statusFilter === 'All' ? null : statusFilter,
                     filterType
                 );
                 console.log('Tasks API response:', response);
 
                 if (response.success) {
-                    setTasks(response.tasks || response.data || []);
-                    console.log('Tasks loaded:', response.tasks || response.data);
+                    // Inject project_id into tasks
+                    const tasksWithProjectId = (response.tasks || response.data || []).map(t => ({
+                        ...t,
+                        project_id: selectedProject
+                    }));
+                    setTasks(tasksWithProjectId);
+                    console.log('Tasks loaded:', tasksWithProjectId);
                 } else {
                     setError('Failed to load tasks');
                     setTasks([]);
@@ -99,7 +151,7 @@ function Task() {
         };
 
         fetchTasks();
-    }, [selectedProject, statusFilter, filterType]);
+    }, [selectedProject, statusFilter, filterType, projects]);
 
     const handleStatusFilter = (value) => {
         setStatusFilter(value);
@@ -131,7 +183,7 @@ function Task() {
 
     // Build project options - use project_id from backend
     const projectOptions = [
-        { id: 'all', name: 'All Projects' },
+        { id: 'All', name: 'All Projects' },
         ...projects.map(project => ({
             id: (project.project_id || project.id)?.toString(),
             name: project.title
@@ -141,15 +193,51 @@ function Task() {
     console.log('projectOptions:', projectOptions);
 
     const refreshTasks = async () => {
-        if (selectedProject === 'all') return;
+        if (selectedProject === 'All') {
+            // Refresh all projects
+            try {
+                const allTaskPromises = projects.map(async (project) => {
+                    try {
+                        const response = await getTasks(
+                            (project.project_id || project.id)?.toString(),
+                            statusFilter === 'All' ? null : statusFilter,
+                            filterType
+                        );
+                        if (response.success) {
+                            const tasksWithProjectId = (response.tasks || response.data || []).map(t => ({
+                                ...t,
+                                project_id: project.project_id || project.id
+                            }));
+                            return { success: true, tasks: tasksWithProjectId };
+                        }
+                        return { success: false, data: [] };
+                    } catch (err) {
+                        return { success: false, data: [] };
+                    }
+                });
+
+                const results = await Promise.all(allTaskPromises);
+                const allTasks = results.flatMap(response =>
+                    response.success ? (response.tasks || []) : []
+                );
+                setTasks(allTasks);
+            } catch (err) {
+                console.error('Error refreshing all tasks:', err);
+            }
+            return;
+        }
         try {
             const response = await getTasks(
                 selectedProject,
-                statusFilter === 'all' ? null : statusFilter,
+                statusFilter === 'All' ? null : statusFilter,
                 filterType
             );
             if (response.success) {
-                setTasks(response.tasks || response.data || []);
+                const tasksWithProjectId = (response.tasks || response.data || []).map(t => ({
+                    ...t,
+                    project_id: selectedProject
+                }));
+                setTasks(tasksWithProjectId);
             }
         } catch (err) {
             console.error('Error refreshing tasks:', err);
@@ -215,9 +303,7 @@ function Task() {
                     <p className="text-red-500 mt-10 text-center col-span-full">{error}</p>
                 ) : displayedTasks.length === 0 ? (
                     <p className="text-gray-500 mt-10 text-center col-span-full">
-                        {selectedProject === 'all'
-                            ? 'Select a project to view tasks'
-                            : 'No tasks found'}
+                        No tasks found
                     </p>
                 ) : (
                     displayedTasks.map((task) => (

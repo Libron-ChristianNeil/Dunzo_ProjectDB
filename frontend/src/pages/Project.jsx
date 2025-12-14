@@ -84,7 +84,7 @@ function Project() {
     // Transform API project to format expected by ProjectCard
     const transformProject = (project) => ({
         ...project,
-        id: project.project_id,
+        id: project.project_id || project.id,
         name: project.title,
         desc: project.description,
         startDate: project.start_date ? new Date(project.start_date).toLocaleDateString() : '',
@@ -149,7 +149,7 @@ function Project() {
                 ) : (
                     displayedProjects.map((project) => (
                         <ProjectCard
-                            key={project.project_id}
+                            key={project.project_id || project.id}
                             item={transformProject(project)}
                             setViewProject={setViewProject}
                             setProjectItem={setProjectItem}

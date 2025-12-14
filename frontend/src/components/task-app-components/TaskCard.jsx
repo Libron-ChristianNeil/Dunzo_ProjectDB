@@ -1,12 +1,12 @@
 import React from 'react'
 
-function TaskCard({setView, item, setTaskItem}) {
+function TaskCard({ setView, item, setTaskItem }) {
     const getInitials = (name) =>
         name
-        .split(' ')
-        .map((part) => part[0])
-        .join('')
-        .toUpperCase();
+            .split(' ')
+            .map((part) => part[0])
+            .join('')
+            .toUpperCase();
 
     // Format date for display
     const formatDate = (dateString) => {
@@ -18,6 +18,12 @@ function TaskCard({setView, item, setTaskItem}) {
             year: 'numeric'
         });
     };
+
+    // Safely get tags array (handle both array and non-array cases)
+    const tagsArray = Array.isArray(item.tags) ? item.tags : [];
+
+    // Safely get assignees array
+    const assigneesArray = Array.isArray(item.assignees) ? item.assignees : [];
 
     return (
         <div
@@ -55,7 +61,7 @@ function TaskCard({setView, item, setTaskItem}) {
 
             {/* tags */}
             <div className='flex flex-row gap-2 h-5 my-1'>
-                {item.tags && item.tags.map((tag) => (
+                {tagsArray.map((tag) => (
                     <div
                         key={tag.id}
                         className='h-5 px-2 rounded-full text-xs flex items-center justify-center text-white font-medium'
@@ -80,25 +86,24 @@ function TaskCard({setView, item, setTaskItem}) {
 
             {/* Assignees */}
             <div className='flex flex-row justify-end'>
-                {item.assignees && item.assignees.slice(0, 3).map((mem, index) => (
+                {assigneesArray.slice(0, 3).map((mem, index) => (
                     <div
                         key={mem.user_id}
                         style={{ backgroundColor: `hsl(${mem.user_id * 137.508 % 360}, 70%, 60%)` }}
-                        className={`flex items-center justify-center rounded-full h-9 w-9 text-white text-sm font-semibold border-white border-2 transition duration-300 hover:-translate-y-1 cursor-pointer ${
-                            index !== 0 ? 'ml-[-7px]' : ''
-                        }`}
+                        className={`flex items-center justify-center rounded-full h-9 w-9 text-white text-sm font-semibold border-white border-2 transition duration-300 hover:-translate-y-1 cursor-pointer ${index !== 0 ? 'ml-[-7px]' : ''
+                            }`}
                         title={`${mem.username} (${mem.role})`}
                     >
                         {getInitials(mem.username)}
                     </div>
                 ))}
 
-                {item.assignees && item.assignees.length > 3 && (
+                {assigneesArray.length > 3 && (
                     <div
                         className={`flex items-center justify-center bg-gray-600 rounded-full h-9 w-9 text-white text-sm font-semibold border-white border-2 ml-[-7px] transition duration-300 hover:-translate-y-1 cursor-pointer`}
-                        title={`${item.assignees.length - 3} more assignees`}
+                        title={`${assigneesArray.length - 3} more assignees`}
                     >
-                        +{item.assignees.length - 3}
+                        +{assigneesArray.length - 3}
                     </div>
                 )}
             </div>

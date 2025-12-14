@@ -28,41 +28,43 @@ class TaskView(View):
             return JsonResponse({'success': False, 'error': 'Unauthorized'}, status=401)
         return super().dispatch(request, *args, **kwargs)
 
+    # get tasks for a project with filters
     def get(self, request):
         try:
+            # 1. Extract parameters from Query String
+            # Frontend sends project ID as the first argument
             project_id = request.GET.get('project_id')
+            
+            # Frontend sends 'all' or specific status. 
+            # If frontend sends 'null' string or empty, we treat as None.
             status_filter = request.GET.get('status')
-            filter_type = request.GET.get('filter_type', 'All')
+            if status_filter == 'null' or status_filter == '':
+                status_filter = None
+            
+            # Frontend sends 'All', 'Assigned', or 'Unassigned'
+            filter_type = request.GET.get('filter_type', 'All') 
+            
             user_id = request.user.user_id
 
+            # Validation: Task.jsx ensures selectedProject !== 'all' before calling, 
+            # so project_id should always be present.
             if not project_id:
                 return JsonResponse({'success': False, 'error': 'project_id is required'}, status=400)
 
-            # Try stored procedure first, fallback to ORM if it fails
-            try:
-                with connection.cursor() as cursor:
-                    cursor.callproc('get_user_tasks', [user_id, project_id, status_filter, filter_type])
-                    tasks = dictfetchall(cursor)
-                return JsonResponse({'success': True, 'data': tasks}, safe=False)
-            except Exception as sp_error:
-                print(f"Stored procedure failed: {sp_error}, using ORM fallback")
-                
-                # Fallback to Django ORM
-                tasks_qs = Task.objects.filter(project_id=project_id)
-                
-                if status_filter:
-                    tasks_qs = tasks_qs.filter(status=status_filter)
-                
-                if filter_type == 'Assigned':
-                    tasks_qs = tasks_qs.filter(users__user_id=user_id)
-                elif filter_type == 'Unassigned':
-                    tasks_qs = tasks_qs.exclude(users__user_id=user_id)
-                
-                tasks_data = list(tasks_qs.values('task_id', 'title', 'description', 'status', 'due_date', 'created_at', 'project_id'))
-                return JsonResponse({'success': True, 'data': tasks_data}, safe=False)
+            # 2. Call Stored Procedure
+            with connection.cursor() as cursor:
+                cursor.callproc('get_user_tasks', [
+                    user_id, 
+                    project_id, 
+                    status_filter, 
+                    filter_type
+                ])
+                # 3. Fetch results
+                tasks = dictfetchall(cursor)
+
+            return JsonResponse({'success': True, 'data': tasks}, safe=False)
 
         except Exception as e:
-            print(f"TaskView GET error: {e}")
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     def post(self, request):

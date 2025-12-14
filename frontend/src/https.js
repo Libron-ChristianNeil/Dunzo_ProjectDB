@@ -44,7 +44,7 @@ export const registerUser = async (username, password) => {
 
     } catch (error) {
         console.error('Error connecting to backend:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -60,7 +60,7 @@ export const getProjects = async (filter = 'Active') => {
         return await response.json();
     } catch (error) {
         console.error('Error fetching projects:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -77,7 +77,7 @@ export const createProject = async (projectData) => {
         return await response.json();
     } catch (error) {
         console.error('Error creating project:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -90,7 +90,7 @@ export const getProjectDetails = async (projectId) => {
         return await response.json();
     } catch (error) {
         console.error('Error fetching project details:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -107,7 +107,7 @@ export const updateProject = async (projectData) => {
         return await response.json();
     } catch (error) {
         console.error('Error updating project:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -124,7 +124,7 @@ export const addProjectMember = async (memberData) => {
         return await response.json();
     } catch (error) {
         console.error('Error adding project member:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -141,7 +141,7 @@ export const removeProjectMember = async (memberData) => {
         return await response.json();
     } catch (error) {
         console.error('Error removing project member:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -158,7 +158,23 @@ export const updateProjectMemberRole = async (roleData) => {
         return await response.json();
     } catch (error) {
         console.error('Error updating member role:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
+    }
+};
+
+export const getProjectTags = async (projectId) => {
+    try {
+        const response = await fetch(`${BASE_URL}/project/details/tags/?project_id=${projectId}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching tags:', error);
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -175,7 +191,7 @@ export const createTag = async (tagData) => {
         return await response.json();
     } catch (error) {
         console.error('Error creating tag:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -192,7 +208,7 @@ export const updateTag = async (tagData) => {
         return await response.json();
     } catch (error) {
         console.error('Error updating tag:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -209,7 +225,7 @@ export const deleteTag = async (tagData) => {
         return await response.json();
     } catch (error) {
         console.error('Error deleting tag:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -226,7 +242,7 @@ export const deleteProject = async (projectId) => {
         return await response.json();
     } catch (error) {
         console.error('Error deleting project:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -244,7 +260,7 @@ export const getTasks = async (projectId, status, filterType) => {
         return await response.json();
     } catch (error) {
         console.error('Error fetching tasks:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -261,7 +277,7 @@ export const createTask = async (taskData) => {
         return await response.json();
     } catch (error) {
         console.error('Error creating task:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -278,7 +294,7 @@ export const deleteTask = async (taskId) => {
         return await response.json();
     } catch (error) {
         console.error('Error deleting task:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -291,7 +307,7 @@ export const getTaskDetails = async (taskId) => {
         return await response.json();
     } catch (error) {
         console.error('Error fetching task details:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -308,7 +324,7 @@ export const updateTask = async (taskData) => {
         return await response.json();
     } catch (error) {
         console.error('Error updating task:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -325,7 +341,7 @@ export const assignTask = async (assignmentData) => {
         return await response.json();
     } catch (error) {
         console.error('Error assigning task:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -342,7 +358,7 @@ export const unassignTask = async (assignmentData) => {
         return await response.json();
     } catch (error) {
         console.error('Error unassigning task:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -359,7 +375,7 @@ export const updateAssignmentRole = async (roleData) => {
         return await response.json();
     } catch (error) {
         console.error('Error updating assignment role:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -376,7 +392,7 @@ export const postComment = async (commentData) => {
         return await response.json();
     } catch (error) {
         console.error('Error posting comment:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -393,7 +409,7 @@ export const deleteComment = async (commentData) => {
         return await response.json();
     } catch (error) {
         console.error('Error deleting comment:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
     }
 };
 
@@ -410,6 +426,25 @@ export const updateComment = async (commentData) => {
         return await response.json();
     } catch (error) {
         console.error('Error updating comment:', error);
-        return {success: false, error: 'Network Error'};
+        return { success: false, error: 'Network Error' };
+    }
+};
+
+//***********************
+//* timeline_app
+//***********************
+export const getTimeline = async (projectId) => {
+    try {
+        const response = await fetch(`${BASE_URL}/timeline/?project_id=${projectId}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error connecting to backend:', error);
+        return { success: false, error: 'Network Error' };
     }
 };

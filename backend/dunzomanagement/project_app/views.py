@@ -314,6 +314,18 @@ class TagView(View):
         if not request.user.is_authenticated:
             return JsonResponse({'success': False, 'error': 'Unauthorized'}, status=401)
         return super().dispatch(request, *args, **kwargs)
+    # get tags for a project
+    def get(self, request):
+        project_id = request.GET.get('project_id')
+        if not project_id:
+            return JsonResponse({'success': False, 'error': 'Project ID is required.'}, status=400)
+        
+        try:
+            tags = Tag.objects.filter(project_id=project_id).values('tag_id', 'name', 'hex_color')
+            return JsonResponse({'success': True, 'tags': list(tags)})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
     # create tag
     def post(self, request):
         data = decode_body(request)
