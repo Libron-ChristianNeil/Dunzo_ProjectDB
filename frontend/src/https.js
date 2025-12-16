@@ -38,6 +38,19 @@ export const logoutUser = async () => {
     }
 };
 
+export const getDashboard = async () => {
+    try {
+        const response = await fetch(`${BASE_URL}/dashboard/`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching dashboard:', error);
+        return { success: false, error: 'Network Error' };
+    }
+};
+
 export const getUserSettings = async () => {
     try {
         const response = await fetch(`${BASE_URL}/settings/`, {
@@ -536,6 +549,94 @@ export const getTimeline = async (projectId) => {
         return await response.json();
     } catch (error) {
         console.error('Error connecting to backend:', error);
+        return { success: false, error: 'Network Error' };
+    }
+};
+
+//***********************
+//* calendarevent_app
+//***********************
+
+// Get all calendar events for the current user
+export const getCalendarEvents = async () => {
+    try {
+        const response = await fetch(`${BASE_URL}/calendar/`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching calendar events:', error);
+        return { success: false, error: 'Network Error' };
+    }
+};
+
+// Create a new calendar event (Meeting or Event only)
+export const createCalendarEvent = async (eventData) => {
+    try {
+        const response = await fetch(`${BASE_URL}/calendar/event/`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(eventData)
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error creating calendar event:', error);
+        return { success: false, error: 'Network Error' };
+    }
+};
+
+// Update an existing calendar event
+export const updateCalendarEvent = async (eventData) => {
+    try {
+        const response = await fetch(`${BASE_URL}/calendar/event/`, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(eventData)
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error updating calendar event:', error);
+        return { success: false, error: 'Network Error' };
+    }
+};
+
+// Delete a calendar event (Meeting or Event only)
+export const deleteCalendarEvent = async (eventId) => {
+    try {
+        const response = await fetch(`${BASE_URL}/calendar/event/`, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ event_id: eventId })
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error deleting calendar event:', error);
+        return { success: false, error: 'Network Error' };
+    }
+};
+
+// Get projects where user is Manager or Leader (for Meeting creation)
+export const getUserManagedProjects = async () => {
+    try {
+        // Uses existing getProjects but we'll filter by role on frontend
+        // or we can add a filter parameter
+        const response = await fetch(`${BASE_URL}/project/?filter=Active&role=manager_leader`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching managed projects:', error);
         return { success: false, error: 'Network Error' };
     }
 };
