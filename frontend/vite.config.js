@@ -10,42 +10,52 @@ export default defineConfig({
   ],
   server: {
     proxy: {
-      '/login': {
+      // Auth routes - direct mapping
+      '/api/login': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
-      '/logout': {
+      '/api/logout': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
-      '/register': {
+      '/api/register': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
-      '/project': {
+      // User routes - need /user prefix
+      '/api/project': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/project/, '/user/project'),
+        rewrite: (path) => path.replace(/^\/api\/project/, '/user/project'),
       },
-      '/task': {
+      '/api/task': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/task/, '/user/task'),
+        rewrite: (path) => path.replace(/^\/api\/task/, '/user/task'),
       },
-      '/timeline': {
+      '/api/timeline': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/timeline/, '/user/timeline'),
+        rewrite: (path) => path.replace(/^\/api\/timeline/, '/user/timeline'),
       },
-      '/calendar': {
+      '/api/calendar': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/calendar/, '/user/calendar'),
+        rewrite: (path) => path.replace(/^\/api\/calendar/, '/user/calendar'),
       },
-      '/dashboard': {
+      '/api/dashboard': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/dashboard/, '/user/dashboard'),
+        rewrite: (path) => path.replace(/^\/api\/dashboard/, '/user/dashboard'),
+      },
+      '/api/settings': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/settings/, '/user/dashboard/settings'),
       },
     }
   }

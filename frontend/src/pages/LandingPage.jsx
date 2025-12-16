@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Login from './Login';
 import Register from './Register';
@@ -25,8 +25,8 @@ function LandingPage() {
     return (
         <div className='flex flex-col items-center inset-0 w-screen min-h-screen'>
             {/* Header kuno */}
-            {register && <Register onClose={()=>setRegister(false)} onLogin={openLogin}/>}
-            {login && <Login onClose={()=>setLogin(false)} onRegister={openRegister}/>}
+            {register && <Register onClose={() => setRegister(false)} onLogin={openLogin} />}
+            {login && <Login onClose={() => setLogin(false)} onRegister={openRegister} />}
             <div className='bg-white max-w-[1200px] min-h-screen px-10 pt-8 '>
                 <div className='flex flex-row justify-between'>
                     <span className='font-black text-red-500 text-xl tracking-tighter'>dunzo.</span>
@@ -39,7 +39,7 @@ function LandingPage() {
                 {/* hero */}
                 <div className='py-20 border-b border-black'>
                     <span className='font-semibold text-xs tracking-wider text-red-500'
-                            style={{ fontFamily: '"Courier New", Courier, monospace' }}>
+                        style={{ fontFamily: '"Courier New", Courier, monospace' }}>
                         TASK MANAGEMENT. DUNZO EASY.
                     </span>
 
@@ -49,13 +49,13 @@ function LandingPage() {
                     </div>
 
                     <span className='text-gray-700'>
-                        A web-app solution for students tired of chaotic group projects.<br/>
+                        A web-app solution for students tired of chaotic group projects.<br />
                         Assign tasks, track progress, and stop the last-minute panic.
                     </span>
 
                     <div className='flex flex-row gap-5 mt-10 items-center cursor-pointer hover:underline'>
                         <button className='py-4 px-7 bg-red-500 text-white font-medium cursor-pointer transition duration-300 hover:-translate-y-1'
-                            onClick={() => navigate('/register')}>
+                            onClick={() => navigate('/login')}>
                             Start Managing
                         </button>
 
@@ -75,10 +75,10 @@ function LandingPage() {
                             <div className='flex flex-col gap-6'>
                                 <span className='font-black text-5xl tracking-tighter max-sm:text-3xl'>Why we built this.</span>
                                 <span className='text-gray-700'>
-                                    You know the drill. You're in a group with people you barely know.<br/>
-                                    The deadline is one week away, and only 20% of the work is done.<br/>
-                                    Some groupmates ghost you, others wait until the last minute.<br/><br/>
-                                    You're left carrying the stress. <strong>Dunzo</strong> fixes this by making<br/> 
+                                    You know the drill. You're in a group with people you barely know.<br />
+                                    The deadline is one week away, and only 20% of the work is done.<br />
+                                    Some groupmates ghost you, others wait until the last minute.<br /><br />
+                                    You're left carrying the stress. <strong>Dunzo</strong> fixes this by making<br />
                                     collaboration transparent and accountable.
                                 </span>
                             </div>
@@ -103,7 +103,7 @@ function LandingPage() {
                                 </div>
 
                                 <div className='text-sm pt-4 text-gray-700 border-t border-gray-400'>
-                                    "Would've been nice if there was some way to manage everyone's <br/>
+                                    "Would've been nice if there was some way to manage everyone's <br />
                                     tasks instead of me babysitting."
                                 </div>
                             </div>
@@ -111,7 +111,7 @@ function LandingPage() {
 
                         <div className='flex flex-col'>
                             <span id='HOWITWORKS' className='font-black text-5xl tracking-tight leading-14'>
-                                Task Management, <br/>
+                                Task Management, <br />
                                 <span className='text-red-500'>Dunzo Easy.</span>
                             </span>
 
@@ -179,19 +179,19 @@ function LandingPage() {
                             </div>
 
                             <div className='flex flex-row justify-center px-7 py-3 bg-zinc-100 rounded-full'>
-                                Christian Neil Libron   
+                                Christian Neil Libron
                             </div>
 
                             <div className='flex flex-row justify-center px-7 py-3 bg-zinc-100 rounded-full'>
-                                Joseph Victor Novabos  
+                                Joseph Victor Novabos
                             </div>
 
                             <div className='flex flex-row justify-center px-7 py-3 bg-zinc-100 rounded-full'>
-                                John Winston Tabada  
+                                John Winston Tabada
                             </div>
 
                             <div className='flex flex-row  justify-center  px-7 py-3 bg-zinc-100 rounded-full'>
-                                Fateful Verdida  
+                                Fateful Verdida
                             </div>
                         </div>
                     </div>
@@ -204,7 +204,7 @@ function LandingPage() {
                         © 2025 Dunzo Project
                     </div>
                 </div>
-            </div> 
+            </div>
         </div>
     )
 }

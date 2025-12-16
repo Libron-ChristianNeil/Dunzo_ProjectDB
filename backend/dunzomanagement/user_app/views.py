@@ -73,9 +73,14 @@ class UserView(View):
         user.first_name = data.get('first_name', user.first_name)
         user.last_name = data.get('last_name', user.last_name)
 
-        # If password is provided, update it (make sure to hash it)
+        # If password is provided, verify old password first
         new_password = data.get('password')
+        old_password = data.get('old_password')
         if new_password:
+            if not old_password:
+                return JsonResponse({'success': False, 'error': 'Old password is required'}, status=400)
+            if not user.check_password(old_password):
+                return JsonResponse({'success': False, 'error': 'Old password is incorrect'}, status=400)
             user.set_password(new_password)
 
         try:

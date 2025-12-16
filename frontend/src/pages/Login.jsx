@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import login_illustration from '../assets/login_illustration.jpg';
 import { useNavigate } from 'react-router-dom'
 import { loginUser } from '../https';
@@ -6,6 +6,7 @@ import { loginUser } from '../https';
 function Login() {
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
 
     const navigate = useNavigate();
@@ -43,7 +44,7 @@ function Login() {
                         </button>
 
                     </div>
-                    
+
                     <div className='flex flex-row gap-3 items-center'>
                         <span className='font-bold text-gray-900 text-2xl'>Welcome Back</span>
                         <i className="fa-regular fa-hand text-red-500 text-2xl"></i>
@@ -68,7 +69,7 @@ function Login() {
                             <input
                                 type='text'
                                 placeholder='Enter your username/email'
-                                className='w-100 py-2 pl-2 border border-gray-400 rounded-sm'
+                                className='w-100 py-2 pl-2 border border-gray-400 rounded-sm placeholder:text-gray-500'
                                 // 1. BIND VALUE AND ONCHANGE
                                 value={identifier}
                                 onChange={(e) => setIdentifier(e.target.value)}
@@ -79,23 +80,24 @@ function Login() {
                             <p>Password</p>
                             <div className="relative"> {/* Added relative for positioning if needed */}
                                 <input
-                                    type='password'
+                                    type={showPassword ? 'text' : 'password'}
                                     placeholder='Password'
-                                    className='w-100 py-2 pl-2 border border-gray-400 rounded-sm'
+                                    className='w-100 py-2 pl-2 border border-gray-400 rounded-sm placeholder:text-gray-500'
                                     // 2. BIND VALUE AND ONCHANGE
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
-                                {/* Ensure eye button doesn't submit form */}
-                                <button type="button" className='absolute right-2 top-2 cursor-pointer text-gray-500'>
-                                    <i className="fa-regular fa-eye"></i>
+                                {/* Toggle password visibility */}
+                                <button type="button" className='absolute right-2 top-2 cursor-pointer text-gray-500'
+                                    onClick={() => setShowPassword(!showPassword)}>
+                                    <i className={showPassword ? "fa-regular fa-eye-slash" : "fa-regular fa-eye"}></i>
                                 </button>
                             </div>
                         </div>
 
                         <div className='flex flex-row justify-between'>
                             <div className='flex flex-row items-center gap-2'>
-                                <input type='checkbox' className='w-3 h-3 ml-0.5'/>
+                                <input type='checkbox' className='w-3 h-3 ml-0.5' />
                                 <p>Remember me</p>
                             </div>
 
@@ -122,11 +124,11 @@ function Login() {
                             Register
                         </button>
                     </div>
-                    
+
                 </div>
 
                 <div>
-                    <img src={login_illustration} className='h-160 rounded-tr-2xl rounded-br-2xl'/>
+                    <img src={login_illustration} className='h-160 rounded-tr-2xl rounded-br-2xl' />
                 </div>
             </div>
         </div>

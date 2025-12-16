@@ -141,11 +141,11 @@ function Project() {
 
             <div className='mt-4 grid gap-4 grid-cols-[repeat(auto-fit,minmax(360px,1fr))]'>
                 {loading ? (
-                    <p className="text-gray-500 mt-10">Loading projects...</p>
+                    <p className="mx-auto my-auto">Loading projects...</p>
                 ) : error ? (
-                    <p className="text-red-500 mt-10">{error}</p>
+                    <p className="mx-auto my-auto">{error}</p>
                 ) : displayedProjects.length === 0 ? (
-                    <p className="text-gray-500 mt-10">No projects found.</p>
+                    <p className="mx-auto my-auto">No projects found.</p>
                 ) : (
                     displayedProjects.map((project) => (
                         <ProjectCard

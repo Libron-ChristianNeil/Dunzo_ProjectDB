@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { getInitials } from '../../utils/getInitials';
-import { createTag, updateTag, deleteTag, getProjectTags, updateTask } from '../../https';
+import { getProjectTags, updateTask } from '../../https';
 
 function ModalExpandTask({ item, onClose, refreshTasks }) {
     // Safely handle tags and assignees arrays
@@ -10,13 +10,7 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
     // Tag Management State
     const [projectTags, setProjectTags] = useState([]);
     const [showTagMenu, setShowTagMenu] = useState(false);
-    const [tagMenuTab, setTagMenuTab] = useState('select'); // 'select', 'create', 'manage'
-    const [loadingTags, setLoadingTags] = useState(false);
-
-    // Create/Edit State
-    const [tagNameInput, setTagNameInput] = useState('');
-    const [tagColorInput, setTagColorInput] = useState('#3b82f6');
-    const [editingTagId, setEditingTagId] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const tagMenuRef = useRef(null);
 
@@ -25,18 +19,25 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
         return null;
     }
 
-    // Fetch project tags when menu opens
+    // Fetch project tags on mount
     useEffect(() => {
-        if (showTagMenu && item.project_id) {
+        if (item.project_id) {
             fetchProjectTags();
         }
-    }, [showTagMenu, item.project_id]);
+    }, [item.project_id]);
+
+    // Update local tags when item changes
+    useEffect(() => {
+        setTags(Array.isArray(item?.tags) ? item.tags : []);
+    }, [item]);
+
 
     // Close menu on click outside
     useEffect(() => {
         function handleClickOutside(event) {
             if (tagMenuRef.current && !tagMenuRef.current.contains(event.target)) {
                 setShowTagMenu(false);
+                setSearchQuery('');
             }
         }
         document.addEventListener("mousedown", handleClickOutside);
@@ -44,7 +45,6 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
     }, [tagMenuRef]);
 
     const fetchProjectTags = async () => {
-        setLoadingTags(true);
         try {
             const res = await getProjectTags(item.project_id);
             if (res.success) {
@@ -52,127 +52,43 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
             }
         } catch (error) {
             console.error("Error fetching tags:", error);
-        } finally {
-            setLoadingTags(false);
         }
     };
 
-    const handleAssignTag = async (tag) => {
-        // Add to local tags
-        const newTags = [...tags, tag];
-        setTags(newTags); // Optimistic update
-
-        // Update task
-        const tagIds = newTags.map(t => t.id || t.tag_id);
-        await updateTask({
-            task_id: item.task_id,
-            title: item.title,
-            status: item.status,
-            due_date: item.due_date,
-            tag_ids: tagIds
-        });
-        refreshTasks?.();
+    // --- Assignment Logic ---
+    const isTagAssigned = (tagId) => {
+        return tags.some(t => (t.id || t.tag_id) === tagId);
     };
 
-    const handleUnassignTag = async (tagId) => {
-        const newTags = tags.filter(t => (t.id || t.tag_id) !== tagId);
+    const toggleTagAssignment = async (tag) => {
+        const tagId = tag.tag_id || tag.id;
+        let newTags;
+
+        if (isTagAssigned(tagId)) {
+            // Unassign
+            newTags = tags.filter(t => (t.id || t.tag_id) !== tagId);
+        } else {
+            // Assign
+            newTags = [...tags, tag];
+        }
+
         setTags(newTags); // Optimistic update
 
         const tagIds = newTags.map(t => t.id || t.tag_id);
-        await updateTask({
-            task_id: item.task_id,
-            title: item.title,
-            status: item.status,
-            due_date: item.due_date,
-            tag_ids: tagIds
-        });
-        refreshTasks?.();
-    };
-
-    const handleCreateTag = async () => {
-        if (!tagNameInput.trim()) return;
 
         try {
-            const res = await createTag({
-                project_id: item.project_id,
-                name: tagNameInput,
-                hex_color: tagColorInput
+            await updateTask({
+                task_id: item.task_id,
+                title: item.title,
+                status: item.status,
+                due_date: item.due_date,
+                tag_ids: tagIds
             });
-
-            if (res.success) {
-                // Refresh project tags
-                fetchProjectTags();
-                // Optionally auto-assign
-                handleAssignTag(res.tag);
-                // Reset input
-                setTagNameInput('');
-                setTagMenuTab('select');
-            } else {
-                alert(res.error);
-            }
+            refreshTasks?.();
         } catch (error) {
-            console.error(error);
+            console.error("Error updating task tags:", error);
+            // Revert on error could go here
         }
-    };
-
-    const handleUpdateTag = async () => {
-        if (!editingTagId || !tagNameInput.trim()) return;
-
-        try {
-            const res = await updateTag({
-                tag_id: editingTagId,
-                name: tagNameInput,
-                hex_color: tagColorInput
-            });
-
-            if (res.success) {
-                fetchProjectTags();
-                // Also update local assigned tags if they were edited
-                setTags(prev => prev.map(t => {
-                    if ((t.id || t.tag_id) === editingTagId) {
-                        return { ...t, name: tagNameInput, hex_color: tagColorInput, color: tagColorInput };
-                    }
-                    return t;
-                }));
-                setEditingTagId(null);
-                setTagNameInput('');
-                refreshTasks?.();
-            } else {
-                alert(res.error);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const handleDeleteTag = async (tagId) => {
-        if (!confirm("Are you sure you want to delete this tag? It will be removed from all tasks.")) return;
-
-        try {
-            const res = await deleteTag(tagId);
-            if (res.success) {
-                fetchProjectTags();
-                // Remove from local assigned tags if present
-                setTags(prev => prev.filter(t => (t.id || t.tag_id) !== tagId));
-                refreshTasks?.();
-            } else {
-                alert(res.error);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const startEditing = (tag) => {
-        setEditingTagId(tag.tag_id || tag.id);
-        setTagNameInput(tag.name);
-        setTagColorInput(tag.hex_color || tag.color);
-    };
-
-    const cancelEditing = () => {
-        setEditingTagId(null);
-        setTagNameInput('');
-        setTagColorInput('#3b82f6');
     };
 
     // Format date for display
@@ -186,9 +102,10 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
         });
     };
 
-    // Filter available tags (not assigned)
-    const assignedTagIds = new Set(tags.map(t => t.id || t.tag_id));
-    const availableTags = projectTags.filter(t => !assignedTagIds.has(t.tag_id));
+    // Filter tags for display in list view
+    const filteredTags = projectTags.filter(tag =>
+        tag.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
         <div className='flex fixed justify-center overflow-y-scroll inset-0 z-1000 bg-zinc-300/80'>
@@ -202,155 +119,79 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
                         <button>
                             <i className="fa-regular fa-pen-to-square"></i>
                         </button>
-
                     </div>
                     <span className='text-[12px] text-gray-600 font-medium'>Date Created: {formatDate(item.created_at)}</span>
                     <span className='text-[12px] text-gray-600 font-medium'>Due Date: {formatDate(item.due_date)}</span>
 
-                    {/* tags */}
-                    <div className='flex flex-col gap-2 relative'>
-                        <div className='flex flex-row gap-1 flex-wrap items-center'>
+                    {/* Tags Section */}
+                    <div className='flex flex-col gap-2 relative mt-2'>
+                        <div className='flex flex-wrap gap-2 items-center'>
+                            {/* Trigger Button - Inline */}
                             <button
                                 onClick={() => setShowTagMenu(!showTagMenu)}
-                                className='flex flex-row items-center border-2 w-7 h-7 border-gray-300 bg-gray-100 text-gray-600 justify-center text-sm font-medium rounded-full cursor-pointer hover:bg-gray-200 transition-colors'>
-                                <i className={`fa-solid ${showTagMenu ? 'fa-minus' : 'fa-plus'}`}></i>
+                                className='flex items-center justify-center w-8 h-7 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-300 transition-colors'>
+                                <i className="fa-solid fa-plus text-xs"></i>
                             </button>
+
                             {tags.map((tag) => (
                                 <div key={tag.id || tag.tag_id}
-                                    className='group flex flex-row items-center justify-center py-1 px-3 text-sm font-medium rounded-full text-white gap-2 transition-all hover:pr-2'
-                                    style={{ backgroundColor: tag.hex_color || tag.color }}>
+                                    className='flex items-center justify-center px-3 py-1.5 rounded-md text-white text-xs font-bold shadow-sm'
+                                    style={{ backgroundColor: tag.hex_color || tag.color, minWidth: '40px' }}>
                                     {tag.name}
-                                    <button
-                                        onClick={() => handleUnassignTag(tag.id || tag.tag_id)}
-                                        className='hidden group-hover:block text-white/80 hover:text-white cursor-pointer'>
-                                        <i className="fa-solid fa-xmark"></i>
-                                    </button>
                                 </div>
                             ))}
                         </div>
 
-                        {/* Tag Manager Menu */}
+                        {/* Tag Manager Popover */}
                         {showTagMenu && (
-                            <div ref={tagMenuRef} className='absolute top-10 left-0 bg-white border border-gray-200 shadow-xl rounded-lg p-3 w-72 z-50 flex flex-col gap-3'>
-                                {/* Tabs */}
-                                <div className='flex flex-row border-b border-gray-200 pb-2 gap-4 text-sm font-medium text-gray-500'>
-                                    <button
-                                        className={`hover:text-blue-600 ${tagMenuTab === 'select' ? 'text-blue-600 border-b-2 border-blue-600' : ''}`}
-                                        onClick={() => setTagMenuTab('select')}>
-                                        Select
-                                    </button>
-                                    <button
-                                        className={`hover:text-blue-600 ${tagMenuTab === 'create' ? 'text-blue-600 border-b-2 border-blue-600' : ''}`}
-                                        onClick={() => setTagMenuTab('create')}>
-                                        Create
-                                    </button>
-                                    <button
-                                        className={`hover:text-blue-600 ${tagMenuTab === 'manage' ? 'text-blue-600 border-b-2 border-blue-600' : ''}`}
-                                        onClick={() => setTagMenuTab('manage')}>
-                                        Manage
+                            <div ref={tagMenuRef} className='absolute -top-40 left-0 bg-white border border-gray-200 shadow-xl rounded-lg w-80 z-50 flex flex-col'>
+
+                                {/* Header */}
+                                <div className='flex items-center justify-between px-3 py-2 border-b'>
+                                    <span className='font-semibold text-sm'>Labels</span>
+                                    <button onClick={() => setShowTagMenu(false)} className='text-gray-400 hover:text-gray-600'>
+                                        <i className="fa-solid fa-xmark"></i>
                                     </button>
                                 </div>
 
-                                {/* Content */}
-                                <div className='min-h-[150px] max-h-[250px] overflow-y-auto'>
-                                    {loadingTags ? (
-                                        <div className='text-center text-gray-400 py-4'>Loading tags...</div>
-                                    ) : (
-                                        <>
-                                            {/* SELECT TAB */}
-                                            {tagMenuTab === 'select' && (
-                                                <div className='flex flex-col gap-1'>
-                                                    {availableTags.length === 0 ? (
-                                                        <p className='text-xs text-gray-400 text-center py-2'>No available tags. Create one!</p>
-                                                    ) : (
-                                                        availableTags.map(tag => (
-                                                            <button
-                                                                key={tag.tag_id}
-                                                                onClick={() => handleAssignTag(tag)}
-                                                                className='flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 rounded text-left w-full group'>
-                                                                <span className='w-3 h-3 rounded-full' style={{ backgroundColor: tag.hex_color }}></span>
-                                                                <span className='text-sm text-gray-700 flex-1'>{tag.name}</span>
-                                                                <i className="fa-solid fa-plus text-gray-300 group-hover:text-blue-500 text-xs"></i>
-                                                            </button>
-                                                        ))
-                                                    )}
-                                                </div>
-                                            )}
+                                {/* Search */}
+                                <div className='p-2 border-b'>
+                                    <input
+                                        type="text"
+                                        placeholder="Search labels..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="w-full px-2 py-1.5 text-sm border rounded hover:border-blue-400 focus:border-blue-500 outline-none transition-colors"
+                                    />
+                                </div>
 
-                                            {/* CREATE TAB */}
-                                            {tagMenuTab === 'create' && (
-                                                <div className='flex flex-col gap-3 pt-1'>
+                                {/* Tags List */}
+                                <div className='max-h-60 overflow-y-auto'>
+                                    {filteredTags.map(tag => {
+                                        const isAssigned = isTagAssigned(tag.tag_id);
+                                        return (
+                                            <div key={tag.tag_id}
+                                                onClick={() => toggleTagAssignment(tag)}
+                                                className='flex items-center justify-between px-3 py-2 border-b last:border-b-0 hover:bg-gray-50 cursor-pointer group'>
+                                                <div className='flex items-center gap-3'>
                                                     <input
-                                                        type="text"
-                                                        placeholder="Tag Name"
-                                                        value={tagNameInput}
-                                                        onChange={(e) => setTagNameInput(e.target.value)}
-                                                        className="border rounded px-2 py-1.5 text-sm outline-none w-full focus:border-blue-500"
+                                                        type="checkbox"
+                                                        checked={isAssigned}
+                                                        readOnly
+                                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 pointer-events-none"
                                                     />
-                                                    <div className='flex items-center gap-2'>
-                                                        <span className='text-xs text-gray-500'>Color:</span>
-                                                        <input
-                                                            type="color"
-                                                            value={tagColorInput}
-                                                            onChange={(e) => setTagColorInput(e.target.value)}
-                                                            className="h-8 w-full border rounded cursor-pointer"
-                                                        />
-                                                    </div>
-                                                    <button
-                                                        onClick={handleCreateTag}
-                                                        className="bg-blue-600 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700 mt-2 w-full font-medium">
-                                                        Create Tag
-                                                    </button>
+                                                    <div className='h-4 w-15 rounded-md' style={{ backgroundColor: tag.hex_color }}></div>
+                                                    <span className='text-sm text-gray-700'>{tag.name}</span>
                                                 </div>
-                                            )}
-
-                                            {/* MANAGE TAB */}
-                                            {tagMenuTab === 'manage' && (
-                                                <div className='flex flex-col gap-1'>
-                                                    {editingTagId ? (
-                                                        <div className='flex flex-col gap-2 bg-gray-50 p-2 rounded border border-blue-100'>
-                                                            <p className='text-xs font-bold text-blue-600'>Editing Tag</p>
-                                                            <input
-                                                                type="text"
-                                                                value={tagNameInput}
-                                                                onChange={(e) => setTagNameInput(e.target.value)}
-                                                                className="border rounded px-2 py-1 text-sm outline-none bg-white"
-                                                            />
-                                                            <div className='flex gap-2'>
-                                                                <input
-                                                                    type="color"
-                                                                    value={tagColorInput}
-                                                                    onChange={(e) => setTagColorInput(e.target.value)}
-                                                                    className="h-7 w-10 border rounded cursor-pointer"
-                                                                />
-                                                                <div className='flex gap-1 flex-1 justify-end'>
-                                                                    <button onClick={cancelEditing} className='text-xs text-gray-500 hover:text-gray-700 px-2'>Cancel</button>
-                                                                    <button onClick={handleUpdateTag} className='text-xs bg-blue-600 text-white px-2 rounded hover:bg-blue-700'>Save</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    ) : (
-                                                        projectTags.map(tag => (
-                                                            <div key={tag.tag_id} className='flex items-center justify-between px-2 py-1.5 hover:bg-gray-50 rounded group'>
-                                                                <div className='flex items-center gap-2'>
-                                                                    <span className='w-3 h-3 rounded-full' style={{ backgroundColor: tag.hex_color }}></span>
-                                                                    <span className='text-sm text-gray-700'>{tag.name}</span>
-                                                                </div>
-                                                                <div className='flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity'>
-                                                                    <button onClick={() => startEditing(tag)} className='text-gray-400 hover:text-blue-600'>
-                                                                        <i className="fa-solid fa-pen text-xs"></i>
-                                                                    </button>
-                                                                    <button onClick={() => handleDeleteTag(tag.tag_id)} className='text-gray-400 hover:text-red-600'>
-                                                                        <i className="fa-solid fa-trash text-xs"></i>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        ))
-                                                    )}
-                                                </div>
-                                            )}
-                                        </>
+                                            </div>
+                                        );
+                                    })}
+                                    {filteredTags.length === 0 && (
+                                        <div className='p-4 text-center text-sm text-gray-500'>No labels found.</div>
                                     )}
+                                </div>
+                                <div className='p-2 border-t bg-gray-50/50 text-xs text-center text-gray-400 italic'>
+                                    Manage labels in Project Settings
                                 </div>
                             </div>
                         )}

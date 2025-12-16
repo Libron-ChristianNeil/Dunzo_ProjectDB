@@ -1,4 +1,4 @@
-const BASE_URL = ""  // Vite proxy handles routing to backend
+const BASE_URL = "/api"  // Vite proxy handles routing to backend
 
 //***********************
 //* dunzomanagement
@@ -24,10 +24,53 @@ export const loginUser = async (identifier, password) => {
         return { success: false, error: 'Network Error' };
     }
 };
+
+export const logoutUser = async () => {
+    try {
+        const response = await fetch(`${BASE_URL}/logout/`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error logging out:', error);
+        return { success: false, error: 'Network Error' };
+    }
+};
+
+export const getUserSettings = async () => {
+    try {
+        const response = await fetch(`${BASE_URL}/settings/`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching user settings:', error);
+        return { success: false, error: 'Network Error' };
+    }
+};
+
+export const updateUserSettings = async (userData) => {
+    try {
+        const response = await fetch(`${BASE_URL}/settings/`, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData)
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error updating user settings:', error);
+        return { success: false, error: 'Network Error' };
+    }
+};
 //***********************
 //* user_app
 //***********************
-export const registerUser = async (username, password) => {
+export const registerUser = async (username, firstName, lastName, email, password) => {
     try {
         const response = await fetch(`${BASE_URL}/register/`, {
             method: 'POST',
@@ -37,6 +80,9 @@ export const registerUser = async (username, password) => {
             },
             body: JSON.stringify({
                 username: username,
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
                 password: password
             })
         });

@@ -4,6 +4,13 @@ import { getInitials } from '../../utils/getInitials'
 import { useNavigate } from 'react-router-dom';
 import { getProjectTags, createTag, updateTag, deleteTag } from '../../https';
 
+// Preset colors for the color picker
+const PRESET_COLORS = [
+    '#bbf7d0', '#fef08a', '#fed7aa', '#fca5a5', '#d8b4fe', '#93c5fd', '#67e8f9', '#bef264',
+    '#22c55e', '#eab308', '#f97316', '#ef4444', '#a855f7', '#3b82f6', '#06b6d4', '#86efac',
+    '#1e40af', '#1e293b', '#b91c1c', '#a16207', '#4d7c0f', '#15803d', '#0e7490', '#7e22ce'
+];
+
 function ModalExpandProject({ item, onClose }) {
     const navigate = useNavigate();
 
@@ -21,11 +28,17 @@ function ModalExpandProject({ item, onClose }) {
 
     // Tag Management State
     const [projectTags, setProjectTags] = useState([]);
-    const [loadingTags, setLoadingTags] = useState(false);
     const [showTagMenu, setShowTagMenu] = useState(false);
+
+    // Tag Manager View State: 'list' | 'create' | 'edit'
+    const [tagViewMode, setTagViewMode] = useState('list');
+    const [searchQuery, setSearchQuery] = useState('');
+
+    // Form inputs
     const [tagNameInput, setTagNameInput] = useState('');
     const [tagColorInput, setTagColorInput] = useState('#3b82f6');
     const [editingTagId, setEditingTagId] = useState(null);
+
     const tagMenuRef = useRef(null);
 
     // Fetch tags on mount
@@ -40,14 +53,22 @@ function ModalExpandProject({ item, onClose }) {
         function handleClickOutside(event) {
             if (tagMenuRef.current && !tagMenuRef.current.contains(event.target)) {
                 setShowTagMenu(false);
+                resetTagForm(); // Reset on close
             }
         }
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [tagMenuRef]);
 
+    const resetTagForm = () => {
+        setTagViewMode('list');
+        setTagNameInput('');
+        setTagColorInput('#3b82f6');
+        setEditingTagId(null);
+        setSearchQuery('');
+    };
+
     const fetchProjectTags = async () => {
-        setLoadingTags(true);
         try {
             const res = await getProjectTags(item.id);
             if (res.success) {
@@ -55,8 +76,6 @@ function ModalExpandProject({ item, onClose }) {
             }
         } catch (error) {
             console.error("Error fetching tags:", error);
-        } finally {
-            setLoadingTags(false);
         }
     };
 
@@ -72,7 +91,7 @@ function ModalExpandProject({ item, onClose }) {
 
             if (res.success) {
                 fetchProjectTags();
-                setTagNameInput('');
+                resetTagForm();
             } else {
                 alert(res.error);
             }
@@ -93,8 +112,7 @@ function ModalExpandProject({ item, onClose }) {
 
             if (res.success) {
                 fetchProjectTags();
-                setEditingTagId(null);
-                setTagNameInput('');
+                resetTagForm();
             } else {
                 alert(res.error);
             }
@@ -104,12 +122,13 @@ function ModalExpandProject({ item, onClose }) {
     };
 
     const handleDeleteTag = async (tagId) => {
-        if (!confirm("Are you sure you want to delete this tag? It will be removed from all tasks.")) return;
+        if (!confirm("Are you sure you want to delete this label?")) return;
 
         try {
             const res = await deleteTag(tagId);
             if (res.success) {
                 fetchProjectTags();
+                if (tagViewMode === 'edit') resetTagForm();
             } else {
                 alert(res.error);
             }
@@ -122,13 +141,13 @@ function ModalExpandProject({ item, onClose }) {
         setEditingTagId(tag.tag_id);
         setTagNameInput(tag.name);
         setTagColorInput(tag.hex_color);
+        setTagViewMode('edit');
     };
 
-    const cancelEditing = () => {
-        setEditingTagId(null);
-        setTagNameInput('');
-        setTagColorInput('#3b82f6');
-    };
+    // Filter tags for display in list view
+    const filteredTags = projectTags.filter(tag =>
+        tag.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
         <div className='flex fixed justify-center overflow-y-scroll inset-0 z-1000 bg-zinc-300/80'>
@@ -188,80 +207,160 @@ function ModalExpandProject({ item, onClose }) {
 
                     {/* Tags Section */}
                     <div className='flex flex-col gap-2 relative'>
-                        <span className='text-sm font-semibold text-gray-900'>Tags</span>
+                        <span className='text-sm font-semibold text-gray-900'>Labels</span>
+
                         <div className='flex flex-wrap gap-2 items-center'>
                             {projectTags.map(tag => (
                                 <div key={tag.tag_id}
-                                    className='group flex items-center gap-2 px-3 py-1 rounded-full text-white text-xs font-medium'
-                                    style={{ backgroundColor: tag.hex_color }}>
+                                    className='flex items-center justify-center px-3 py-1.5 rounded-md text-white text-xs font-bold shadow-sm'
+                                    style={{ backgroundColor: tag.hex_color, minWidth: '40px' }}>
                                     {tag.name}
                                 </div>
                             ))}
                             <button
                                 onClick={() => setShowTagMenu(!showTagMenu)}
-                                className='flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-300 transition-colors'>
-                                <i className={`fa-solid ${showTagMenu ? 'fa-minus' : 'fa-plus'} text-xs`}></i>
+                                className='flex items-center justify-center w-8 h-7 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-300 transition-colors'>
+                                <i className="fa-solid fa-plus text-xs"></i>
                             </button>
                         </div>
 
                         {/* Tag Manager Popover */}
                         {showTagMenu && (
-                            <div ref={tagMenuRef} className='absolute top-8 left-0 bg-white border border-gray-200 shadow-xl rounded-lg p-3 w-72 z-50 flex flex-col gap-3'>
-                                <p className='text-sm font-semibold text-gray-700 border-b pb-1'>Manage Project Tags</p>
-
-                                {/* Create/Edit Form */}
-                                <div className='flex flex-col gap-2 bg-gray-50 p-2 rounded border border-blue-100'>
-                                    <p className='text-xs font-bold text-blue-600'>{editingTagId ? 'Edit Tag' : 'Create New Tag'}</p>
-                                    <input
-                                        type="text"
-                                        placeholder="Tag Name"
-                                        value={tagNameInput}
-                                        onChange={(e) => setTagNameInput(e.target.value)}
-                                        className="border rounded px-2 py-1 text-sm outline-none bg-white w-full"
-                                    />
-                                    <div className='flex gap-2 items-center'>
-                                        <input
-                                            type="color"
-                                            value={tagColorInput}
-                                            onChange={(e) => setTagColorInput(e.target.value)}
-                                            className="h-7 w-10 border rounded cursor-pointer"
-                                        />
-                                        <div className='flex gap-1 flex-1 justify-end'>
-                                            {editingTagId && (
-                                                <button onClick={cancelEditing} className='text-xs text-gray-500 hover:text-gray-700 px-2'>Cancel</button>
-                                            )}
-                                            <button
-                                                onClick={editingTagId ? handleUpdateTag : handleCreateTag}
-                                                className='text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700'>
-                                                {editingTagId ? 'Save' : 'Create'}
+                            <div ref={tagMenuRef} className='absolute -top-40 left-0 bg-white border border-gray-200 shadow-xl rounded-lg w-80 z-50 flex flex-col'>
+                                {tagViewMode === 'list' && (
+                                    <>
+                                        {/* Header */}
+                                        <div className='flex items-center justify-between px-3 py-2 border-b'>
+                                            <span className='font-semibold text-sm'>Labels</span>
+                                            <button onClick={() => setShowTagMenu(false)} className='text-gray-400 hover:text-gray-600'>
+                                                <i className="fa-solid fa-xmark"></i>
                                             </button>
                                         </div>
-                                    </div>
-                                </div>
 
-                                {/* List of Tags to Edit/Delete */}
-                                <div className='flex flex-col gap-1 max-h-[150px] overflow-y-auto'>
-                                    {projectTags.length === 0 ? (
-                                        <p className='text-xs text-gray-400 text-center py-2'>No tags yet.</p>
-                                    ) : (
-                                        projectTags.map(tag => (
-                                            <div key={tag.tag_id} className='flex items-center justify-between px-2 py-1.5 hover:bg-gray-50 rounded group'>
-                                                <div className='flex items-center gap-2'>
-                                                    <span className='w-3 h-3 rounded-full' style={{ backgroundColor: tag.hex_color }}></span>
-                                                    <span className='text-sm text-gray-700'>{tag.name}</span>
-                                                </div>
-                                                <div className='flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity'>
-                                                    <button onClick={() => startEditing(tag)} className='text-gray-400 hover:text-blue-600'>
-                                                        <i className="fa-solid fa-pen text-xs"></i>
+                                        {/* Search */}
+                                        <div className='p-2 border-b'>
+                                            <input
+                                                type="text"
+                                                placeholder="Search labels..."
+                                                value={searchQuery}
+                                                onChange={(e) => setSearchQuery(e.target.value)}
+                                                className="w-full px-2 py-1.5 text-sm border rounded hover:border-blue-400 focus:border-blue-500 outline-none transition-colors"
+                                            />
+                                        </div>
+
+                                        {/* Tags List */}
+                                        <div className='max-h-60 overflow-y-auto'>
+                                            {filteredTags.map(tag => (
+                                                <div key={tag.tag_id} className='flex items-center justify-between px-3 py-2 border-b last:border-b-0 hover:bg-gray-50 group'>
+                                                    <div className='flex items-center gap-3'>
+                                                        <input type="checkbox" checked readOnly className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                                                        <div className='h-4 w-15 rounded-md' style={{ backgroundColor: tag.hex_color }}></div>
+                                                        <span className='text-sm text-gray-700'>{tag.name}</span>
+                                                    </div>
+                                                    <button onClick={() => startEditing(tag)} className='text-gray-400 hover:text-gray-600 p-1'>
+                                                        <i className="fa-solid fa-pencil text-xs"></i>
                                                     </button>
-                                                    <button onClick={() => handleDeleteTag(tag.tag_id)} className='text-gray-400 hover:text-red-600'>
-                                                        <i className="fa-solid fa-trash text-xs"></i>
+                                                </div>
+                                            ))}
+                                            {filteredTags.length === 0 && (
+                                                <div className='p-4 text-center text-sm text-gray-500'>No labels found.</div>
+                                            )}
+                                        </div>
+
+                                        {/* Footer */}
+                                        <div className='p-2 border-t bg-gray-50'>
+                                            <button
+                                                onClick={() => {
+                                                    setTagViewMode('create');
+                                                    setTagNameInput('');
+                                                    setTagColorInput('#3b82f6');
+                                                    setEditingTagId(null);
+                                                }}
+                                                className='w-full py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-200 rounded transition-colors'>
+                                                Create a new label
+                                            </button>
+
+                                        </div>
+                                    </>
+                                )}
+
+                                {(tagViewMode === 'create' || tagViewMode === 'edit') && (
+                                    <>
+                                        {/* Header */}
+                                        <div className='flex items-center justify-between px-3 py-2 border-b'>
+                                            <button onClick={() => setTagViewMode('list')} className='text-gray-400 hover:text-gray-600'>
+                                                <i className="fa-solid fa-chevron-left"></i>
+                                            </button>
+                                            <span className='font-semibold text-sm'>{tagViewMode === 'create' ? 'Create label' : 'Edit label'}</span>
+                                            <button onClick={() => setShowTagMenu(false)} className='text-gray-400 hover:text-gray-600'>
+                                                <i className="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
+
+                                        {/* Preview */}
+                                        <div className='p-4 bg-gray-50 flex justify-center border-b'>
+                                            <span
+                                                className='px-3 py-1.5 rounded-md text-white font-semibold text-sm shadow-sm'
+                                                style={{ backgroundColor: tagColorInput }}>
+                                                {tagNameInput || 'Label Preview'}
+                                            </span>
+                                        </div>
+
+                                        {/* Form */}
+                                        <div className='p-3 flex flex-col gap-3'>
+                                            <div>
+                                                <label className='block text-xs font-semibold text-gray-600 mb-1'>Title</label>
+                                                <input
+                                                    type="text"
+                                                    value={tagNameInput}
+                                                    onChange={(e) => setTagNameInput(e.target.value)}
+                                                    placeholder="Label name"
+                                                    className="w-full px-3 py-2 text-sm border rounded hover:border-blue-400 focus:border-blue-500 outline-none transition-colors"
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <label className='block text-xs font-semibold text-gray-600 mb-1'>Select a color</label>
+                                                <div className='grid grid-cols-8 gap-2'>
+                                                    {PRESET_COLORS.map(color => (
+                                                        <button
+                                                            key={color}
+                                                            onClick={() => setTagColorInput(color)}
+                                                            className={`h-6 w-8 rounded transition-transform hover:scale-110 focus:outline-none ${tagColorInput === color ? 'ring-2 ring-offset-1 ring-blue-500' : ''}`}
+                                                            style={{ backgroundColor: color }}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            <button
+                                                onClick={() => setTagColorInput('#3b82f6')}
+                                                className='w-full py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm rounded transition-colors flex items-center justify-center gap-2'>
+                                                <i className="fa-solid fa-xmark"></i> Remove color
+                                            </button>
+
+                                            <div className='flex flex-row justify-between items-center pt-2 mt-2 border-t'>
+                                                {tagViewMode === 'edit' && (
+                                                    <button
+                                                        onClick={() => handleDeleteTag(editingTagId)}
+                                                        className='px-3 py-1.5 text-sm bg-white border border-red-200 text-red-600 hover:bg-red-50 rounded transition-colors'>
+                                                        Delete
+                                                    </button>
+                                                )}
+
+                                                <div className='flex gap-2 w-full justify-end'>
+                                                    {tagViewMode === 'edit' && <button onClick={() => setTagViewMode('list')} className='px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded'>Cancel</button>}
+                                                    <button
+                                                        onClick={tagViewMode === 'create' ? handleCreateTag : handleUpdateTag}
+                                                        className='px-4 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors'>
+                                                        {tagViewMode === 'create' ? 'Create' : 'Save changes'}
                                                     </button>
                                                 </div>
                                             </div>
-                                        ))
-                                    )}
-                                </div>
+
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         )}
                     </div>

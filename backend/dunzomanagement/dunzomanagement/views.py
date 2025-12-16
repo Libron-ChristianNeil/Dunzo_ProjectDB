@@ -57,23 +57,32 @@ def create_user(request):
         data = decode_body(request)
 
         username = data.get('username')
+        first_name = data.get('first_name', '')
+        last_name = data.get('last_name', '')
+        email = data.get('email')
         password = data.get('password')
 
         # 1. Basic Validation
         if not username or not password:
             return JsonResponse({'success': False, 'error': 'All fields are required.'}, status=400)
 
-        # 2. Check if User already exists
+        # 2. Check if Username already exists
         if User.objects.filter(username=username).exists():
             return JsonResponse({'success': False, 'error': 'Username already taken.'}, status=400)
 
-        # 3. Create User
+        # 3. Check if Email already exists (only if email is provided)
+        if email and User.objects.filter(email=email).exists():
+            return JsonResponse({'success': False, 'error': 'Email already registered.'}, status=400)
+
+        # 4. Create User
         try:
             # create_user automatically hashes the password
-            user = User.objects.create_user(username=username, password=password)
+            user = User.objects.create_user(username=username, email=email, password=password)
+            user.first_name = first_name
+            user.last_name = last_name
             user.save()
 
-            # 4. Log them in immediately
+            # 5. Log them in immediately
             login(request, user)
 
             return JsonResponse({'success': True, 'message': 'Registration successful'})
