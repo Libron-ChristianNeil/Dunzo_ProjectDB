@@ -122,3 +122,54 @@ class NotificationView(View):
         notif = get_object_or_404(Notification, pk=notification_id, user=request.user.pk)
         notif.delete()
         return JsonResponse({'success': True, 'message': 'Notification deleted successfully'})
+
+@method_decorator(csrf_exempt, name='dispatch')
+class UserSearchView(View):
+    """Search for users to add to a project"""
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({'success': False, 'error': 'Unauthorized'}, status=401)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request):
+        from django.db.models import Q
+        from .models import User
+        
+        query = request.GET.get('q', '').strip()
+        project_id = request.GET.get('project_id')
+        
+        if not query or len(query) < 2:
+            return JsonResponse({'success': True, 'users': []})
+        
+        # Search users by username or email
+        users = User.objects.filter(
+            Q(username__icontains=query) | 
+            Q(email__icontains=query) |
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query)
+        )
+        
+        # Exclude users already in the project if project_id is provided
+        if project_id:
+            ProjectMembership = apps.get_model('project_app', 'ProjectMembership')
+            existing_member_ids = ProjectMembership.objects.filter(
+                project_id=project_id
+            ).values_list('user_id', flat=True)
+            users = users.exclude(pk__in=existing_member_ids)
+        
+        # Limit results
+        users = users[:10]
+        
+        user_list = [
+            {
+                'user_id': u.pk,
+                'username': u.username,
+                'email': u.email or '',
+                'first_name': u.first_name or '',
+                'last_name': u.last_name or '',
+                'full_name': f"{u.first_name or ''} {u.last_name or ''}".strip() or u.username
+            }
+            for u in users
+        ]
+        
+        return JsonResponse({'success': True, 'users': user_list})

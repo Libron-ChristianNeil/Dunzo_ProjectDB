@@ -143,6 +143,9 @@ class ProjectDetailView(View):
 
                 # Check status code based on result success
                 if result.get('success'):
+                    # Inject current_user_id into the response data for frontend permission checks
+                    if 'data' in result and isinstance(result['data'], dict):
+                        result['data']['current_user_id'] = user_id
                     return JsonResponse(result)
                 else:
                     # Determine error code (403 for Unauthorized, 404 for Not Found)
@@ -241,6 +244,10 @@ class ProjectMembershipView(View):
 
         project_id = data.get('project_id')
         target_user_id = data.get('user_id')
+
+        # Handle 'self' - user wants to leave the project
+        if target_user_id == 'self':
+            target_user_id = requester_id
 
         # Basic Validation
         if not project_id or not target_user_id:

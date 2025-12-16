@@ -67,6 +67,23 @@ export const updateUserSettings = async (userData) => {
         return { success: false, error: 'Network Error' };
     }
 };
+
+export const searchUsers = async (query, projectId = null) => {
+    try {
+        let url = `${BASE_URL}/user/search/?q=${encodeURIComponent(query)}`;
+        if (projectId) {
+            url += `&project_id=${projectId}`;
+        }
+        const response = await fetch(url, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error searching users:', error);
+        return { success: false, error: 'Network Error', users: [] };
+    }
+};
 //***********************
 //* user_app
 //***********************
@@ -110,6 +127,19 @@ export const getProjects = async (filter = 'Active') => {
     }
 };
 
+export const getProjectDetails = async (projectId) => {
+    try {
+        const response = await fetch(`${BASE_URL}/project/details/?project_id=${projectId}`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching project details:', error);
+        return { success: false, error: 'Network Error' };
+    }
+};
+
 export const createProject = async (projectData) => {
     try {
         const response = await fetch(`${BASE_URL}/project/`, {
@@ -123,19 +153,6 @@ export const createProject = async (projectData) => {
         return await response.json();
     } catch (error) {
         console.error('Error creating project:', error);
-        return { success: false, error: 'Network Error' };
-    }
-};
-
-export const getProjectDetails = async (projectId) => {
-    try {
-        const response = await fetch(`${BASE_URL}/project/details/?project_id=${projectId}`, {
-            method: 'GET',
-            credentials: 'include',
-        });
-        return await response.json();
-    } catch (error) {
-        console.error('Error fetching project details:', error);
         return { success: false, error: 'Network Error' };
     }
 };
@@ -391,6 +408,20 @@ export const assignTask = async (assignmentData) => {
     }
 };
 
+// Get task assignees
+export const getTaskAssignees = async (taskId) => {
+    try {
+        const response = await fetch(`${BASE_URL}/task/details/assignees/?task_id=${taskId}`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching task assignees:', error);
+        return { success: false, error: 'Network Error' };
+    }
+};
+
 export const unassignTask = async (assignmentData) => {
     try {
         const response = await fetch(`${BASE_URL}/task/details/assignees/`, {
@@ -421,6 +452,20 @@ export const updateAssignmentRole = async (roleData) => {
         return await response.json();
     } catch (error) {
         console.error('Error updating assignment role:', error);
+        return { success: false, error: 'Network Error' };
+    }
+};
+
+// Get task comments
+export const getTaskComments = async (taskId) => {
+    try {
+        const response = await fetch(`${BASE_URL}/task/details/comments/?task_id=${taskId}`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching task comments:', error);
         return { success: false, error: 'Network Error' };
     }
 };

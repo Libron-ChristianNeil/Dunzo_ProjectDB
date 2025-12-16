@@ -8,8 +8,9 @@ import ModalExpandProject from '../components/projects-app-components/ModalExpan
 function Project() {
 
     const projectStatuses = [
+        { id: 'All', name: 'All' },
         { id: 'Active', name: 'Active' },
-        { id: 'Completed', name: 'Completed' },
+        { id: 'Complete', name: 'Complete' },
         { id: 'Archived', name: 'Archived' },
     ];
 
@@ -23,13 +24,13 @@ function Project() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedProjectStatus, setSelectedProjectStatus] = useState('Active');
-    const [selectedSortOption, setSelectedSortOption] = useState('all');
+    const [selectedSortOption, setSelectedSortOption] = useState('Name');
 
     // Fetch projects from API
     const fetchProjects = async () => {
         setLoading(true);
         try {
-            const response = await getProjects(selectedProjectStatus === 'all' ? 'Active' : selectedProjectStatus);
+            const response = await getProjects(selectedProjectStatus);
             if (response.success) {
                 setProjects(response.projects || []);
             } else {
@@ -59,21 +60,31 @@ function Project() {
     // SORT STEP
     // ==========================================
     const displayedProjects = [...projects].sort((a, b) => {
+        // Get values with fallbacks for different field names
+        const nameA = (a.title || a.name || '').toLowerCase();
+        const nameB = (b.title || b.name || '').toLowerCase();
+        const progressA = a.progress || a.percentage || 0;
+        const progressB = b.progress || b.percentage || 0;
+        const dateA = a.end_date || a.endDate || '';
+        const dateB = b.end_date || b.endDate || '';
 
         if (selectedSortOption === 'Name') {
-            return (a.title || '').localeCompare(b.title || '');
+            return nameA.localeCompare(nameB);
         }
 
         if (selectedSortOption === 'Progress') {
-            return (b.percentage || 0) - (a.percentage || 0);
+            return progressB - progressA; // Higher progress first
         }
 
         if (selectedSortOption === 'Due Date') {
-            return new Date(a.end_date) - new Date(b.end_date);
+            if (!dateA && !dateB) return 0;
+            if (!dateA) return 1; // No date goes to end
+            if (!dateB) return -1;
+            return new Date(dateA) - new Date(dateB); // Earliest due date first
         }
 
         // Default: Sort by ID
-        return (a.project_id || 0) - (b.project_id || 0);
+        return (a.project_id || a.id || 0) - (b.project_id || b.id || 0);
     });
 
     //for modal
@@ -85,16 +96,17 @@ function Project() {
     const transformProject = (project) => ({
         ...project,
         id: project.project_id || project.id,
-        name: project.title,
-        desc: project.description,
-        startDate: project.start_date ? new Date(project.start_date).toLocaleDateString() : '',
-        endDate: project.end_date ? new Date(project.end_date).toLocaleDateString() : '',
-        numTask: project.total_tasks || 0,
-        numComplete: project.completed_tasks || 0,
-        numMembers: project.member_count || 0,
-        percentage: project.progress || 0,
-        color: '#EF4444', // Default red color
+        name: project.title || project.name,
+        desc: project.description || project.desc,
+        startDate: project.start_date || project.startDate ? new Date(project.start_date || project.startDate).toLocaleDateString() : '',
+        endDate: project.end_date || project.endDate ? new Date(project.end_date || project.endDate).toLocaleDateString() : '',
+        numTask: project.total_tasks || project.numTask || 0,
+        numComplete: project.completed_tasks || project.numComplete || 0,
+        numMembers: project.member_count || project.numMembers || 0,
+        percentage: project.progress || project.percentage || 0,
+        color: project.color || '#EF4444',
         members: project.members || [],
+        currentUserRole: project.user_role || project.currentUserRole || 'Member', // Check user_role from API
     });
 
     return (

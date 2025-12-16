@@ -8,7 +8,7 @@ function ProjectCard({ item, setViewProject, setProjectItem }) {
             <div className='flex flex-row justify-between'>
                 <div style={{ backgroundColor: item.color }}
                     className='flex items-center justify-center bg-linear-to-br h-12 w-12 rounded-xl'>
-                    <span className='font-bold text-white text-xl'>{item.name[0]}</span>
+                    <span className='font-bold text-white text-xl'>{item.name?.[0] || '?'}</span>
                 </div>
 
                 <button onClick={() => {
@@ -68,7 +68,7 @@ function ProjectCard({ item, setViewProject, setProjectItem }) {
                 {/* members */}
                 <div>
                     <ul className='flex flex-row'>
-                        {item.members.slice(0, 5).map((mem, index) => (
+                        {(item.members || []).slice(0, 5).map((mem, index) => (
                             <li
                                 key={mem.id}
                                 style={{ backgroundColor: mem.avatarColor }}
@@ -78,10 +78,10 @@ function ProjectCard({ item, setViewProject, setProjectItem }) {
                             </li>
                         ))}
 
-                        {item.members.length > 5 && (
+                        {(item.members || []).length > 5 && (
                             <li
                                 className={`flex items-center justify-center bg-gray-600 rounded-full h-9 w-9 text-white text-sm font-semibold border-white border-2 ml-[-7px] transition duration-300 hover:-translate-y-1 cursor-pointer`}>
-                                +{item.members.length - 5}
+                                +{(item.members || []).length - 5}
                             </li>
                         )}
                     </ul>
@@ -89,7 +89,7 @@ function ProjectCard({ item, setViewProject, setProjectItem }) {
                 {/* status */}
                 <div className={`flex flex-row items-center justify-center font-semibold py-1 px-4 rounded-full
                         ${item.status === 'Active' && 'bg-blue-100 text-blue-500'}
-                        ${item.status === 'Completed' && 'bg-green-100 text-green-500'}
+                        ${item.status === 'Complete' && 'bg-green-100 text-green-500'}
                         ${item.status === 'Archived' && 'bg-gray-200 text-gray-700'}`}>
                     {item.status}
                 </div>

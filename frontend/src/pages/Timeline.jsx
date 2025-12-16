@@ -66,7 +66,7 @@ function Timeline() {
                         const response = await getTimeline(projectId);
                         return {
                             id: projectId,
-                            name: project.title,
+                            name: project.title || project.name || 'Untitled',
                             color: project.color || '#3b82f6', // Default blue if no color
                             timeline: response.success ? (response.data || []) : []
                         };
@@ -74,7 +74,7 @@ function Timeline() {
                         console.error(`Error fetching timeline for project ${projectId}`, err);
                         return {
                             id: projectId,
-                            name: project.title,
+                            name: project.title || project.name || 'Untitled',
                             color: project.color || '#3b82f6',
                             timeline: []
                         };
@@ -109,7 +109,7 @@ function Timeline() {
         { id: 'All', name: 'All Projects' },
         ...projects.map(p => ({
             id: (p.project_id || p.id).toString(),
-            name: p.title
+            name: p.title || p.name || 'Untitled'
         }))
     ];
 

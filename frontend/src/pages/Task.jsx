@@ -186,7 +186,7 @@ function Task() {
         { id: 'All', name: 'All Projects' },
         ...projects.map(project => ({
             id: (project.project_id || project.id)?.toString(),
-            name: project.title
+            name: project.title || project.name || 'Untitled Project'
         }))
     ];
 

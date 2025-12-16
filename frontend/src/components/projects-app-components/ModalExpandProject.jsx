@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react'
 import { formatToDateInput } from '../../utils/formatToDateInput';
 import { getInitials } from '../../utils/getInitials'
 import { useNavigate } from 'react-router-dom';
-import { getProjectTags, createTag, updateTag, deleteTag } from '../../https';
+import { getProjectTags, createTag, updateTag, deleteTag, updateProject, removeProjectMember } from '../../https';
+import AddMemberModal from './AddMemberModal';
+import MemberManagementModal from './MemberManagementModal';
 
 // Preset colors for the color picker
 const PRESET_COLORS = [
@@ -11,7 +13,7 @@ const PRESET_COLORS = [
     '#1e40af', '#1e293b', '#b91c1c', '#a16207', '#4d7c0f', '#15803d', '#0e7490', '#7e22ce'
 ];
 
-function ModalExpandProject({ item, onClose }) {
+function ModalExpandProject({ item, onClose, onUpdate }) {
     const navigate = useNavigate();
 
     // Guard against null item
@@ -21,6 +23,8 @@ function ModalExpandProject({ item, onClose }) {
 
     // Local state for editing, initialized with current value
     const [desc, setDesc] = useState(item?.desc || "");
+    const [title, setTitle] = useState(item?.name || "");
+    const [status, setStatus] = useState(item?.status || "Active");
     const [dates, setDates] = useState({
         start: formatToDateInput(item?.startDate),
         end: formatToDateInput(item?.endDate),
@@ -40,6 +44,72 @@ function ModalExpandProject({ item, onClose }) {
     const [editingTagId, setEditingTagId] = useState(null);
 
     const tagMenuRef = useRef(null);
+
+    // Add Member Modal State
+    const [showAddMemberModal, setShowAddMemberModal] = useState(false);
+
+    // Member Management Modal State
+    const [showMemberManagement, setShowMemberManagement] = useState(false);
+
+    // Permission check: Only Leader and Manager can edit dates/desc, only Leader can edit title
+    const canEdit = item.currentUserRole === 'Leader' || item.currentUserRole === 'Manager';
+    const isLeader = item.currentUserRole === 'Leader';
+    const isMember = item.currentUserRole === 'Member';
+
+    // Saving state
+    const [isSaving, setIsSaving] = useState(false);
+    const [saveMessage, setSaveMessage] = useState('');
+
+    // Check if there are unsaved changes
+    const hasChanges = dates.start !== formatToDateInput(item?.startDate) ||
+        dates.end !== formatToDateInput(item?.endDate) ||
+        desc !== (item?.desc || "") ||
+        title !== (item?.name || "") ||
+        status !== (item?.status || "Active");
+
+    // Save handler
+    const handleSave = async () => {
+        if (!canEdit || !hasChanges) return;
+
+        setIsSaving(true);
+        setSaveMessage('');
+
+        try {
+            const res = await updateProject({
+                project_id: item.id,
+                title: title, // Use editable title
+                start_date: dates.start || null,
+                end_date: dates.end || null,
+                description: desc,
+                status: status // Use editable status
+            });
+
+            if (res.success) {
+                setSaveMessage('Saved successfully!');
+                setTimeout(() => setSaveMessage(''), 2000);
+                onUpdate?.(); // Refresh project list
+            } else {
+                setSaveMessage('Failed to save');
+            }
+        } catch (error) {
+            console.error('Failed to save project:', error);
+            setSaveMessage('Error saving');
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    // Cancel handler - reset to original values
+    const handleCancel = () => {
+        setDesc(item?.desc || "");
+        setTitle(item?.name || "");
+        setStatus(item?.status || "Active");
+        setDates({
+            start: formatToDateInput(item?.startDate),
+            end: formatToDateInput(item?.endDate),
+        });
+        setSaveMessage('');
+    };
 
     // Fetch tags on mount
     useEffect(() => {
@@ -151,9 +221,40 @@ function ModalExpandProject({ item, onClose }) {
 
     return (
         <div className='flex fixed justify-center overflow-y-scroll inset-0 z-1000 bg-zinc-300/80'>
+            {/* Add Member Modal */}
+            {showAddMemberModal && (
+                <AddMemberModal
+                    projectId={item.id}
+                    onClose={() => setShowAddMemberModal(false)}
+                    onMemberAdded={() => {
+                        setShowAddMemberModal(false);
+                        onUpdate?.(); // Refresh project data
+                    }}
+                />
+            )}
+            {/* Member Management Modal */}
+            {showMemberManagement && (
+                <MemberManagementModal
+                    projectId={item.id}
+                    members={item.members || []}
+                    currentUserRole={item.currentUserRole || 'Member'}
+                    onClose={() => setShowMemberManagement(false)}
+                    onMemberUpdated={() => {
+                        setShowMemberManagement(false);
+                        onUpdate?.(); // Refresh project data
+                    }}
+                />
+            )}
             {/* Item */}
             <div className='flex flex-row my-auto min-h-100 h-fit rounded-2xl shadow'>
                 <div className='flex flex-col bg-white p-6 min-w-150 gap-3 relative'>
+                    {/* Permission Alert for Members */}
+                    {isMember && (
+                        <div className='bg-amber-50 border border-amber-200 text-amber-700 px-3 py-2 rounded-lg text-sm flex items-center gap-2 mb-2'>
+                            <i className="fa-solid fa-lock"></i>
+                            <span>You have view-only access to this project.</span>
+                        </div>
+                    )}
                     {/* project icon */}
                     <div className='flex flex-row justify-between'>
                         <div style={{ backgroundColor: item.color }}
@@ -166,7 +267,17 @@ function ModalExpandProject({ item, onClose }) {
 
 
                     {/* project name */}
-                    <span className='font-semibold text-gray-900 text-md'>{item.name}</span>
+                    {isLeader ? (
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            className='font-semibold text-gray-900 text-md border-b border-transparent hover:border-gray-300 focus:border-blue-500 focus:outline-none bg-transparent w-full'
+                            placeholder='Project name'
+                        />
+                    ) : (
+                        <span className='font-semibold text-gray-900 text-md'>{item.name}</span>
+                    )}
                     {/* dates */}
                     <div className='text-sm text-gray-700'>
 
@@ -177,7 +288,10 @@ function ModalExpandProject({ item, onClose }) {
                                 value={dates.start}
                                 onChange={(e) =>
                                     setDates({ ...dates, start: e.target.value })
-                                } />
+                                }
+                                disabled={!canEdit}
+                                className={!canEdit ? 'cursor-not-allowed opacity-60' : ''}
+                            />
                         </div>
 
                         <div className='flex flex-row gap-2'>
@@ -187,7 +301,10 @@ function ModalExpandProject({ item, onClose }) {
                                 value={dates.end}
                                 onChange={(e) =>
                                     setDates({ ...dates, end: e.target.value })
-                                } />
+                                }
+                                disabled={!canEdit}
+                                className={!canEdit ? 'cursor-not-allowed opacity-60' : ''}
+                            />
                         </div>
                     </div>
 
@@ -404,7 +521,9 @@ function ModalExpandProject({ item, onClose }) {
                         <div className='flex flex-row gap-1'>
 
                             {item.name !== 'General' ? (
-                                <div className='flex items-center justify-center rounded-full h-9 w-9 bg-gray-100 text-gray-600 text-sm font-semibold border-gray-300 border-2 cursor-pointer'>
+                                <div
+                                    onClick={() => setShowAddMemberModal(true)}
+                                    className='flex items-center justify-center rounded-full h-9 w-9 bg-gray-100 text-gray-600 text-sm font-semibold border-gray-300 border-2 cursor-pointer hover:bg-gray-200 transition-colors'>
                                     <i className="fa-solid fa-plus"></i>
                                 </div>
                             ) : null}
@@ -412,8 +531,10 @@ function ModalExpandProject({ item, onClose }) {
                             {(item.members || []).map((mem) => (
                                 <div
                                     key={mem.id}
+                                    onClick={() => setShowMemberManagement(true)}
                                     style={{ backgroundColor: mem.avatarColor }}
                                     className='flex items-center justify-center rounded-full h-9 w-9 text-white text-sm font-semibold border-white border-2 transition duration-300 hover:-translate-y-1 cursor-pointer'
+                                    title={`${mem.name} (${mem.role || 'Member'})`}
                                 >
                                     {getInitials(mem.name)}
                                 </div>
@@ -421,35 +542,98 @@ function ModalExpandProject({ item, onClose }) {
                         </div>
 
                         {/* status */}
-                        <div className={`flex flex-row items-center justify-center font-semibold py-1 px-4 rounded-full
-                                ${item.status === 'Active' && 'bg-blue-100 text-blue-500'}
-                                ${item.status === 'Completed' && 'bg-green-100 text-green-500'}
-                                ${item.status === 'Archived' && 'bg-gray-200 text-gray-700'}`}>
-                            {item.status}
-                        </div>
+                        {isLeader ? (
+                            <select
+                                value={status}
+                                onChange={(e) => setStatus(e.target.value)}
+                                className={`flex flex-row items-center justify-center font-semibold py-1 px-4 rounded-full cursor-pointer
+                                    ${status === 'Active' && 'bg-blue-100 text-blue-500'}
+                                    ${status === 'Complete' && 'bg-green-100 text-green-500'}
+                                    ${status === 'Archived' && 'bg-gray-200 text-gray-700'}`}
+                            >
+                                <option value="Active">Active</option>
+                                <option value="Complete">Complete</option>
+                                <option value="Archived">Archived</option>
+                            </select>
+                        ) : (
+                            <div className={`flex flex-row items-center justify-center font-semibold py-1 px-4 rounded-full
+                                    ${item.status === 'Active' && 'bg-blue-100 text-blue-500'}
+                                    ${item.status === 'Complete' && 'bg-green-100 text-green-500'}
+                                    ${item.status === 'Archived' && 'bg-gray-200 text-gray-700'}`}>
+                                {item.status}
+                            </div>
+                        )}
                     </div>
+
+                    {/* Save/Cancel Buttons (only show if user can edit and has changes) */}
+                    {canEdit && (
+                        <div className='flex flex-row items-center gap-2 mt-4 pt-4 border-t'>
+                            {hasChanges && (
+                                <>
+                                    <button
+                                        onClick={handleSave}
+                                        disabled={isSaving}
+                                        className='px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 cursor-pointer text-sm font-medium'
+                                    >
+                                        {isSaving ? 'Saving...' : 'Save Changes'}
+                                    </button>
+                                    <button
+                                        onClick={handleCancel}
+                                        disabled={isSaving}
+                                        className='px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 cursor-pointer text-sm font-medium'
+                                    >
+                                        Cancel
+                                    </button>
+                                </>
+                            )}
+                            {saveMessage && (
+                                <span className={`text-sm ${saveMessage.includes('success') ? 'text-green-600' : 'text-red-600'}`}>
+                                    {saveMessage}
+                                </span>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Leave Project Button (only for Members and Managers) */}
+                    {!isLeader && (
+                        <div className='flex flex-row items-center gap-2 mt-4 pt-4 border-t'>
+                            <button
+                                onClick={async () => {
+                                    if (!confirm('Are you sure you want to leave this project? This action cannot be undone.')) return;
+
+                                    try {
+                                        const res = await removeProjectMember({
+                                            project_id: item.id,
+                                            user_id: 'self' // Backend should handle 'self' as current user
+                                        });
+
+                                        if (res.success) {
+                                            alert('You have left the project.');
+                                            onUpdate?.();
+                                            onClose();
+                                        } else {
+                                            alert(res.error || 'Failed to leave project');
+                                        }
+                                    } catch (error) {
+                                        console.error('Error leaving project:', error);
+                                        alert('Error leaving project');
+                                    }
+                                }}
+                                className='px-4 py-2 bg-red-100 text-red-600 border border-red-200 rounded-lg hover:bg-red-200 cursor-pointer text-sm font-medium flex items-center gap-2'
+                            >
+                                <i className="fa-solid fa-right-from-bracket"></i>
+                                Leave Project
+                            </button>
+                            <span className='text-xs text-gray-500'>You will no longer have access to this project</span>
+                        </div>
+                    )}
                 </div>
 
-                {/* Comment section */}
-                <div className='flex flex-col w-120 py-5 px-5 bg-gray-100'>
-                    <div className='flex flex-row justify-between gap-2 '>
-                        <div className='flex flex-row items-center gap-2 text-md font-medium text-gray-900'>
-                            <i className="fa-regular fa-message"></i>
-                            <span>Comments</span>
-                        </div>
-                        <button className='cursor-pointer' onClick={onClose}>
-                            <i className="fa-regular fa-circle-xmark text-xl"></i>
-                        </button>
-                    </div>
-
-                    <textarea
-                        placeholder="Write a short description..."
-                        className="w-full mt-2 p-2 border rounded resize-none overflow-hidden text-sm min-h-[60px]"
-                        onInput={(e) => {
-                            e.target.style.height = "auto";
-                            e.target.style.height = `${e.target.scrollHeight}px`;
-                        }}
-                    />
+                {/* Close button */}
+                <div className='flex flex-col py-5 px-3 bg-gray-100'>
+                    <button className='cursor-pointer' onClick={onClose}>
+                        <i className="fa-regular fa-circle-xmark text-xl"></i>
+                    </button>
                 </div>
             </div>
         </div>
