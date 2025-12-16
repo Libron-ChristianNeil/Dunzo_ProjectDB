@@ -95,16 +95,7 @@ function Login() {
                             </div>
                         </div>
 
-                        <div className='flex flex-row justify-between'>
-                            <div className='flex flex-row items-center gap-2'>
-                                <input type='checkbox' className='w-3 h-3 ml-0.5' />
-                                <p>Remember me</p>
-                            </div>
 
-                            <button type="button" className='text-red-500 font-medium text-sm hover:underline cursor-pointer mr-1'>
-                                Forgot Password
-                            </button>
-                        </div>
 
                         {/* 3. SUBMIT BUTTON */}
                         <button
