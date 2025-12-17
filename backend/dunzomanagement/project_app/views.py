@@ -7,19 +7,14 @@ from django.views import View
 
 
 def decode_body(request):
-    """Parse JSON body from request, return empty dict if invalid."""
     try:
         return json.loads(request.body.decode('utf-8'))
     except json.JSONDecodeError:
         return {}
 
 
-# =============================================================================
-# PROJECT VIEW - /api/project/
-# =============================================================================
 @method_decorator(csrf_exempt, name='dispatch')
 class ProjectView(View):
-    """Handles project list and creation."""
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -27,7 +22,6 @@ class ProjectView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
-        """Get all projects for the current user."""
         user_id = request.user.pk
         filter_type = request.GET.get('filter', 'Active')
 
@@ -46,7 +40,6 @@ class ProjectView(View):
             return JsonResponse({'success': False, 'error': 'Internal Server Error'}, status=500)
 
     def post(self, request):
-        """Create a new project."""
         data = decode_body(request)
 
         # kuha data from request
@@ -77,12 +70,8 @@ class ProjectView(View):
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
-# =============================================================================
-# PROJECT DETAIL VIEW - /api/project/details/
-# =============================================================================
 @method_decorator(csrf_exempt, name='dispatch')
 class ProjectDetailView(View):
-    """Handles single project details and updates."""
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -90,7 +79,6 @@ class ProjectDetailView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
-        """Get project details."""
         project_id = request.GET.get('project_id')
         user_id = request.user.pk
 
@@ -115,7 +103,6 @@ class ProjectDetailView(View):
             return JsonResponse({'success': False, 'error': 'Internal Server Error'}, status=500)
 
     def put(self, request):
-        """Update project details."""
         data = decode_body(request)
         user_id = request.user.pk
 
@@ -149,13 +136,8 @@ class ProjectDetailView(View):
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
-
-# =============================================================================
-# PROJECT MEMBERSHIP VIEW - /api/project/details/members/
-# =============================================================================
 @method_decorator(csrf_exempt, name='dispatch')
 class ProjectMembershipView(View):
-    """Handles project member management."""
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -163,7 +145,6 @@ class ProjectMembershipView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request):
-        """Add a member to the project."""
         data = decode_body(request)
         requester_id = request.user.pk
 
@@ -189,7 +170,6 @@ class ProjectMembershipView(View):
             return JsonResponse({'success': False, 'error': 'Internal Server Error'}, status=500)
 
     def delete(self, request):
-        """Remove a member from the project."""
         data = decode_body(request)
         requester_id = request.user.pk
 
@@ -216,7 +196,6 @@ class ProjectMembershipView(View):
             return JsonResponse({'success': False, 'error': 'Internal Server Error'}, status=500)
 
     def put(self, request):
-        """Update a member's role."""
         data = decode_body(request)
         # get logged in user id must be a leader
         requester_id = request.user.pk
@@ -248,21 +227,14 @@ class ProjectMembershipView(View):
         except Exception as e:
             return JsonResponse({'success': False, 'error': 'Internal Server Error'}, status=500)
 
-
-# =============================================================================
-# TAG VIEW - /api/project/details/tags/
-# =============================================================================
 @method_decorator(csrf_exempt, name='dispatch')
 class TagView(View):
-    """Handles project tag management."""
-
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return JsonResponse({'success': False, 'error': 'Unauthorized'}, status=401)
         return super().dispatch(request, *args, **kwargs)
 
-    def get(self, request):
-        """Get tags for a project."""
+    def get(self, request):  
         project_id = request.GET.get('project_id')
 
         if not project_id:
@@ -277,7 +249,6 @@ class TagView(View):
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     def post(self, request):
-        """Create a new tag."""
         data = decode_body(request)
         project_id = data.get('project_id')
         user_id = request.user.pk
@@ -300,7 +271,6 @@ class TagView(View):
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     def put(self, request):
-        """Edit a tag."""
         data = decode_body(request)
         tag_id = data.get('tag_id')
         user_id = request.user.pk
@@ -324,7 +294,6 @@ class TagView(View):
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     def delete(self, request):
-        """Delete a tag."""
         data = decode_body(request)
         tag_id = data.get('tag_id')
         user_id = request.user.pk
