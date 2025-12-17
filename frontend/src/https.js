@@ -305,22 +305,7 @@ export const deleteTag = async (tagData) => {
     }
 };
 
-export const deleteProject = async (projectId) => {
-    try {
-        const response = await fetch(`${BASE_URL}/project/`, {
-            method: 'DELETE',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ project_id: projectId })
-        });
-        return await response.json();
-    } catch (error) {
-        console.error('Error deleting project:', error);
-        return { success: false, error: 'Network Error' };
-    }
-};
+
 
 //***********************
 //* task_app
