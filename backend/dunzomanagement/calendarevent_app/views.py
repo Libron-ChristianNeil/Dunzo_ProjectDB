@@ -10,12 +10,26 @@ def decode_body(request):
         return json.loads(request.body.decode('utf-8'))
     except json.JSONDecodeError:
         return {}
+from datetime import datetime
+
 def dictfetchall(cursor):
+    """
+    Convert cursor results to list of dicts.
+    Datetime values are converted to ISO format strings WITHOUT 'Z' suffix
+    so the frontend treats them as local Manila time (not UTC).
+    """
     columns = [col[0] for col in cursor.description]
-    return [
-        dict(zip(columns, row))
-        for row in cursor.fetchall()
-    ]
+    rows = []
+    for row in cursor.fetchall():
+        row_dict = {}
+        for col, val in zip(columns, row):
+            # Convert datetime to ISO string without 'Z' (so frontend treats as local time)
+            if isinstance(val, datetime):
+                row_dict[col] = val.strftime('%Y-%m-%dT%H:%M:%S')
+            else:
+                row_dict[col] = val
+        rows.append(row_dict)
+    return rows
 
 @method_decorator(csrf_exempt, name='dispatch')
 class CalendarView(View):

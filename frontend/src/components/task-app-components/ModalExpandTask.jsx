@@ -732,7 +732,7 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
                             <button
                                 onClick={handlePostComment}
                                 disabled={!canComment || isSubmitting}
-                                className="flex items-center justify-center gap-2 mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50"
+                                className="flex items-center justify-center gap-2 mt-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 disabled:opacity-50"
                             >
                                 {isSubmitting && !replyingTo && <i className="fas fa-spinner fa-spin"></i>}
                                 {isSubmitting && !replyingTo ? 'Posting...' : 'Post Comment'}

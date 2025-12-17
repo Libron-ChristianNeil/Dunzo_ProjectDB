@@ -97,23 +97,27 @@ function EditEventModal({ onClose, eventsService, event, onEventUpdated }) {
         setSubmitting(true);
 
         try {
-            const startZoned = Temporal.PlainDateTime.from(start).toZonedDateTime(TIMEZONE);
-            const endZoned = Temporal.PlainDateTime.from(end).toZonedDateTime(TIMEZONE);
+            // Send dates as ISO string without 'Z' - backend expects Manila time
+            const startDateTime = Temporal.PlainDateTime.from(start);
+            const endDateTime = Temporal.PlainDateTime.from(end);
 
-            // Prepare API data
+            // Prepare API data - send as local Manila time (no UTC conversion)
             const updateData = {
                 event_id: eventId,
                 title: title,
                 description: description,
-                start_date: startZoned.toInstant().toString(),
-                end_date: endZoned.toInstant().toString(),
+                start_date: startDateTime.toString(),
+                end_date: endDateTime.toString(),
                 participant_ids: [] // Preserve existing or empty
             };
 
             const response = await updateCalendarEvent(updateData);
 
             if (response.success) {
-                // Update local calendar
+                // Update local calendar with zoned datetimes for display
+                const startZoned = startDateTime.toZonedDateTime(TIMEZONE);
+                const endZoned = endDateTime.toZonedDateTime(TIMEZONE);
+                
                 eventsService.update({
                     ...event,
                     title: title,

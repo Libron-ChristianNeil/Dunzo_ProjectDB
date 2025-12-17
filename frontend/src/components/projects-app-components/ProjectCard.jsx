@@ -71,8 +71,7 @@ function ProjectCard({ item, setViewProject, setProjectItem }) {
                         {(item.members || []).slice(0, 5).map((mem, index) => (
                             <li
                                 key={mem.id}
-                                style={{ backgroundColor: mem.avatarColor }}
-                                className={`flex items-center justify-center rounded-full h-9 w-9 text-white text-sm font-semibold border-white border-2 transition duration-300 hover:-translate-y-1 cursor-pointer
+                                className={`bg-red-500 flex items-center justify-center rounded-full h-9 w-9 text-white text-sm font-semibold border-white border-2 transition duration-300 hover:-translate-y-1 cursor-pointer
                                             ${index !== 0 ? 'ml-[-7px]' : ''}`}>
                                 {getInitials(mem.name)}
                             </li>

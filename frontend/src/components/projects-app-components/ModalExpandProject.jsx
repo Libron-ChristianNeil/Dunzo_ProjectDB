@@ -453,7 +453,7 @@ function ModalExpandProject({ item, onClose, onUpdate }) {
                                                     value={tagNameInput}
                                                     onChange={(e) => setTagNameInput(e.target.value)}
                                                     placeholder="Label name"
-                                                    className="w-full px-3 py-2 text-sm border rounded hover:border-blue-400 focus:border-blue-500 outline-none transition-colors"
+                                                    className="w-full px-3 py-2 text-sm border rounded hover:border-red-400 focus:border-red-500 outline-none transition-colors"
                                                 />
                                             </div>
 
@@ -490,7 +490,7 @@ function ModalExpandProject({ item, onClose, onUpdate }) {
                                                     {tagViewMode === 'edit' && <button onClick={() => setTagViewMode('list')} className='px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded'>Cancel</button>}
                                                     <button
                                                         onClick={tagViewMode === 'create' ? handleCreateTag : handleUpdateTag}
-                                                        className='px-4 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors'>
+                                                        className='px-4 py-1.5 text-sm bg-red-600 hover:bg-red-700 text-white font-medium rounded transition-colors'>
                                                         {tagViewMode === 'create' ? 'Create' : 'Save changes'}
                                                     </button>
                                                 </div>
@@ -553,8 +553,7 @@ function ModalExpandProject({ item, onClose, onUpdate }) {
                                 <div
                                     key={mem.id}
                                     onClick={() => setShowMemberManagement(true)}
-                                    style={{ backgroundColor: mem.avatarColor }}
-                                    className='flex items-center justify-center rounded-full h-9 w-9 text-white text-sm font-semibold border-white border-2 transition duration-300 hover:-translate-y-1 cursor-pointer'
+                                    className='bg-red-500 flex items-center justify-center rounded-full h-9 w-9 text-white text-sm font-semibold border-white border-2 transition duration-300 hover:-translate-y-1 cursor-pointer'
                                     title={`${mem.name} (${mem.role || 'Member'})`}
                                 >
                                     {getInitials(mem.name)}

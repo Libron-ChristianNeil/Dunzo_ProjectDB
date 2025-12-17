@@ -33,24 +33,23 @@ const transformEvent = (backendEvent) => {
         calendarId = 'normal';
     }
 
-    // Parse dates - backend sends ISO strings
+    // Parse dates - backend sends dates in Manila timezone (not UTC)
     const parseDate = (dateString) => {
         if (!dateString) return null;
         try {
-            // Convert to ZonedDateTime in Manila timezone
-            const instant = Temporal.Instant.from(
-                dateString.endsWith('Z') ? dateString : dateString.replace(' ', 'T') + 'Z'
-            );
-            return instant.toZonedDateTimeISO(TIMEZONE);
-        } catch (e) {
-            // Fallback: try parsing as PlainDateTime
-            try {
+            // Check if the date already has timezone info (ends with Z or has offset)
+            if (dateString.endsWith('Z') || /[+-]\d{2}:\d{2}$/.test(dateString)) {
+                // Date is in UTC or has explicit timezone - convert to Manila
+                const instant = Temporal.Instant.from(dateString);
+                return instant.toZonedDateTimeISO(TIMEZONE);
+            } else {
+                // Date is stored without timezone - treat as Manila time directly
                 const plain = Temporal.PlainDateTime.from(dateString.replace(' ', 'T'));
                 return plain.toZonedDateTime(TIMEZONE);
-            } catch (e2) {
-                console.error('Failed to parse date:', dateString, e2);
-                return null;
             }
+        } catch (e) {
+            console.error('Failed to parse date:', dateString, e);
+            return null;
         }
     };
 

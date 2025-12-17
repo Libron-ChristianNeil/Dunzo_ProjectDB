@@ -146,8 +146,8 @@ function MemberManagementModal({ projectId, members: initialMembers, currentUser
                                 <div className='flex items-center gap-3'>
                                     {/* Avatar */}
                                     <div
-                                        style={{ backgroundColor: member.avatarColor || '#3b82f6' }}
-                                        className='w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm'
+                        
+                                        className='bg-red-500 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm'
                                     >
                                         {getInitials(member.name)}
                                     </div>

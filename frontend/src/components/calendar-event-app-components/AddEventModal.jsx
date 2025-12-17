@@ -100,13 +100,13 @@ function AddEventModal({ onClose, eventsService, onEventCreated }) {
         setSubmitting(true);
 
         try {
-            // Prepare data for API
+            // Prepare data for API - send as local Manila time (no UTC conversion)
             const eventData = {
                 title: title,
                 description: description,
                 type: eventType,
-                start_date: startPlain.toZonedDateTime(TIMEZONE).toInstant().toString(),
-                end_date: endPlain.toZonedDateTime(TIMEZONE).toInstant().toString(),
+                start_date: startPlain.toString(),
+                end_date: endPlain.toString(),
                 project_id: eventType === 'Meeting' ? parseInt(selectedProjectId) : null,
                 participant_ids: [] // Can be extended to add participants
             };

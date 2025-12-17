@@ -118,7 +118,7 @@ function AddMemberModal({ projectId, onClose, onMemberAdded }) {
                             value={query}
                             onChange={(e) => handleSearch(e.target.value)}
                             placeholder="Search by username or email..."
-                            className='w-full px-3 py-2 border rounded-lg focus:border-blue-500 focus:outline-none text-sm'
+                            className='w-full px-3 py-2 border rounded-lg focus:border-red-500 focus:outline-none text-sm'
                         />
 
                         {/* Search Results Dropdown */}
@@ -130,7 +130,7 @@ function AddMemberModal({ projectId, onClose, onMemberAdded }) {
                                         onClick={() => handleSelectUser(user)}
                                         className='flex items-center gap-3 px-3 py-2 hover:bg-gray-50 cursor-pointer border-b last:border-b-0'
                                     >
-                                        <div className='w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold'>
+                                        <div className='w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white text-xs font-bold'>
                                             {getInitials(user.full_name)}
                                         </div>
                                         <div className='flex flex-col'>
@@ -157,8 +157,8 @@ function AddMemberModal({ projectId, onClose, onMemberAdded }) {
 
                     {/* Selected User Preview */}
                     {selectedUser && (
-                        <div className='flex items-center gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200'>
-                            <div className='w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold'>
+                        <div className='flex items-center gap-3 p-3 bg-red-50 rounded-lg border border-red-200'>
+                            <div className='w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white font-bold'>
                                 {getInitials(selectedUser.full_name)}
                             </div>
                             <div className='flex-1'>
@@ -214,7 +214,7 @@ function AddMemberModal({ projectId, onClose, onMemberAdded }) {
                     <button
                         onClick={handleAddMember}
                         disabled={!selectedUser || adding}
-                        className={`px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer ${(!selectedUser || adding) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`px-4 py-2 text-sm bg-red-500 hover:bg-red-700 text-white font-medium rounded-lg transition-colors cursor-pointer ${(!selectedUser || adding) ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                         {adding ? 'Adding...' : 'Add Member'}
                     </button>
