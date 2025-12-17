@@ -1,0 +1,110 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"33aa42ef-630d-454b-aadd-8426bf50f91a\" name=\"Changes\" comment=\"\">\n      <change afterPath=\"$PROJECT_DIR$/frontend/src/assets/logout_illustration.jpg\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/frontend/src/components/settings-components/LogoutModal.jsx\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/frontend/src/components/Sidebar.jsx\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/frontend/src/components/Sidebar.jsx\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/frontend/src/pages/Settings.jsx\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/frontend/src/pages/Settings.jsx\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"DjangoConsoleOptions\" custom-start-script=\"import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)\">\n    <option name=\"myCustomStartScript\" value=\"import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Python Script\" />\n        <option value=\"JavaScript File\" />\n        <option value=\"JSX File\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"auth\" />\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPEN&quot;,\n    &quot;assignee&quot;: &quot;DMKuZu&quot;\n  }\n}</component>\n  <component name=\"GithubPullRequestsUISettings\">{\n  &quot;selectedUrlAndAccountId&quot;: {\n    &quot;url&quot;: &quot;https://github.com/Libron-ChristianNeil/Dunzo_ProjectDB.git&quot;,\n    &quot;accountId&quot;: &quot;e7030cd0-6bfb-4d76-bfe8-972a5abe9d66&quot;\n  }\n}</component>\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 3\n}</component>\n  <component name=\"ProjectId\" id=\"35kSkIpqhZcelkSjJpCTWayOGFu\" />\n  <component name=\"ProjectLevelVcsManager\">\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\n  </component>\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\"><![CDATA[{\n  \"keyToString\": {\n    \"ModuleVcsDetector.initialDetectionPerformed\": \"true\",\n    \"Python.views.executor\": \"Run\",\n    \"RunOnceActivity.OpenDjangoStructureViewOnStart\": \"true\",\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\n    \"RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252\": \"true\",\n    \"RunOnceActivity.git.unshallow\": \"true\",\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\n    \"SHELLCHECK.PATH\": \"I do mind\",\n    \"Shell Script.Full Stack.executor\": \"Run\",\n    \"git-widget-placeholder\": \"Merging ledon\",\n    \"junie.onboarding.icon.badge.shown\": \"true\",\n    \"last_opened_file_path\": \"/home/kuzu/PycharmProjects/Dunzo_ProjectDB/run_fullstack.sh\",\n    \"node.js.detected.package.eslint\": \"true\",\n    \"node.js.detected.package.tslint\": \"true\",\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\n    \"nodejs_package_manager_path\": \"npm\",\n    \"settings.editor.selected.configurable\": \"com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable\",\n    \"to.speed.mode.migration.done\": \"true\",\n    \"ts.external.directory.path\": \"/home/kuzu/.local/share/JetBrains/Toolbox/apps/pycharm/plugins/javascript-plugin/jsLanguageServicesImpl/external\",\n    \"vue.rearranger.settings.migration\": \"true\"\n  }\n}]]></component>\n  <component name=\"RecentsManager\">\n    <key name=\"CopyFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/backend/dunzomanagement\" />\n      <recent name=\"$PROJECT_DIR$/dunzomanagement/timeline_app/static/timeline_app/css\" />\n      <recent name=\"$PROJECT_DIR$/dunzomanagement/timeline_app/templates/timeline_app\" />\n      <recent name=\"$PROJECT_DIR$/dunzomanagement/task_app/static/task_app/css\" />\n      <recent name=\"$PROJECT_DIR$/dunzomanagement/task_app/templates/task_app\" />\n    </key>\n    <key name=\"MoveFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/dunzomanagement/dunzomanagement/templates/main\" />\n      <recent name=\"$PROJECT_DIR$/dunzomanagement/dunzomanagement/static/main\" />\n      <recent name=\"$PROJECT_DIR$/dunzomanagement/dunzomanagement/templates\" />\n      <recent name=\"$PROJECT_DIR$/dunzomanagement/dunzomanagement/static/css\" />\n      <recent name=\"$PROJECT_DIR$/dunzomanagement/dunzomanagement/static\" />\n    </key>\n  </component>\n  <component name=\"RunManager\" selected=\"Shell Script.Full Stack\">\n    <configuration name=\"Dunzo_ProjectDB\" type=\"Python.DjangoServer\" factoryName=\"Django server\">\n      <module name=\"Dunzo_ProjectDB\" />\n      <option name=\"ENV_FILES\" value=\"\" />\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\n      <option name=\"PARENT_ENVS\" value=\"true\" />\n      <envs>\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\n      </envs>\n      <option name=\"SDK_HOME\" value=\"\" />\n      <option name=\"SDK_NAME\" value=\"Python 3.13\" />\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/backend/dunzomanagement\" />\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\n      <option name=\"launchJavascriptDebuger\" value=\"false\" />\n      <option name=\"port\" value=\"8000\" />\n      <option name=\"host\" value=\"\" />\n      <option name=\"additionalOptions\" value=\"\" />\n      <option name=\"browserUrl\" value=\"\" />\n      <option name=\"runTestServer\" value=\"false\" />\n      <option name=\"runNoReload\" value=\"false\" />\n      <option name=\"useCustomRunCommand\" value=\"false\" />\n      <option name=\"customRunCommand\" value=\"\" />\n      <method v=\"2\" />\n    </configuration>\n    <configuration name=\"Full Stack\" type=\"ShConfigurationType\">\n      <option name=\"SCRIPT_TEXT\" value=\"\" />\n      <option name=\"INDEPENDENT_SCRIPT_PATH\" value=\"true\" />\n      <option name=\"SCRIPT_PATH\" value=\"$PROJECT_DIR$/run_fullstack.sh\" />\n      <option name=\"SCRIPT_OPTIONS\" value=\"\" />\n      <option name=\"INDEPENDENT_SCRIPT_WORKING_DIRECTORY\" value=\"true\" />\n      <option name=\"SCRIPT_WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\n      <option name=\"INDEPENDENT_INTERPRETER_PATH\" value=\"true\" />\n      <option name=\"INTERPRETER_PATH\" value=\"/bin/bash\" />\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\n      <option name=\"EXECUTE_IN_TERMINAL\" value=\"true\" />\n      <option name=\"EXECUTE_SCRIPT_FILE\" value=\"true\" />\n      <envs />\n      <method v=\"2\" />\n    </configuration>\n    <list>\n      <item itemvalue=\"Django Server.Dunzo_ProjectDB\" />\n      <item itemvalue=\"Shell Script.Full Stack\" />\n    </list>\n  </component>\n  <component name=\"SharedIndexes\">\n    <attachedChunks>\n      <set>\n        <option value=\"bundled-js-predefined-d6986cc7102b-9c94529fcfe0-JavaScript-PY-252.26199.168\" />\n        <option value=\"bundled-python-sdk-b3d66beaba9a-c6efb3732140-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.26199.168\" />\n      </set>\n    </attachedChunks>\n  </component>\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"33aa42ef-630d-454b-aadd-8426bf50f91a\" name=\"Changes\" comment=\"\" />\n      <created>1763652718779</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1763652718779</updated>\n      <workItem from=\"1763652722640\" duration=\"212000\" />\n      <workItem from=\"1763652968929\" duration=\"3126000\" />\n      <workItem from=\"1763823527511\" duration=\"1318000\" />\n      <workItem from=\"1763887112293\" duration=\"1315000\" />\n      <workItem from=\"1763992190680\" duration=\"61000\" />\n      <workItem from=\"1764008108331\" duration=\"7864000\" />\n      <workItem from=\"1764057701514\" duration=\"560000\" />\n      <workItem from=\"1764230112166\" duration=\"95878000\" />\n      <workItem from=\"1764588836457\" duration=\"718000\" />\n      <workItem from=\"1764758846613\" duration=\"34000\" />\n      <workItem from=\"1764988719844\" duration=\"3308000\" />\n      <workItem from=\"1765034342109\" duration=\"930000\" />\n      <workItem from=\"1765084283120\" duration=\"833000\" />\n      <workItem from=\"1765116782951\" duration=\"608000\" />\n      <workItem from=\"1765291077958\" duration=\"1500000\" />\n      <workItem from=\"1765299658053\" duration=\"2719000\" />\n      <workItem from=\"1765302528871\" duration=\"1667000\" />\n      <workItem from=\"1765333096447\" duration=\"9396000\" />\n      <workItem from=\"1765345499561\" duration=\"943000\" />\n      <workItem from=\"1765375748733\" duration=\"23039000\" />\n      <workItem from=\"1765447958102\" duration=\"9207000\" />\n      <workItem from=\"1765473405993\" duration=\"5859000\" />\n      <workItem from=\"1765582152478\" duration=\"1435000\" />\n    </task>\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n  </component>\n  <component name=\"UnknownFeatures\">\n    <option featureType=\"dependencySupport\" implementationName=\"javascript:npm:react\" />\n    <option featureType=\"dependencySupport\" implementationName=\"javascript:npm:tailwindcss\" />\n    <option featureType=\"dependencySupport\" implementationName=\"javascript:npm:vite\" />\n    <option featureType=\"dependencySupport\" implementationName=\"executable:podman\" />\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State />\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n  <component name=\"com.intellij.coverage.CoverageDataManagerImpl\">\n    <SUITE FILE_PATH=\"coverage/Dunzo_ProjectDB$views.coverage\" NAME=\"views Coverage Results\" MODIFIED=\"1764279867929\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/dunzomanagement/dunzomanagement\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision be747d57dd8e61e8b800d609185bcff28a7e9443)
++++ b/.idea/workspace.xml	(date 1765723165275)
+@@ -4,12 +4,7 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="33aa42ef-630d-454b-aadd-8426bf50f91a" name="Changes" comment="">
+-      <change afterPath="$PROJECT_DIR$/frontend/src/assets/logout_illustration.jpg" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/frontend/src/components/settings-components/LogoutModal.jsx" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Sidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Sidebar.jsx" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Settings.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Settings.jsx" afterDir="false" />
+-    </list>
++    <list default="true" id="33aa42ef-630d-454b-aadd-8426bf50f91a" name="Changes" comment="fixed ledon" />
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -58,31 +53,31 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "ModuleVcsDetector.initialDetectionPerformed": "true",
+-    "Python.views.executor": "Run",
+-    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+-    "RunOnceActivity.git.unshallow": "true",
+-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+-    "SHELLCHECK.PATH": "I do mind",
+-    "Shell Script.Full Stack.executor": "Run",
+-    "git-widget-placeholder": "Merging ledon",
+-    "junie.onboarding.icon.badge.shown": "true",
+-    "last_opened_file_path": "/home/kuzu/PycharmProjects/Dunzo_ProjectDB/run_fullstack.sh",
+-    "node.js.detected.package.eslint": "true",
+-    "node.js.detected.package.tslint": "true",
+-    "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)",
+-    "nodejs_package_manager_path": "npm",
+-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+-    "to.speed.mode.migration.done": "true",
+-    "ts.external.directory.path": "/home/kuzu/.local/share/JetBrains/Toolbox/apps/pycharm/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+-    "vue.rearranger.settings.migration": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
++    &quot;Python.views.executor&quot;: &quot;Run&quot;,
++    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
++    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++    &quot;SHELLCHECK.PATH&quot;: &quot;I do mind&quot;,
++    &quot;Shell Script.Full Stack.executor&quot;: &quot;Run&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;ledon&quot;,
++    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
++    &quot;last_opened_file_path&quot;: &quot;/home/kuzu/PycharmProjects/Dunzo_ProjectDB/run_fullstack.sh&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
++    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
++    &quot;ts.external.directory.path&quot;: &quot;/home/kuzu/.local/share/JetBrains/Toolbox/apps/pycharm/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="RecentsManager">
+     <key name="CopyFile.RECENT_KEYS">
+       <recent name="$PROJECT_DIR$/backend/dunzomanagement" />
+@@ -182,8 +177,17 @@
+       <workItem from="1765375748733" duration="23039000" />
+       <workItem from="1765447958102" duration="9207000" />
+       <workItem from="1765473405993" duration="5859000" />
+-      <workItem from="1765582152478" duration="1435000" />
++      <workItem from="1765582152478" duration="1572000" />
++    </task>
++    <task id="LOCAL-00001" summary="fixed ledon">
++      <option name="closed" value="true" />
++      <created>1765583672639</created>
++      <option name="number" value="00001" />
++      <option name="presentableId" value="LOCAL-00001" />
++      <option name="project" value="LOCAL" />
++      <updated>1765583672639</updated>
+     </task>
++    <option name="localTasksCounter" value="2" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -205,6 +209,10 @@
+         </entry>
+       </map>
+     </option>
++  </component>
++  <component name="VcsManagerConfiguration">
++    <MESSAGE value="fixed ledon" />
++    <option name="LAST_COMMIT_MESSAGE" value="fixed ledon" />
+   </component>
+   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+     <SUITE FILE_PATH="coverage/Dunzo_ProjectDB$views.coverage" NAME="views Coverage Results" MODIFIED="1764279867929" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dunzomanagement/dunzomanagement" />

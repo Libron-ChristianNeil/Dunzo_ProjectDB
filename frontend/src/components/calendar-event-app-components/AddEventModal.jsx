@@ -244,29 +244,23 @@ function AddEventModal({ onClose, eventsService, onEventCreated }) {
                         </div>
                     </div>
 
-                    {/* Buttons */}
-                    <div className='flex flex-row justify-center gap-2 my-5'>
+                    {/* Action Buttons */}
+                    <div className='flex flex-row justify-end gap-3 pt-3'>
+                        <button type='button' onClick={onClose} className='text-gray-800 font-semibold'>Cancel</button>
                         <button
-                            type="submit"
-                            disabled={submitting || (eventType === 'Meeting' && !selectedProjectId)}
-                            className={`py-2 w-40 rounded-md font-semibold text-white cursor-pointer 
-                                ${submitting || (eventType === 'Meeting' && !selectedProjectId)
-                                    ? 'bg-gray-400 cursor-not-allowed'
-                                    : 'bg-green-600 hover:bg-green-700'}`}>
+                            type='submit'
+                            disabled={submitting}
+                            className='flex items-center justify-center gap-2 bg-blue-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-blue-600 disabled:opacity-50'
+                        >
+                            {submitting && <i className="fas fa-spinner fa-spin"></i>}
                             {submitting ? 'Creating...' : 'Create Event'}
-                        </button>
-
-                        <button type="button"
-                            className='py-2 w-40 rounded-md bg-red-600 font-semibold text-white cursor-pointer hover:bg-red-700'
-                            onClick={onClose}
-                            disabled={submitting}>
-                            Discard
                         </button>
                     </div>
                 </div>
             </form>
         </div>
-    )
+    );
 }
 
-export default AddEventModal
+export default AddEventModal;
+

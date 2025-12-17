@@ -408,7 +408,7 @@ class TagView(View):
     # delete tag
     def delete(self, request):
         data = decode_body(request)
-        tag_id = data.get('tag_id')
+        tag_id = data
 
         if not tag_id:
             return JsonResponse({'success': False, 'error': 'Tag ID is required.'}, status=400)
@@ -418,7 +418,7 @@ class TagView(View):
 
             # PERMISSION CHECK
             has_permission = ProjectMembership.objects.filter(
-                project_id=tag.project_id,
+                project_id=tag.project,
                 user_id=request.user.pk,
                 role__in=['Leader', 'Manager']
             ).exists()

@@ -76,8 +76,8 @@ function EditEventModal({ onClose, eventsService, event, onEventUpdated }) {
         } catch (error) {
             console.error("Error deleting event:", error);
             alert("Error deleting event: " + error.message);
-            setShowDeleteConfirm(false);
         } finally {
+            setShowDeleteConfirm(false);
             setSubmitting(false);
         }
     };
@@ -157,6 +157,7 @@ function EditEventModal({ onClose, eventsService, event, onEventUpdated }) {
                     message="Are you sure you want to delete this event? This action cannot be undone."
                     onClose={() => setShowDeleteConfirm(false)}
                     onConfirm={handleConfirmDelete}
+                    isSubmitting={submitting}
                 />
             )}
 
@@ -239,47 +240,30 @@ function EditEventModal({ onClose, eventsService, event, onEventUpdated }) {
                         </div>
                     </div>
 
-                    {/* Buttons - Hide for Deadlines */}
-                    {!isDeadline && (
-                        <div className='flex flex-row justify-center gap-2 my-5'>
-                            <button
-                                type="submit"
-                                disabled={!hasChanges || submitting}
-                                className={`py-2 w-32 rounded-md font-semibold text-white cursor-pointer
-                                    ${!hasChanges || submitting
-                                        ? 'bg-gray-400 cursor-not-allowed'
-                                        : 'bg-blue-600 hover:bg-blue-700'}`}
-                            >
-                                {submitting ? 'Saving...' : 'Update'}
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={handleDeleteClick}
-                                disabled={submitting}
-                                className='py-2 w-32 rounded-md bg-red-600 font-semibold text-white cursor-pointer hover:bg-red-700'
-                            >
-                                Delete
-                            </button>
-                        </div>
-                    )}
-
-                    {/* Close button for Deadlines */}
-                    {isDeadline && (
-                        <div className='flex justify-center my-5'>
-                            <button
-                                type="button"
-                                onClick={onClose}
-                                className='py-2 w-32 rounded-md bg-gray-600 font-semibold text-white cursor-pointer hover:bg-gray-700'
-                            >
-                                Close
-                            </button>
-                        </div>
-                    )}
+                    {/* Action Buttons */}
+                    <div className='flex flex-row justify-end gap-3 pt-3 items-center'>
+                        <span
+                            className='text-red-500 font-semibold cursor-pointer hover:underline'
+                            onClick={handleDeleteClick}
+                        >
+                            Delete
+                        </span>
+                        <div className='flex-grow' />
+                        <button type='button' onClick={onClose} className='text-gray-800 font-semibold'>Cancel</button>
+                        <button
+                            type='submit'
+                            disabled={!hasChanges || submitting}
+                            className={`flex items-center justify-center gap-2 w-32 bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 disabled:opacity-50`}
+                        >
+                            {submitting && <i className="fas fa-spinner fa-spin"></i>}
+                            {submitting ? 'Updating...' : 'Update'}
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
-    )
+    );
 }
 
-export default EditEventModal
+export default EditEventModal;
+

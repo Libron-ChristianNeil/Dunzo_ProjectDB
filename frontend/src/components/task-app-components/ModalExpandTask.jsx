@@ -34,13 +34,12 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
     // Comments State
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
+    const [replyingTo, setReplyingTo] = useState(null); // { parentId, userName }
+    const [replyText, setReplyText] = useState('');
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editCommentText, setEditCommentText] = useState('');
     const [loadingComments, setLoadingComments] = useState(true);
-
-    // Reply State
-    const [replyingTo, setReplyingTo] = useState(null);
-    const [replyText, setReplyText] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // User info
     const [userRole, setUserRole] = useState(null);
@@ -354,6 +353,7 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
         }
         if (!newComment.trim()) return;
 
+        setIsSubmitting(true);
         try {
             const res = await postComment({
                 task_id: item.task_id,
@@ -371,12 +371,15 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
             }
         } catch (error) {
             console.error("Error posting comment:", error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     const handlePostReply = async (parentId) => {
         if (!replyText.trim()) return;
 
+        setIsSubmitting(true);
         try {
             const res = await postComment({
                 task_id: item.task_id,
@@ -395,12 +398,15 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
             }
         } catch (error) {
             console.error("Error posting reply:", error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     const handleEditComment = async (commentId) => {
         if (!editCommentText.trim()) return;
 
+        setIsSubmitting(true);
         try {
             const res = await updateComment({
                 comment_id: commentId,
@@ -417,12 +423,15 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
             }
         } catch (error) {
             console.error("Error editing comment:", error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     const handleDeleteComment = async (commentId) => {
         if (!confirm('Delete this comment?')) return;
 
+        setIsSubmitting(true);
         try {
             const res = await deleteComment({ comment_id: commentId });
             if (res.success) {
@@ -432,6 +441,8 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
             }
         } catch (error) {
             console.error("Error deleting comment:", error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -714,13 +725,17 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
                                 value={newComment}
                                 onChange={(e) => setNewComment(e.target.value)}
                                 placeholder="Write a comment..."
-                                className="w-full p-2 border rounded resize-none text-sm min-h-[60px]"
+                                className="w-full p-2 border rounded-md"
+                                rows="2"
+                                disabled={!canComment}
                             />
                             <button
                                 onClick={handlePostComment}
-                                disabled={!newComment.trim()}
-                                className='mt-2 px-3 py-1.5 bg-blue-500 text-white rounded text-sm disabled:opacity-50'>
-                                Post Comment
+                                disabled={!canComment || isSubmitting}
+                                className="flex items-center justify-center gap-2 mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50"
+                            >
+                                {isSubmitting && !replyingTo && <i className="fas fa-spinner fa-spin"></i>}
+                                {isSubmitting && !replyingTo ? 'Posting...' : 'Post Comment'}
                             </button>
                         </div>
                     ) : (
@@ -805,14 +820,12 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
                                                 <div className='flex gap-2 mt-1'>
                                                     <button
                                                         onClick={() => handleEditComment(comment.comment_id)}
-                                                        className='px-2 py-1 bg-blue-500 text-white rounded text-xs'>
-                                                        Save
+                                                        disabled={isSubmitting}
+                                                        className='px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50'
+                                                    >
+                                                        {isSubmitting && editingCommentId === comment.comment_id ? <i className="fas fa-spinner fa-spin"></i> : 'Save'}
                                                     </button>
-                                                    <button
-                                                        onClick={() => { setEditingCommentId(null); setEditCommentText(''); }}
-                                                        className='px-2 py-1 bg-gray-200 rounded text-xs'>
-                                                        Cancel
-                                                    </button>
+                                                    <button onClick={() => setEditingCommentId(null)} className='text-gray-600'>Cancel</button>
                                                 </div>
                                             </div>
                                         ) : (
@@ -825,23 +838,21 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
                                                 <textarea
                                                     value={replyText}
                                                     onChange={(e) => setReplyText(e.target.value)}
-                                                    placeholder="Write a reply..."
-                                                    className='w-full p-2 border rounded text-sm mb-2'
+                                                    placeholder={`Replying to ${replyingTo.userName}...`}
+                                                    className="w-full p-2 border rounded-md"
                                                     rows={2}
                                                     autoFocus
                                                 />
                                                 <div className='flex gap-2'>
                                                     <button
                                                         onClick={() => handlePostReply(comment.comment_id)}
-                                                        disabled={!replyText.trim()}
-                                                        className='px-2 py-1 bg-blue-500 text-white rounded text-xs disabled:opacity-50'>
-                                                        Post Reply
+                                                        disabled={isSubmitting}
+                                                        className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50"
+                                                    >
+                                                        {isSubmitting && replyingTo && <i className="fas fa-spinner fa-spin"></i>}
+                                                        {isSubmitting && replyingTo ? 'Replying...' : 'Post Reply'}
                                                     </button>
-                                                    <button
-                                                        onClick={() => { setReplyingTo(null); setReplyText(''); }}
-                                                        className='px-2 py-1 bg-gray-200 text-gray-600 rounded text-xs'>
-                                                        Cancel
-                                                    </button>
+                                                    <button onClick={() => setReplyingTo(null)} className='text-gray-600'>Cancel</button>
                                                 </div>
                                             </div>
                                         )}
@@ -867,3 +878,4 @@ function ModalExpandTask({ item, onClose, refreshTasks }) {
 }
 
 export default ModalExpandTask
+

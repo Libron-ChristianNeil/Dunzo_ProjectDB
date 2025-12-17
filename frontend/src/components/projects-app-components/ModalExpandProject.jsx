@@ -30,6 +30,20 @@ function ModalExpandProject({ item, onClose, onUpdate }) {
         end: formatToDateInput(item?.endDate),
     });
 
+    // This effect syncs the local state with the `item` prop.
+    // This is crucial for refreshing the modal's content when the parent data updates.
+    useEffect(() => {
+        if (item) {
+            setDesc(item.desc || "");
+            setTitle(item.name || "");
+            setStatus(item.status || "Active");
+            setDates({
+                start: formatToDateInput(item.startDate),
+                end: formatToDateInput(item.endDate),
+            });
+        }
+    }, [item]);
+
     // Tag Management State
     const [projectTags, setProjectTags] = useState([]);
     const [showTagMenu, setShowTagMenu] = useState(false);
@@ -59,17 +73,22 @@ function ModalExpandProject({ item, onClose, onUpdate }) {
     // Saving state
     const [isSaving, setIsSaving] = useState(false);
     const [saveMessage, setSaveMessage] = useState('');
+    const [isDirty, setIsDirty] = useState(false);
 
     // Check if there are unsaved changes
-    const hasChanges = dates.start !== formatToDateInput(item?.startDate) ||
-        dates.end !== formatToDateInput(item?.endDate) ||
-        desc !== (item?.desc || "") ||
-        title !== (item?.name || "") ||
-        status !== (item?.status || "Active");
+    useEffect(() => {
+        const hasChanged =
+            dates.start !== formatToDateInput(item?.startDate) ||
+            dates.end !== formatToDateInput(item?.endDate) ||
+            desc !== (item?.desc || "") ||
+            title !== (item?.name || "") ||
+            status !== (item?.status || "Active");
+        setIsDirty(hasChanged);
+    }, [dates, desc, title, status, item]);
 
     // Save handler
     const handleSave = async () => {
-        if (!canEdit || !hasChanges) return;
+        if (!canEdit || !isDirty) return;
 
         setIsSaving(true);
         setSaveMessage('');
@@ -86,8 +105,9 @@ function ModalExpandProject({ item, onClose, onUpdate }) {
 
             if (res.success) {
                 setSaveMessage('Saved successfully!');
+                setIsDirty(false); // Hide buttons on success
                 setTimeout(() => setSaveMessage(''), 2000);
-                onUpdate?.(); // Refresh project list
+                onUpdate?.(item.id); // Refresh project list and this item
             } else {
                 setSaveMessage('Failed to save');
             }
@@ -109,6 +129,7 @@ function ModalExpandProject({ item, onClose, onUpdate }) {
             end: formatToDateInput(item?.endDate),
         });
         setSaveMessage('');
+        setIsDirty(false); // Also hide buttons on cancel
     };
 
     // Fetch tags on mount
@@ -228,7 +249,7 @@ function ModalExpandProject({ item, onClose, onUpdate }) {
                     onClose={() => setShowAddMemberModal(false)}
                     onMemberAdded={() => {
                         setShowAddMemberModal(false);
-                        onUpdate?.(); // Refresh project data
+                        onUpdate?.(item.id); // Refresh project data
                     }}
                 />
             )}
@@ -241,7 +262,7 @@ function ModalExpandProject({ item, onClose, onUpdate }) {
                     onClose={() => setShowMemberManagement(false)}
                     onMemberUpdated={() => {
                         setShowMemberManagement(false);
-                        onUpdate?.(); // Refresh project data
+                        onUpdate?.(item.id); // Refresh project data
                     }}
                 />
             )}
@@ -568,13 +589,14 @@ function ModalExpandProject({ item, onClose, onUpdate }) {
                     {/* Save/Cancel Buttons (only show if user can edit and has changes) */}
                     {canEdit && (
                         <div className='flex flex-row items-center gap-2 mt-4 pt-4 border-t'>
-                            {hasChanges && (
+                            {isDirty && (
                                 <>
                                     <button
                                         onClick={handleSave}
                                         disabled={isSaving}
-                                        className='px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 cursor-pointer text-sm font-medium'
+                                        className='flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 cursor-pointer text-sm font-medium'
                                     >
+                                        {isSaving && <i className="fas fa-spinner fa-spin"></i>}
                                         {isSaving ? 'Saving...' : 'Save Changes'}
                                     </button>
                                     <button
@@ -640,4 +662,5 @@ function ModalExpandProject({ item, onClose, onUpdate }) {
     )
 }
 
-export default ModalExpandProject
+export default ModalExpandProject;
+
